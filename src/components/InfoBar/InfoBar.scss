@@ -1,0 +1,63 @@
+@import '../../constants';
+
+.info_bar {
+    width: 100%;
+    color: $text-color;
+    background-color: $main-bg-color;
+    flex: 1 1 570px;
+    margin-top: 10px;
+    border-radius: 15px;
+    
+    .info_bar_container {
+        padding: 0 30px;
+    }
+
+    .info_bar_title {
+        font-size: 16px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+    }
+
+    &_icon {
+        width: 30px;
+        height: 30px;
+        fill: $text-color;
+        margin-right: 20px;
+    }
+
+    .btns_selection {
+        display: flex;
+        justify-content: space-around;
+        margin: 15px 0;
+
+        .info_bar_btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 110px;
+            height: 23px;
+            border: 1px solid $text-color;
+            border-radius: 100px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            transition: 0.25s all ease-in;
+            cursor: pointer;
+
+            @media (hover: hover) {
+                &:hover {
+                    background-color: $accent-color;
+                    border-color: transparent;
+                    box-shadow: 0px 0px 8px 1px $accent-color;
+                }
+            }
+        }
+
+        .active_info_bar_btn {
+            background-color: $accent-color;
+            border-color: transparent;
+            box-shadow: 0px 0px 8px 1px $accent-color;
+        }
+    }
+}

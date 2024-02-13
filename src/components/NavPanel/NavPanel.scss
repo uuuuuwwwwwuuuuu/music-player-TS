@@ -1,0 +1,57 @@
+@import '../../constants';
+
+.nav_panel {
+    font-weight: bold;
+    font-size: 1.6rem;
+    width: 100%;
+    flex: 0 0 100px;
+    background-color: $main-bg-color;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .nav_icon {
+        fill: $text-color;
+        width: 1.9rem;
+        margin-right: 30px;
+    }
+
+    .nav_btn {
+        cursor: pointer;
+        transition: 0.25s all ease-in;
+        margin-left: 30px;
+
+        &:first-child {
+            margin-top: 20px;
+        }
+
+        &:last-child {
+            margin-bottom: 20px;
+        }
+
+        .nav_icon {
+            transition: 0.25s all ease-in;
+            fill: $text-color;
+        }
+
+        @media (hover: hover) {
+            &:hover {
+                color: $accent-color;
+                
+                .nav_icon {
+                    fill: $accent-color;
+                }
+            }
+
+        }
+    }
+
+    .current_window {
+        color: $accent-color;
+
+        .nav_icon {
+            fill: $accent-color;
+        }
+    }
+}

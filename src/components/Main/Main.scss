@@ -1,0 +1,8 @@
+@import '../../constants';
+
+.main {
+    background-color: $main-bg-color;
+    flex: 1 1 500px;
+    border-radius: 15px;
+    height: 100%;
+}
