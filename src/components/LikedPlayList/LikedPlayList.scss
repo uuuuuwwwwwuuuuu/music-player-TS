@@ -1,0 +1,32 @@
+@import '../../constants';
+
+img {
+    width: 45px;
+    height: 45px;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.track_card {
+    display: flex;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.track_card_info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+
+    span {
+        color: $text-color;
+        font-size: 1.4rem;
+        font-weight: 600;
+
+        &:last-child {
+            color: $text-second-color;
+            font-weight: 400;
+        }
+    }
+}

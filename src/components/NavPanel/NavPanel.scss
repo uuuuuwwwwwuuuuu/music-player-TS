@@ -9,11 +9,12 @@
     border-radius: 15px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-evenly;
 
     .nav_icon {
         fill: $text-color;
         width: 1.9rem;
+        height: 1.9rem;
         margin-right: 30px;
     }
 
@@ -21,15 +22,9 @@
         cursor: pointer;
         transition: 0.25s all ease-in;
         margin-left: 30px;
-
-        &:first-child {
-            margin-top: 20px;
-        }
-
-        &:last-child {
-            margin-bottom: 20px;
-        }
-
+        display: flex;
+        align-items: center;
+        
         .nav_icon {
             transition: 0.25s all ease-in;
             fill: $text-color;

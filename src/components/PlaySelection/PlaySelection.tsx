@@ -23,8 +23,8 @@ const PlaySelection: FC = () => {
                     <FaRandom className="control" />
                     <BsFillRewindFill className="control" />
                     <FaPlay className="control" />
-                    <BsFillRewindFill className="control next_rewind" />
-                    <LuRepeat className="control repeat" />
+                    <BsFillRewindFill className="control next" />
+                    <LuRepeat className="control" />
                     <RiPlayListFill className="current_play_list_control" />
                 </div>
                 <div className="music_progress">

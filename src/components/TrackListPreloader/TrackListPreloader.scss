@@ -1,0 +1,58 @@
+@import '../../constants';
+
+.track_img_preloader {
+    width: 45px;
+    height: 45px;
+    border-radius: 5px;
+    margin-right: 10px;
+    background-color: #fff;
+    position: relative;
+    background: linear-gradient(90deg, rgba(215,215,215,0.3) 0%, rgba(145,145,145,1) 49%, rgba(215,215,215,0.3) 100%);
+    background-size: 800%;
+    background-position: 100%;
+    animation: gradientAnimation 2s ease-in-out infinite alternate;
+    animation-direction: alternate;
+}
+
+.track_preloader {
+    display: flex;
+    margin-bottom: 10px;
+    width: 100%;
+    
+}
+
+.track_info_preloader {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    width: 70%;
+    position: relative;
+
+    div {
+        width: 70%;
+        height: 1.2rem;
+        background-color: #fff;
+        border-radius: 5px;
+        background: linear-gradient(90deg, rgba(215,215,215,0.3) 0%, rgba(145,145,145,1) 49%, rgba(215,215,215,0.3) 100%);
+        background-size: 800%;
+        background-position: 100%;
+        animation: gradientAnimation 2s ease-in-out infinite alternate;
+        animation-direction: alternate;
+
+        &:first-child {
+            margin-bottom: 5px;
+            height: 1.6rem;
+            width: 90%;
+        }
+    }
+}
+
+
+@keyframes gradientAnimation {
+    from {
+        background-position: 100%;
+    } to {
+        background-position: 0%;
+    }
+}
