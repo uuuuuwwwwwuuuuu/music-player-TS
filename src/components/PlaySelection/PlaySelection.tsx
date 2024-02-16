@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect, SyntheticEvent } from "react";
 import './PlaySelection.scss';
 import { FaRandom } from "react-icons/fa";
 import { BsFillRewindFill } from "react-icons/bs";
@@ -14,17 +14,28 @@ const PlaySelection: FC = () => {
     const currentTrack = currentPlayList.find(track => track.id === trackId);
 
     const [isPlay, setIsPlay] = useState(false);
+    const [currentWidth, setCurrentWidth] = useState(0);
 
     useEffect(() => {
         currentTrack ? setIsPlay(true) : setIsPlay(false);
     }, [currentTrack])          //может быть ошибка из-за зависимости
 
+
+    //______________________________________________________
     const changeIsPlay = () => {
         if (currentTrack) {
             setIsPlay(!isPlay)
         }
     }
 
+    isPlay ? document.querySelector('audio')?.play() : document.querySelector('audio')?.pause()
+
+    const onUpdateCurrentTime = (e: SyntheticEvent<HTMLAudioElement>) => {
+        const audio = e.target as HTMLAudioElement;
+        const {currentTime, duration} = audio
+
+        setCurrentWidth(currentTime * 100 / duration);
+    }
 
 
     const disableClassList = currentTrack ? '' : ' disable';
@@ -39,7 +50,7 @@ const PlaySelection: FC = () => {
                         <span>{currentTrack.title}</span>
                         <span className="artists">{currentTrack.artists}</span>
                     </div>
-                    <audio src={currentTrack.music} />
+                    <audio onTimeUpdate={onUpdateCurrentTime} src={currentTrack.music} />
                 </div>
             }
 
@@ -54,7 +65,7 @@ const PlaySelection: FC = () => {
                     <RiPlayListFill className={"current_play_list_control" + disableClassList} />
                 </div>
                 <div className={"music_progress" + disableClassList}>
-                    <div className="progress_bar">
+                    <div className="progress_bar" style={{width: currentWidth + '%'}}>
                         <div className="target_circle"></div>
                     </div>
                 </div>

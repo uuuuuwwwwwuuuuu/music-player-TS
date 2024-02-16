@@ -102,13 +102,17 @@
     background-color: transparent;
     margin: 0 10px 15px 10px;
     border-radius: 100px;
-    height: 20px;
+    height: 25px;
     padding: 0 20px;
+    transition: 0.2s all ease-out;
 
     color: $text-second-color;
     font-weight: 400;
     outline: none;
 
+    &::placeholder {
+        font-weight: 600;
+    }
 
     &:focus {
         color: $text-color;
