@@ -1,4 +1,4 @@
-import { FC, useState, useEffect, SyntheticEvent } from "react";
+import { FC, useState, useEffect, SyntheticEvent, useRef } from "react";
 import './PlaySelection.scss';
 import { FaRandom } from "react-icons/fa";
 import { BsFillRewindFill } from "react-icons/bs";
@@ -17,8 +17,10 @@ const PlaySelection: FC = () => {
     
     const [isPlay, setIsPlay] = useState(false);
     const [currentWidth, setCurrentWidth] = useState(0);
-    const [currentTrack, setCurrentTrack] = useState<ITrack | undefined>(undefined)
-    
+    const [currentTrack, setCurrentTrack] = useState<ITrack | undefined>(undefined);
+    const [isRepeat, setIsRepeat] = useState(false);
+
+    const audioRef = useRef<HTMLAudioElement>(null);
 
     useEffect(() => {
         if (currentPlayList.length !== 0 && currentTrack?.id !== trackId) {
@@ -28,36 +30,64 @@ const PlaySelection: FC = () => {
         if (currentTrack?.id !== trackId) {
             setIsPlay(true);
         }
+        
+        if (audioRef.current) {
+            audioRef.current.loop = isRepeat;
+            audioRef.current.addEventListener('canplay', handleCanPlay, { once: true });
+        }
+    
+    }, [trackId, currentTrack, currentPlayList, isRepeat])  //может быть ошибка из-за зависимости
 
-        isPlay ? document.querySelector('audio')?.play() : document.querySelector('audio')?.pause()
-
-    }, [trackId, isPlay, currentTrack, currentPlayList])          //может быть ошибка из-за зависимости
+    useEffect(() => {
+        if (audioRef.current) {
+            if (isPlay) {
+                audioRef.current.play();
+            } else {
+                audioRef.current.pause();
+            }
+        }
+    }, [isPlay])
     
     const disableClassList = currentTrack ? '' : ' disable';
     //______________________________________________________
-    const changeIsPlay = () => {
+    const toggleIsPlay = () => {
         if (currentTrack) {
             setIsPlay(!isPlay);
         }
     }
 
+    const handleCanPlay = () => {
+        if (isPlay) {
+            audioRef.current?.play();
+        }
+    }
+    
+
+    const toggleIsRepeat = () => {
+        setIsRepeat(!isRepeat);
+    }
+
     const prevTrack = () => {
         const currentIndex = currentPlayList.findIndex(item => item.id === currentTrack?.id);
 
-        if (currentIndex === 0) {
-            dispatch(selectCurrentTrack(currentPlayList[currentPlayList.length - 1].id))
-        } else {
-            dispatch(selectCurrentTrack(currentPlayList[currentIndex - 1].id));
+        if (!disableClassList) {
+            if (currentIndex === 0) {
+                dispatch(selectCurrentTrack(currentPlayList[currentPlayList.length - 1].id))
+            } else {
+                dispatch(selectCurrentTrack(currentPlayList[currentIndex - 1].id));
+            }
         }
     }
 
     const nextTrack = () => {
         const currentIndex = currentPlayList.findIndex(item => item.id === currentTrack?.id);
 
-        if (currentIndex >= currentPlayList.length - 1) {
-            dispatch(selectCurrentTrack(currentPlayList[0].id))
-        } else {
-            dispatch(selectCurrentTrack(currentPlayList[currentIndex + 1].id))
+        if (!disableClassList) {
+            if (currentIndex >= currentPlayList.length - 1) {
+                dispatch(selectCurrentTrack(currentPlayList[0].id))
+            } else {
+                dispatch(selectCurrentTrack(currentPlayList[currentIndex + 1].id))
+            }
         }
     }
 
@@ -69,15 +99,20 @@ const PlaySelection: FC = () => {
     }
 
     const setCurrentTime = (e: SyntheticEvent<HTMLDivElement, MouseEvent>) => {
-        const song = document.querySelector('audio');
+        const {current: song} = audioRef;
         const offsetX = e.nativeEvent.offsetX;
         const clientWidth = document.querySelector('.music_progress')?.clientWidth;
 
         if (song && clientWidth) {
-            song.currentTime = (offsetX / clientWidth) * song?.duration;
+            song.currentTime = (offsetX / clientWidth) * song.duration;
         }
     }
 
+    const onEnd = () => {
+        if (!isRepeat) {
+            nextTrack();
+        }
+    }
 
     return (
         <div className="play_selection">
@@ -89,7 +124,7 @@ const PlaySelection: FC = () => {
                         <span>{currentTrack.title}</span>
                         <span className="artists">{currentTrack.artists}</span>
                     </div>
-                    <audio onTimeUpdate={onUpdateCurrentTime} src={currentTrack.music} />
+                    <audio ref={audioRef} onEnded={onEnd} onTimeUpdate={onUpdateCurrentTime} src={currentTrack.music} />
                 </div>
             }
 
@@ -97,10 +132,11 @@ const PlaySelection: FC = () => {
                 <div className="music_controls">
                     <FaRandom className={"control" + disableClassList} />
                     <BsFillRewindFill className={"control" + disableClassList} onClick={prevTrack}/>
-                    <FaPlay style={{display: isPlay ? 'none' : 'inline-block'}} onClick={changeIsPlay} className={"control play" + disableClassList} />
-                    <FaPause style={{display: !isPlay ? 'none' : 'inline-block'}} onClick={changeIsPlay} className={"control" + disableClassList} />
+                    <FaPlay style={{display: isPlay ? 'none' : 'inline-block'}} onClick={toggleIsPlay} className={"control play" + disableClassList} />
+                    <FaPause style={{display: !isPlay ? 'none' : 'inline-block'}} onClick={toggleIsPlay} className={"control" + disableClassList} />
                     <BsFillRewindFill className={"control next_rewind" + disableClassList} onClick={nextTrack}/>
-                    <LuRepeat className={"control" + disableClassList} />
+                    <LuRepeat style={{display: isRepeat ? 'none' : 'inline-block'}} onClick={toggleIsRepeat} className={"control" + disableClassList} />
+                    <LuRepeat1 style={{display: !isRepeat ? 'none' : 'inline-block'}} onClick={toggleIsRepeat} className={'control repeat' + disableClassList} />
                     <RiPlayListFill className={"current_play_list_control" + disableClassList} />
                 </div>
                 <div className={"music_progress" + disableClassList} onClick={setCurrentTime}>
