@@ -7,10 +7,13 @@ import { useAppDispatch, useAppSelector } from '../../hook';
 import { loadLikedTrackList } from "../../store/likedPlayList/reducerLiked";
 import { VscRunErrors } from "react-icons/vsc";
 import { selectVisibleLikedTracks } from "../../store/likedPlayList/selectorsLikedPlayList";
+import { searchLikedTrack } from "../../store/searchTrack/actionsSearchTrack";
 
 const InfoBar: FC = () => {
-    const {likedTrackList, loading, error} = useAppSelector(state => state.liked)
-
+    const selectedSearch = useAppSelector(state => state.search)
+    const likedTrackList = useAppSelector(state => selectVisibleLikedTracks(state, selectedSearch));
+    const {error, loading} = useAppSelector(state => state.liked)
+    
     const dispatch = useAppDispatch();
 
     useEffect(() => {
@@ -18,7 +21,7 @@ const InfoBar: FC = () => {
     }, []);
 
     const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
-        console.log(e.target.value)
+        dispatch(searchLikedTrack(e.target.value));
     }
 
     return (

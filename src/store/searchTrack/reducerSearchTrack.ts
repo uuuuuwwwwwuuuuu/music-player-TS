@@ -6,7 +6,7 @@ const initialState: string = ''
 const searchReducer = createReducer(initialState, (builder) => {
     builder
         .addCase(searchLikedTrack, (state, action: PayloadAction<string>) => {
-            state = action.payload
+            return state = action.payload
         })
 })
 
