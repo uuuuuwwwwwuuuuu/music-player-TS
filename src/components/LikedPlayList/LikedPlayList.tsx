@@ -1,7 +1,7 @@
 import {FC} from 'react';
 import './LikedPlayList.scss';
 import { ITrack } from '../../store/likedPlayList/reducerLiked';
-import { selectPlayList } from '../../store/currentPlayList/actionsCurrentPlayList';
+import { selectCurrentTrack, selectPlayList } from '../../store/current/actionsCurrent';
 import { useAppDispatch } from '../../hook';
 
 type LikedPlayListProps = {
@@ -11,7 +11,8 @@ type LikedPlayListProps = {
 const LikedPlayList: FC<LikedPlayListProps> = ({likedTrackList}) => {
     const dispatch = useAppDispatch();
     const selectLikedPlayList = (id: string) => {
-        dispatch(selectPlayList(likedTrackList, id));
+        dispatch(selectPlayList(likedTrackList));
+        dispatch(selectCurrentTrack(id));
     }
 
     return (

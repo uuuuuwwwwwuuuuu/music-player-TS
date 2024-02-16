@@ -1,6 +1,6 @@
 import { createReducer } from "@reduxjs/toolkit";
 import { ITrack } from "../likedPlayList/reducerLiked";
-import { selectPlayList } from "./actionsCurrentPlayList";
+import { selectCurrentTrack, selectPlayList } from "./actionsCurrent";
 
 const initialState: {
     currentPlayList: ITrack[],
@@ -14,7 +14,9 @@ const currentPlayListReducer = createReducer(initialState, (builder) => {
     builder
         .addCase(selectPlayList, (state, {payload}) => {
             state.currentPlayList = payload.currentPlayList;
-            state.trackId = payload.trackId;
+        })
+        .addCase(selectCurrentTrack, (state, {payload}) => {
+            state.trackId = payload
         })
 })
 

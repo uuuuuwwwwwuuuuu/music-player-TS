@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import likedReducer from "./likedPlayList/reducerLiked";
 import searchReducer from "./searchTrack/reducerSearchTrack";
-import currentPlayListReducer from "./currentPlayList/reducerCurrentPlayList";
+import currentPlayListReducer from "./current/reducerCurrent";
 
 const store = configureStore({
     reducer: {
