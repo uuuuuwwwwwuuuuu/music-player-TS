@@ -2,11 +2,13 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import likedReducer from "./likedPlayList/reducerLiked";
 import searchReducer from "./searchTrack/reducerSearchTrack";
+import currentPlayListReducer from "./currentPlayList/reducerCurrentPlayList";
 
 const store = configureStore({
     reducer: {
         liked: likedReducer,
-        search: searchReducer
+        search: searchReducer,
+        current: currentPlayListReducer
     },
     devTools: true,
 });

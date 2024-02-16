@@ -120,3 +120,15 @@
         }
     }
 }
+
+.play {
+    position: relative;
+    left: 2px;
+    width: 15px;
+    height: 15px;
+}
+
+.disable {
+    color: $text-second-color;
+    fill: $text-second-color
+}
