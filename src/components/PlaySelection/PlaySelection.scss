@@ -1,5 +1,21 @@
 @import '../../constants';
 
+button {
+    background: transparent;
+    padding: 0;
+    border: none;
+
+    width: 20px;
+    height: 20px;
+    transition: 0.2s all ease;
+    color: $text-color;
+
+    svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
 .play_selection {
     height: 54px;
     background-color: $main-bg-color;
@@ -56,20 +72,14 @@
 }
 
 .music_controls {
+    display: flex;
+    align-items: center;
+    width: 200px;
+    justify-content: space-between;
     .next_rewind {
         transform: rotate(180deg);
     }
 
-    .control {
-        width: 20px;
-        height: 20px;
-        cursor: pointer;
-        
-        &:not(:last-child) {
-            margin-right: 25px;
-        }
-
-    }
 }
 
 .music_progress {
@@ -109,8 +119,15 @@
 }
 
 .current_play_list_control {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
+    
+    svg {
+        transition: 0.2s all ease;
+        width: 18px;
+        height: 18px;
+    }
+
     position: absolute;
     right: 30px;
     transition: 0.25s all ease-in;
@@ -127,9 +144,18 @@
     left: 2px;
     width: 15px;
     height: 15px;
+
+    svg {
+        width: 15px;
+        height: 15px;
+    }
 }
 
 .disable {
     color: $text-second-color;
     fill: $text-second-color
+}
+
+.active {
+    fill: $accent-color;
 }

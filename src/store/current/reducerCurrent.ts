@@ -1,13 +1,17 @@
 import { createReducer } from "@reduxjs/toolkit";
 import { ITrack } from "../likedPlayList/reducerLiked";
-import { selectCurrentTrack, selectPlayList } from "./actionsCurrent";
+import { selectCurrentTrack, selectPlayList, selectShuffledPlayList, showCurrentPlayListAction } from "./actionsCurrent";
 
 const initialState: {
     currentPlayList: ITrack[],
-    trackId: string | null
+    trackId: string | null,
+    shuffledArr: ITrack[],
+    showCurrentPlayList: boolean
 } = {
     currentPlayList: [],
-    trackId: null
+    trackId: null,
+    shuffledArr: [],
+    showCurrentPlayList: false
 }
 
 const currentPlayListReducer = createReducer(initialState, (builder) => {
@@ -17,6 +21,12 @@ const currentPlayListReducer = createReducer(initialState, (builder) => {
         })
         .addCase(selectCurrentTrack, (state, {payload}) => {
             state.trackId = payload
+        })
+        .addCase(selectShuffledPlayList, (state, {payload}) => {
+            state.shuffledArr = payload
+        })
+        .addCase(showCurrentPlayListAction, (state, {payload}) => {
+            state.showCurrentPlayList = payload
         })
 })
 

@@ -5,35 +5,40 @@
             "artists": "Тринадцать карат, Три дня дождя",
             "albumImg": "/img/13prichin.jpg",
             "music": "/music/Trinadcat_karat_Tri_dnya_dozhdya_Bolshe_ne_budu.mp3",
-            "id": "geerve"
+            "id": "geerve",
+            "liked": true
         },
         {
             "title": "Отпусти",
             "artists": "Тима Беларуских",
             "albumImg": "/img/otpusti.jpg",
             "music": "/music/otpusti.mp3",
-            "id": "thfghdf"
+            "id": "thfghdf",
+            "liked": true
         },
         {
             "title": "Навсегда",
             "artists": "Nikitata",
             "albumImg": "/img/navsegda.jpeg",
             "music": "/music/navsegda.mp3",
-            "id": "gwgrthrthty"
+            "id": "gwgrthrthty",
+            "liked": true
         },
         {
             "title": "Не слезай",
             "artists": "Гнилая Лирика",
             "albumImg": "/img/ne-slezai.jpeg",
             "music": "/music/ne-slezai.mp3",
-            "id": "fdgfdghcv"
+            "id": "fdgfdghcv",
+            "liked": true
         },
         {
             "title": "Под Звездопадом",
             "artists":"Тима Беларуских",
             "albumImg": "/img/pod-zvezdopadom.jpeg",
             "music": "/music/pod-zvezdopadom.mp3",
-            "id": "gorepmwp"
+            "id": "gorepmwp",
+            "liked": true
         }
     ]
 }

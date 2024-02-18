@@ -3,12 +3,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import likedReducer from "./likedPlayList/reducerLiked";
 import searchReducer from "./searchTrack/reducerSearchTrack";
 import currentPlayListReducer from "./current/reducerCurrent";
+import navReducer from "./navigation/reducerNavigation";
 
 const store = configureStore({
     reducer: {
         liked: likedReducer,
         search: searchReducer,
-        current: currentPlayListReducer
+        current: currentPlayListReducer,
+        nav: navReducer
     },
     devTools: true,
 });

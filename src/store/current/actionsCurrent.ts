@@ -10,3 +10,11 @@ export const selectPlayList = createAction('@@current/SELECT_PLAY_LIST', (playLi
 export const selectCurrentTrack = createAction('@@current/SELECT_CURRENT_TRACK', (currentTrack: string) => ({
     payload: currentTrack
 }))
+
+export const selectShuffledPlayList = createAction('@@current/SELECT_SHUFFLED_PLAY_LIST', (shuffledArr: ITrack[]) => ({
+    payload: shuffledArr
+}))
+
+export const showCurrentPlayListAction = createAction('@@current/SHOW_CURRENT_PLAY_LIST', (bool: boolean) => ({
+    payload: bool
+}))

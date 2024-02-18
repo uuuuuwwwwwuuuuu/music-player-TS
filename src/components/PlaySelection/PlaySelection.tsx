@@ -9,18 +9,34 @@ import { LuRepeat1 } from "react-icons/lu";
 import { RiPlayListFill } from "react-icons/ri";
 import { useAppDispatch, useAppSelector } from "../../hook";
 import { ITrack } from "../../store/likedPlayList/reducerLiked";
-import { selectCurrentTrack } from "../../store/current/actionsCurrent";
+import { selectCurrentTrack, selectShuffledPlayList, showCurrentPlayListAction } from "../../store/current/actionsCurrent";
 
 const PlaySelection: FC = () => {
-    const {currentPlayList, trackId} = useAppSelector(state => state.current);
+    const {currentPlayList: playList, trackId, shuffledArr, showCurrentPlayList} = useAppSelector(state => state.current);
     const dispatch = useAppDispatch();
-    
+
     const [isPlay, setIsPlay] = useState(false);
     const [currentWidth, setCurrentWidth] = useState(0);
     const [currentTrack, setCurrentTrack] = useState<ITrack | undefined>(undefined);
     const [isRepeat, setIsRepeat] = useState(false);
+    const [currentPlayList, setCurrentPlayList] = useState<ITrack[]>([]);
+    const [isRandom, setIsRandom] = useState(false);
 
     const audioRef = useRef<HTMLAudioElement>(null);
+
+    useEffect(() => {
+        if (shuffledArr.length !== 0) {
+            setCurrentPlayList(shuffledArr);
+        } else {
+            setCurrentPlayList(playList);
+        }
+    }, [playList, shuffledArr])
+
+    useEffect(() => {
+        if (currentPlayList.length === 1) {
+            setIsRepeat(true);
+        }
+    }, [currentPlayList])
 
     useEffect(() => {
         if (currentPlayList.length !== 0 && currentTrack?.id !== trackId) {
@@ -36,7 +52,7 @@ const PlaySelection: FC = () => {
             audioRef.current.addEventListener('canplay', handleCanPlay, { once: true });
         }
     
-    }, [trackId, currentTrack, currentPlayList, isRepeat])  //может быть ошибка из-за зависимости
+    }, [trackId, currentTrack, currentPlayList, isRepeat]);  //может быть ошибка из-за зависимости
 
     useEffect(() => {
         if (audioRef.current) {
@@ -46,13 +62,30 @@ const PlaySelection: FC = () => {
                 audioRef.current.pause();
             }
         }
-    }, [isPlay])
+    }, [isPlay]);
+
+    useEffect(() => {
+        if (isRandom) {
+            dispatch(selectShuffledPlayList(shuffle(currentPlayList)))
+        } else {
+            dispatch(selectShuffledPlayList([]));
+        }
+    }, [isRandom])
     
     const disableClassList = currentTrack ? '' : ' disable';
+    const randomClassList = isRandom ? 'control active' : 'control';
+    const showCurrentPlayListClassList = showCurrentPlayList ? ' active' : ''
+
     //______________________________________________________
     const toggleIsPlay = () => {
         if (currentTrack) {
             setIsPlay(!isPlay);
+        }
+    }
+
+    const toggleShowCurrentPlayList = () => {
+        if (currentPlayList) {
+            dispatch(showCurrentPlayListAction(!showCurrentPlayList));
         }
     }
 
@@ -62,10 +95,26 @@ const PlaySelection: FC = () => {
         }
     }
     
-
     const toggleIsRepeat = () => {
-        setIsRepeat(!isRepeat);
+        if (currentPlayList.length !== 1) {
+            setIsRepeat(!isRepeat);
+        }
     }
+
+    const toggleIsRandom = () => {
+        setIsRandom(!isRandom);
+    }
+
+    const shuffle = (array: ITrack[]): ITrack[] => {
+        const shuffledArray = [...array];
+
+        for (let i = shuffledArray.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+        }
+    
+        return shuffledArray;
+    };
 
     const prevTrack = () => {
         const currentIndex = currentPlayList.findIndex(item => item.id === currentTrack?.id);
@@ -130,14 +179,30 @@ const PlaySelection: FC = () => {
 
             <div className="right_elements">
                 <div className="music_controls">
-                    <FaRandom className={"control" + disableClassList} />
-                    <BsFillRewindFill className={"control" + disableClassList} onClick={prevTrack}/>
-                    <FaPlay style={{display: isPlay ? 'none' : 'inline-block'}} onClick={toggleIsPlay} className={"control play" + disableClassList} />
-                    <FaPause style={{display: !isPlay ? 'none' : 'inline-block'}} onClick={toggleIsPlay} className={"control" + disableClassList} />
-                    <BsFillRewindFill className={"control next_rewind" + disableClassList} onClick={nextTrack}/>
-                    <LuRepeat style={{display: isRepeat ? 'none' : 'inline-block'}} onClick={toggleIsRepeat} className={"control" + disableClassList} />
-                    <LuRepeat1 style={{display: !isRepeat ? 'none' : 'inline-block'}} onClick={toggleIsRepeat} className={'control repeat' + disableClassList} />
-                    <RiPlayListFill className={"current_play_list_control" + disableClassList} />
+                    <button>
+                        <FaRandom className={randomClassList + disableClassList} onClick={toggleIsRandom}/>
+                    </button>
+                    <button className="control">
+                        <BsFillRewindFill className={disableClassList} onClick={prevTrack}/>
+                    </button>
+                    <button style={{display: isPlay ? 'none' : 'inline-block'}} className="control play">
+                        <FaPlay onClick={toggleIsPlay} className={ disableClassList} />
+                    </button>
+                    <button className="control" style={{display: !isPlay ? 'none' : 'inline-block'}}>
+                        <FaPause onClick={toggleIsPlay} className={disableClassList} />
+                    </button>
+                    <button className="control next_rewind">
+                        <BsFillRewindFill className={disableClassList} onClick={nextTrack}/>
+                    </button>
+                    <button style={{display: isRepeat ? 'none' : 'inline-block'}} className="control">
+                        <LuRepeat onClick={toggleIsRepeat} className={disableClassList} />
+                    </button>
+                    <button style={{display: !isRepeat ? 'none' : 'inline-block'}} className="control repeat">
+                        <LuRepeat1 onClick={toggleIsRepeat} className={disableClassList} />
+                    </button>
+                    <button className="current_play_list_control" onClick={toggleShowCurrentPlayList}>
+                        <RiPlayListFill className={disableClassList + showCurrentPlayListClassList}/>
+                    </button>
                 </div>
                 <div className={"music_progress" + disableClassList} onClick={setCurrentTime}>
                     <div className="progress_bar" style={{width: currentWidth + '%'}}>
