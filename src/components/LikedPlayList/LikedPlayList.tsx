@@ -3,6 +3,7 @@ import './LikedPlayList.scss';
 import { ITrack } from '../../store/likedPlayList/reducerLiked';
 import { selectCurrentTrack, selectPlayList } from '../../store/current/actionsCurrent';
 import { useAppDispatch } from '../../hook';
+import TrackItem from '../TrackItem/TrackItem';
 
 type LikedPlayListProps = {
     likedTrackList: ITrack[]
@@ -19,13 +20,7 @@ const LikedPlayList: FC<LikedPlayListProps> = ({likedTrackList}) => {
         <>
             {likedTrackList.map(item => {
                 return (
-                    <div className="track_card" onClick={() => selectLikedPlayList(item.id)} key={item.id}>
-                        <img src={item.albumImg} alt="album" />
-                        <div className="track_card_info">
-                            <span>{item.title}</span>
-                            <span>{item.artists}</span>
-                        </div>
-                    </div>
+                    <TrackItem id={item.id} albumImg={item.albumImg} title={item.title} artists={item.artists} additionalFunction={selectLikedPlayList} key={item.id} />
                 )
             })}
         </>

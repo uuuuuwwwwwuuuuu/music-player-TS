@@ -4,6 +4,7 @@
     display: flex;
     margin-bottom: 10px;
     cursor: pointer;
+    width: 100%;
     
     img {
         width: 45px;
@@ -39,5 +40,12 @@
 }
 
 .current_icons {
-    margin-left: 10px;
+    flex: 0 0 50px;
+
+    svg {
+        width: 1.5rem;
+        height: 1.5rem;
+        fill: $text-second-color;
+        color: $text-second-color;
+    }
 }

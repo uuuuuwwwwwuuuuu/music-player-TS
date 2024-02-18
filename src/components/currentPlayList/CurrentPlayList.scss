@@ -4,12 +4,15 @@
     position: absolute;
     right: -460px;
     top: 10px;
-    width: 450px;
-    height: calc(100svh - 100px);
+    width: 390px;
+    height: calc(100svh - 120px);
     border-radius: 15px;
     background-color: $main-bg-color;
     z-index: 1;
     transition: 0.5s all ease;
+    padding: 10px 30px;
+    display: flex;
+    flex-direction: column;
 }
 
 .current_play_list_wrapper {
@@ -22,4 +25,20 @@
     background-color: #000;
     opacity: 0;
     transition: 0.5s opacity ease;
+}
+
+.play_list_icon {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+}
+
+.current_play_list_header {
+    display: flex;
+    align-items: center;
+    span {
+        font-size: 1.8rem;
+        font-weight: bold;
+    }
+    margin-bottom: 20px;
 }

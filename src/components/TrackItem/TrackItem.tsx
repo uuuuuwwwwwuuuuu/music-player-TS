@@ -9,13 +9,13 @@ type props = {
     title: string,
     artists: string,
     additionalFunction: (id: string) => void;
-    current?: boolean
+    current?: boolean | undefined
 }
 
 const TrackItem: FC<props> = ({id, albumImg, title, artists, additionalFunction, current = false}) => {
     const createTrackCard = () => {
         return (
-            <div className="track_card" onClick={() => additionalFunction(id)} key={id}>
+            <div className="track_card" onClick={() => additionalFunction(id)} >
                 <img src={albumImg} alt="album" />
                 <div className="track_card_info">
                     <span>{title}</span>
@@ -28,8 +28,12 @@ const TrackItem: FC<props> = ({id, albumImg, title, artists, additionalFunction,
     const buildCurrentTrackItem = () => {
         return (
             <div className='current_icons'>
-                <IoReorderTwo />
-                <HiX />
+                <button>
+                    <IoReorderTwo />
+                </button>
+                <button>
+                    <HiX />
+                </button>
             </div>
         )
     }
