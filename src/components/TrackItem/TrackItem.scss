@@ -1,6 +1,5 @@
 @import '../../constants';
 
-
 .track_card {
     display: flex;
     margin-bottom: 10px;
@@ -30,4 +29,15 @@
             font-weight: 400;
         }
     }
+}
+
+.track_item {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.current_icons {
+    margin-left: 10px;
 }

@@ -1,6 +1,25 @@
+@import '../../constants';
+
 .current_play_list {
     position: absolute;
-    right: 10px;
+    right: -460px;
     top: 10px;
     width: 450px;
+    height: calc(100svh - 100px);
+    border-radius: 15px;
+    background-color: $main-bg-color;
+    z-index: 1;
+    transition: 0.5s all ease;
+}
+
+.current_play_list_wrapper {
+    position: absolute;
+    z-index: 0;
+    left: 0;
+    top: 0;
+    width: 100svw;
+    height: calc(100svh - 90px);
+    background-color: #000;
+    opacity: 0;
+    transition: 0.5s opacity ease;
 }

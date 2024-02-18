@@ -7,10 +7,16 @@ import User from "./User/User";
 import { useAppSelector } from "../../hook";
 import { NavSelections } from "../../store/navigation/actionsNavigation";
 
-const Main: FC = () => {
-    const navBlock = useAppSelector(state => state.nav)
+type props = {
+    showPlayList: boolean
+}
 
-    let content: ReactElement = <Home />
+const Main: FC<props> = ({showPlayList}) => {
+    const navBlock = useAppSelector(state => state.nav);
+
+    const classList = showPlayList ? 'main blur' : 'main';
+
+    let content: ReactElement = <Home />;
 
     switch(navBlock) {
         case NavSelections.HOME:
@@ -28,7 +34,7 @@ const Main: FC = () => {
     }
 
     return (
-        <div className="main">
+        <div className={classList}>
             {content}
         </div>
     );
