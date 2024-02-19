@@ -90,8 +90,10 @@ const PlaySelection: FC = () => {
     }
 
     const handleCanPlay = () => {
-        if (isPlay) {
-            audioRef.current?.play();
+        if (currentTrack) {
+            if (isPlay) {
+                audioRef.current?.play();
+            }
         }
     }
     
@@ -102,7 +104,9 @@ const PlaySelection: FC = () => {
     }
 
     const toggleIsRandom = () => {
-        setIsRandom(!isRandom);
+        if (currentTrack) {
+            setIsRandom(!isRandom);
+        }
     }
 
     const shuffle = (array: ITrack[]): ITrack[] => {
@@ -162,6 +166,45 @@ const PlaySelection: FC = () => {
             nextTrack();
         }
     }
+
+    useEffect(() => {
+        let currentTime = audioRef.current?.currentTime
+        const handleKeyDown = (e) => {
+            if (e.shiftKey && e.code === 'ArrowRight') {
+                nextTrack();
+            }
+    
+            if (e.shiftKey && e.code === 'ArrowLeft') {
+                prevTrack();
+            }
+    
+            switch (e.code) {
+                case 'KeyR':
+                    toggleIsRepeat();
+                    break;
+                case 'KeyP':
+                    toggleShowCurrentPlayList();
+                    break;
+                case 'KeyN':
+                    toggleIsRandom();
+                    break;
+                case 'Space':
+                    toggleIsPlay();
+                    break;
+                case 'ArrowRight':
+                    if (currentTime) {
+                        currentTime = currentTime + 5
+                    }
+                    break;
+                case 'ArrowLeft':
+                    if (currentTime) {
+                        currentTime = currentTime - 5
+                    }
+            }
+        };
+
+        document.body.addEventListener('keydown', handleKeyDown);
+    });
 
     return (
         <div className="play_selection">

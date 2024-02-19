@@ -1,11 +1,15 @@
 import {FC} from 'react';
 import './Settings.scss';
+import { IoSettings } from "react-icons/io5";
 
 const Settings: FC = () => {
     return (
         <div className='Settings'>
             <header>
-                <span>Настройки</span>
+                <span>
+                    <IoSettings />
+                    Настройки
+                </span>
             </header>
             <div className='style_settings'>
                 <span className='style'>Вид</span>
@@ -22,9 +26,9 @@ const Settings: FC = () => {
                             </li>
                             <li className='color_li'>
                                 <span className='li_item_color'>Цвет акцента</span>
-                                <div className='color_picker accent_color_1 active_color'></div>
+                                <div className='color_picker accent_color_1'></div>
                                 <div className='color_picker accent_color_2'></div>
-                                <div className='color_picker accent_color_3'></div>
+                                <div className='color_picker accent_color_3 active_color'></div>
                             </li>
                         </ul>
                     </li>

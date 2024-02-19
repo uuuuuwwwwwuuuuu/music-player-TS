@@ -18,7 +18,7 @@ interface ICurrentPlayListState {
 
 const CurrentPlayList: FC<props> = ({showPlayList}) => {
     const dispatch = useAppDispatch();
-    const {currentPlayList, shuffledArr} = useAppSelector(state => state.current)
+    const {currentPlayList, shuffledArr, trackId} = useAppSelector(state => state.current)
 
     const [params, setParams] = useState<ICurrentPlayListState>({opacity: 0, position: '-460px', display: 'none', pointerEvents: undefined});
     const {opacity, position, display, pointerEvents} = params;
@@ -35,7 +35,7 @@ const CurrentPlayList: FC<props> = ({showPlayList}) => {
         dispatch(showCurrentPlayListAction(false));
     }
 
-    const onSelect = (id) => {
+    const onSelect = (id: string) => {
         dispatch(selectCurrentTrack(id));
     }
 
@@ -48,8 +48,8 @@ const CurrentPlayList: FC<props> = ({showPlayList}) => {
                 </div>
                 {
                     shuffledArr.length !== 0
-                        ? shuffledArr.map(item => <TrackItem id={item.id} albumImg={item.albumImg} title={item.title} artists={item.artists} additionalFunction={onSelect} key={item.id} current={true} />)
-                        : currentPlayList.map(item => <TrackItem id={item.id} albumImg={item.albumImg} title={item.title} artists={item.artists} additionalFunction={onSelect} key={item.id} current={true} />)
+                        ? shuffledArr.map(item => <TrackItem id={item.id} albumImg={item.albumImg} title={item.title} artists={item.artists} additionalFunction={onSelect} key={item.id} current={item.id !== trackId && true} />)
+                        : currentPlayList.map(item => <TrackItem id={item.id} albumImg={item.albumImg} title={item.title} artists={item.artists} additionalFunction={onSelect} key={item.id} current={item.id !== trackId && true} />)
                 }
             </div>
             <div onClick={handleOverlay} style={{opacity: opacity, display: display, pointerEvents: pointerEvents}} className='current_play_list_wrapper'></div>

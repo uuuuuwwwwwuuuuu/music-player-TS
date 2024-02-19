@@ -11,6 +11,12 @@ header {
         font-size: 3.6rem;
         font-weight: bold;
         margin-left: 50px;
+        display: flex;
+        align-items: center;
+
+        svg {
+            margin-right: 10px;
+        }
     }
 }
 

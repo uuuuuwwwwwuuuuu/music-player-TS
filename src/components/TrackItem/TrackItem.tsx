@@ -2,6 +2,8 @@ import {FC} from 'react';
 import './TrackItem.scss';
 import { IoReorderTwo } from "react-icons/io5";
 import { HiX } from "react-icons/hi";
+import { useAppDispatch } from '../../hook';
+import { deleteCurrentTrack } from '../../store/current/actionsCurrent';
 
 type props = {
     id: string,
@@ -13,6 +15,13 @@ type props = {
 }
 
 const TrackItem: FC<props> = ({id, albumImg, title, artists, additionalFunction, current = false}) => {
+    const dispatch = useAppDispatch();
+
+
+    const deleteCurrent = () => {
+        dispatch(deleteCurrentTrack(id));
+    }
+
     const createTrackCard = () => {
         return (
             <div className="track_card" onClick={() => additionalFunction(id)} >
@@ -31,7 +40,7 @@ const TrackItem: FC<props> = ({id, albumImg, title, artists, additionalFunction,
                 <button>
                     <IoReorderTwo />
                 </button>
-                <button>
+                <button onClick={deleteCurrent}>
                     <HiX />
                 </button>
             </div>
