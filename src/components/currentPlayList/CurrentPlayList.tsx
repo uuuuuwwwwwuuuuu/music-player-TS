@@ -6,7 +6,8 @@ import TrackItem from '../TrackItem/TrackItem';
 import { IoIosMusicalNote } from "react-icons/io";
 
 type props = {
-    showPlayList: boolean
+    showPlayList: boolean,
+    isFullScreen: boolean
 }
 
 interface ICurrentPlayListState {
@@ -16,7 +17,7 @@ interface ICurrentPlayListState {
     pointerEvents: undefined | 'none'
 }
 
-const CurrentPlayList: FC<props> = ({showPlayList}) => {
+const CurrentPlayList: FC<props> = ({showPlayList, isFullScreen}) => {
     const dispatch = useAppDispatch();
     const {currentPlayList, shuffledArr, trackId} = useAppSelector(state => state.current)
 
@@ -29,7 +30,11 @@ const CurrentPlayList: FC<props> = ({showPlayList}) => {
         } else {
             setParams({display: 'block', opacity: 0.3, position: '10px', pointerEvents: undefined});
         }
-    }, [showPlayList]);
+
+        if (isFullScreen) {
+            setParams({...params, display: 'block', opacity: 0.3});
+        }
+    }, [showPlayList, isFullScreen]);
 
     const handleOverlay = () => {
         dispatch(showCurrentPlayListAction(false));

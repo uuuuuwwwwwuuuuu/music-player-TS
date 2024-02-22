@@ -8,13 +8,14 @@ import { useAppSelector } from "../../hook";
 import { NavSelections } from "../../store/navigation/actionsNavigation";
 
 type props = {
-    showPlayList: boolean
+    showPlayList: boolean,
+    isFullScreen: boolean
 }
 
-const Main: FC<props> = ({showPlayList}) => {
+const Main: FC<props> = ({showPlayList, isFullScreen}) => {
     const navBlock = useAppSelector(state => state.nav);
 
-    const classList = showPlayList ? 'main blur' : 'main';
+    const classList = showPlayList || isFullScreen ? 'main blur' : 'main';
 
     let content: ReactElement = <Home />;
 

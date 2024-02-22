@@ -1,16 +1,23 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import './AsideBar.scss';
 import NavPanel from "../NavPanel/NavPanel";
 import InfoBar from "../InfoBar/InfoBar";
 
 type props = {
-    showPlayList: boolean
+    showPlayList: boolean,
+    isFullScreen: boolean
 }
 
-const AsideBar:FC<props> = ({showPlayList}) => {
-
-    const classList = showPlayList ? 'aside_bar blur' : 'aside_bar'
-
+const AsideBar:FC<props> = ({showPlayList, isFullScreen}) => {
+    const [classList, setClassList] = useState('aside_bar')
+    useEffect(() => {
+        if (showPlayList || isFullScreen) {
+            setClassList('aside_bar blur');
+        } else {
+            setClassList('aside_bar');
+        }
+    }, [isFullScreen, showPlayList]);
+    
     return (
         <aside className={classList}>
             <NavPanel />

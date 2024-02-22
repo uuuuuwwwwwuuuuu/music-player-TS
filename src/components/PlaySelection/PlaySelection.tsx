@@ -11,7 +11,11 @@ import { useAppDispatch, useAppSelector } from "../../hook";
 import { ITrack } from "../../store/likedPlayList/reducerLiked";
 import { selectCurrentTrack, selectShuffledPlayList, showCurrentPlayListAction } from "../../store/current/actionsCurrent";
 
-const PlaySelection: FC = () => {
+interface props {
+    toggleIsFullScreen: (isFullScreen: boolean) => void
+}
+
+const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
     const {currentPlayList: playList, trackId, shuffledArr, showCurrentPlayList} = useAppSelector(state => state.current);
     const dispatch = useAppDispatch();
 
@@ -31,7 +35,7 @@ const PlaySelection: FC = () => {
         } else {
             setCurrentPlayList(playList);
         }
-    }, [playList, shuffledArr])
+    }, [playList, shuffledArr]);
 
     useEffect(() => {
         if (currentPlayList.length === 1) {
@@ -53,7 +57,7 @@ const PlaySelection: FC = () => {
             audioRef.current.addEventListener('canplay', handleCanPlay, { once: true });
         }
     
-    }, [trackId, currentTrack, currentPlayList, isRepeat]);  //может быть ошибка из-за зависимости
+    }, [trackId, currentTrack, currentPlayList, isRepeat]);
 
     useEffect(() => {
         if (audioRef.current) {
@@ -101,10 +105,11 @@ const PlaySelection: FC = () => {
 
     const toggleFullScreen = () => {
         setIsFullScreen(!isFullScreen);
+        toggleIsFullScreen(!isFullScreen)
     }
     
     const toggleIsRepeat = () => {
-        if (currentPlayList.length === 1 ) {
+        if (currentPlayList.length !== 1 ) {
             setIsRepeat(!isRepeat);
         }
     }
@@ -173,48 +178,49 @@ const PlaySelection: FC = () => {
         }
     }
 
-    useEffect(() => {
-        let currentTime = audioRef.current?.currentTime
-        const handleKeyDown = (e) => {
-            if (e.shiftKey && e.code === 'ArrowRight') {
-                nextTrack();
-            }
+    // useEffect(() => {
+    //     let currentTime = audioRef.current?.currentTime
+    //     const handleKeyDown = (e) => {
+    //         if (e.shiftKey && e.code === 'ArrowRight') {
+    //             nextTrack();
+    //         }
     
-            if (e.shiftKey && e.code === 'ArrowLeft') {
-                prevTrack();
-            }
+    //         if (e.shiftKey && e.code === 'ArrowLeft') {
+    //             prevTrack();
+    //         }
     
-            switch (e.code) {
-                case 'KeyR':
-                    toggleIsRepeat();
-                    break;
-                case 'KeyP':
-                    toggleShowCurrentPlayList();
-                    break;
-                case 'KeyN':
-                    toggleIsRandom();
-                    break;
-                case 'Space':
-                    toggleIsPlay();
-                    break;
-                case 'ArrowRight':
-                    if (currentTime) {
-                        currentTime = currentTime + 5;
-                    }
-                    break;
-                case 'ArrowLeft':
-                    if (currentTime) {
-                        currentTime = currentTime - 5;
-                    }
-                    break;
-                case 'KeyF':
-                    toggleFullScreen();
-                    break;
-            }
-        };
+    //         switch (e.code) {
+    //             case 'KeyR':
+    //                 toggleIsRepeat();
+    //                 break;
+    //             case 'KeyP':
+    //                 toggleShowCurrentPlayList();
+    //                 break;
+    //             case 'KeyN':
+    //                 toggleIsRandom();
+    //                 break;
+    //             case 'Space':
+    //                 console.log('hih');
+    //                 toggleIsPlay();
+    //                 break;
+    //             case 'ArrowRight':
+    //                 if (currentTime) {
+    //                     currentTime = currentTime + 5;
+    //                 }
+    //                 break;
+    //             case 'ArrowLeft':
+    //                 if (currentTime) {
+    //                     currentTime = currentTime - 5;
+    //                 }
+    //                 break;
+    //             case 'KeyF':
+    //                 toggleFullScreen();
+    //                 break;
+    //         }
+    //     };
 
-        document.body.addEventListener('keydown', handleKeyDown);
-    });
+    //     document.body.addEventListener('keydown', handleKeyDown);
+    // });
 
 
 
