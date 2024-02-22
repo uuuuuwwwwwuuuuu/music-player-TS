@@ -90,7 +90,7 @@ const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
     }
 
     const toggleShowCurrentPlayList = () => {
-        if (currentPlayList) {
+        if (currentPlayList && !isFullScreen) {
             dispatch(showCurrentPlayListAction(!showCurrentPlayList));
         }
     }
@@ -104,8 +104,10 @@ const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
     }
 
     const toggleFullScreen = () => {
-        setIsFullScreen(!isFullScreen);
-        toggleIsFullScreen(!isFullScreen)
+        if (!showCurrentPlayList) {
+            setIsFullScreen(!isFullScreen);
+            toggleIsFullScreen(!isFullScreen)
+        }
     }
     
     const toggleIsRepeat = () => {

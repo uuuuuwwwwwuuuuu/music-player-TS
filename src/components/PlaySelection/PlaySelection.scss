@@ -220,6 +220,10 @@ button {
         overflow: scroll;
         font-size: 2.6rem;
     }
+
+    .current_play_list_control {
+        display: none;
+    }
 }
 
 @keyframes fade-in {

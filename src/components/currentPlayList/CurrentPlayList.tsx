@@ -32,7 +32,7 @@ const CurrentPlayList: FC<props> = ({showPlayList, isFullScreen}) => {
         }
 
         if (isFullScreen) {
-            setParams({...params, display: 'block', opacity: 0.3});
+            setParams({...params, display: 'block', opacity: 0.3, pointerEvents: undefined});
         }
     }, [showPlayList, isFullScreen]);
 
