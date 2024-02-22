@@ -21,6 +21,7 @@ const PlaySelection: FC = () => {
     const [isRepeat, setIsRepeat] = useState(false);
     const [currentPlayList, setCurrentPlayList] = useState<ITrack[]>([]);
     const [isRandom, setIsRandom] = useState(false);
+    const [isFullScreen, setIsFullScreen] = useState(false);
 
     const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -71,10 +72,11 @@ const PlaySelection: FC = () => {
             dispatch(selectShuffledPlayList([]));
         }
     }, [isRandom])
-    
+
     const disableClassList = currentTrack ? '' : ' disable';
     const randomClassList = isRandom ? 'control active' : 'control';
     const showCurrentPlayListClassList = showCurrentPlayList ? ' active' : ''
+    const fullScreenClassList = isFullScreen ? 'full_screen' : ''
 
     //______________________________________________________
     const toggleIsPlay = () => {
@@ -96,9 +98,13 @@ const PlaySelection: FC = () => {
             }
         }
     }
+
+    const toggleFullScreen = () => {
+        setIsFullScreen(!isFullScreen);
+    }
     
     const toggleIsRepeat = () => {
-        if (currentPlayList.length !== 1) {
+        if (currentPlayList.length === 1 ) {
             setIsRepeat(!isRepeat);
         }
     }
@@ -193,63 +199,71 @@ const PlaySelection: FC = () => {
                     break;
                 case 'ArrowRight':
                     if (currentTime) {
-                        currentTime = currentTime + 5
+                        currentTime = currentTime + 5;
                     }
                     break;
                 case 'ArrowLeft':
                     if (currentTime) {
-                        currentTime = currentTime - 5
+                        currentTime = currentTime - 5;
                     }
+                    break;
+                case 'KeyF':
+                    toggleFullScreen();
+                    break;
             }
         };
 
         document.body.addEventListener('keydown', handleKeyDown);
     });
 
-    return (
-        <div className="play_selection">
-            {
-                currentTrack &&
-                <div className="left_elements">
-                    <img src={currentTrack.albumImg} alt="album" />
-                    <div className="track_info">
-                        <span>{currentTrack.title}</span>
-                        <span className="artists">{currentTrack.artists}</span>
-                    </div>
-                    <audio ref={audioRef} onEnded={onEnd} onTimeUpdate={onUpdateCurrentTime} src={currentTrack.music} />
-                </div>
-            }
 
-            <div className="right_elements">
-                <div className="music_controls">
-                    <button>
-                        <FaRandom className={randomClassList + disableClassList} onClick={toggleIsRandom}/>
-                    </button>
-                    <button className="control">
-                        <BsFillRewindFill className={disableClassList} onClick={prevTrack}/>
-                    </button>
-                    <button style={{display: isPlay ? 'none' : 'inline-block'}} className="control play">
-                        <FaPlay onClick={toggleIsPlay} className={ disableClassList} />
-                    </button>
-                    <button className="control" style={{display: !isPlay ? 'none' : 'inline-block'}}>
-                        <FaPause onClick={toggleIsPlay} className={disableClassList} />
-                    </button>
-                    <button className="control next_rewind">
-                        <BsFillRewindFill className={disableClassList} onClick={nextTrack}/>
-                    </button>
-                    <button style={{display: isRepeat ? 'none' : 'inline-block'}} className="control">
-                        <LuRepeat onClick={toggleIsRepeat} className={disableClassList} />
-                    </button>
-                    <button style={{display: !isRepeat ? 'none' : 'inline-block'}} className="control repeat">
-                        <LuRepeat1 onClick={toggleIsRepeat} className={disableClassList} />
-                    </button>
-                    <button className="current_play_list_control" onClick={toggleShowCurrentPlayList}>
-                        <RiPlayListFill className={disableClassList + showCurrentPlayListClassList}/>
-                    </button>
-                </div>
-                <div className={"music_progress" + disableClassList} onClick={setCurrentTime}>
-                    <div className="progress_bar" style={{width: currentWidth + '%'}}>
-                        <div className="target_circle"></div>
+
+    return (
+        <div className={fullScreenClassList}>
+            <div className="play_selection" >
+                {
+                    currentTrack &&
+                    <div onClick={toggleFullScreen} className="left_elements">
+                        <img src={currentTrack.albumImg} alt="album" />
+                        <div className="track_info">
+                            <span>{currentTrack.title}</span>
+                            <span className="artists">{currentTrack.artists}</span>
+                            {isFullScreen && <div className="track_text"></div>}
+                        </div>
+                        <audio ref={audioRef} onEnded={onEnd} onTimeUpdate={onUpdateCurrentTime} src={currentTrack.music} />
+                    </div>
+                }
+                <div className="right_elements">
+                    <div className="music_controls">
+                        <button>
+                            <FaRandom className={randomClassList + disableClassList} onClick={toggleIsRandom}/>
+                        </button>
+                        <button className="control">
+                            <BsFillRewindFill className={disableClassList} onClick={prevTrack}/>
+                        </button>
+                        <button style={{display: isPlay ? 'none' : 'inline-block'}} className="control play">
+                            <FaPlay onClick={toggleIsPlay} className={ disableClassList} />
+                        </button>
+                        <button className="control" style={{display: !isPlay ? 'none' : 'inline-block'}}>
+                            <FaPause onClick={toggleIsPlay} className={disableClassList} />
+                        </button>
+                        <button className="control next_rewind">
+                            <BsFillRewindFill className={disableClassList} onClick={nextTrack}/>
+                        </button>
+                        <button style={{display: isRepeat ? 'none' : 'inline-block'}} className="control">
+                            <LuRepeat onClick={toggleIsRepeat} className={disableClassList} />
+                        </button>
+                        <button style={{display: !isRepeat ? 'none' : 'inline-block'}} className="control repeat">
+                            <LuRepeat1 onClick={toggleIsRepeat} className='active_repeat' />
+                        </button>
+                        <button className="current_play_list_control" onClick={toggleShowCurrentPlayList}>
+                            <RiPlayListFill className={disableClassList + showCurrentPlayListClassList}/>
+                        </button>
+                    </div>
+                    <div className={"music_progress" + disableClassList} onClick={setCurrentTime}>
+                        <div className="progress_bar" style={{width: currentWidth + '%'}}>
+                            <div className="target_circle"></div>
+                        </div>
                     </div>
                 </div>
             </div>
