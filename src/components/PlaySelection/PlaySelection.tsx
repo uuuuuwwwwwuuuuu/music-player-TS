@@ -15,6 +15,11 @@ interface props {
     toggleIsFullScreen: (isFullScreen: boolean) => void
 }
 
+interface IKeyInfo {
+    keyCode: string,
+    shiftKey: boolean
+}
+
 const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
     const {currentPlayList: playList, trackId, shuffledArr, showCurrentPlayList} = useAppSelector(state => state.current);
     const dispatch = useAppDispatch();
@@ -26,6 +31,7 @@ const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
     const [currentPlayList, setCurrentPlayList] = useState<ITrack[]>([]);
     const [isRandom, setIsRandom] = useState(false);
     const [isFullScreen, setIsFullScreen] = useState(false);
+    const [key, setKey] = useState<IKeyInfo | null>(null)
 
     const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -180,51 +186,68 @@ const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
         }
     }
 
-    // useEffect(() => {
-    //     let currentTime = audioRef.current?.currentTime
-    //     const handleKeyDown = (e) => {
-    //         if (e.shiftKey && e.code === 'ArrowRight') {
-    //             nextTrack();
-    //         }
+    useEffect(() => {
+        let currentTime = audioRef.current?.currentTime
+        if (key) {
+                if (key.shiftKey && key?.keyCode === 'ArrowRight') {
+                    nextTrack();
+                }
+        
+                if (key.shiftKey && key?.keyCode === 'ArrowLeft') {
+                    prevTrack();
+                }
+                try {
+                    switch (key.keyCode) {
+                        case 'KeyR':
+                            toggleIsRepeat();
+                            break;
+                        case 'KeyP':
+                            toggleShowCurrentPlayList();
+                            break;
+                        case 'KeyN':
+                            toggleIsRandom();
+                            break;
+                        case 'Space':
+                            toggleIsPlay();
+                            break;
+                        case 'ArrowRight':
+                            if (currentTime) {
+                                currentTime = currentTime + 5;
+                            }
+                            break;
+                        case 'ArrowLeft':
+                            if (currentTime) {
+                                currentTime = currentTime - 5;
+                            }
+                            break;
+                        case 'KeyF':
+                            toggleFullScreen();
+                            break;
+                        
+                    }
+                } finally {
+                    setKey(null);
+                }
+            }
+    }, [key])
+
+    useEffect(() => {
+        document.body.addEventListener('keydown', (e) => {
+            if (e.shiftKey) {
+                setKey({
+                    keyCode: e.code,
+                    shiftKey: true
+                });
+            } else {
+                setKey({
+                    keyCode: e.code,
+                    shiftKey: false
+                })
+            }
+        });
+    }, []);
+
     
-    //         if (e.shiftKey && e.code === 'ArrowLeft') {
-    //             prevTrack();
-    //         }
-    
-    //         switch (e.code) {
-    //             case 'KeyR':
-    //                 toggleIsRepeat();
-    //                 break;
-    //             case 'KeyP':
-    //                 toggleShowCurrentPlayList();
-    //                 break;
-    //             case 'KeyN':
-    //                 toggleIsRandom();
-    //                 break;
-    //             case 'Space':
-    //                 console.log('hih');
-    //                 toggleIsPlay();
-    //                 break;
-    //             case 'ArrowRight':
-    //                 if (currentTime) {
-    //                     currentTime = currentTime + 5;
-    //                 }
-    //                 break;
-    //             case 'ArrowLeft':
-    //                 if (currentTime) {
-    //                     currentTime = currentTime - 5;
-    //                 }
-    //                 break;
-    //             case 'KeyF':
-    //                 toggleFullScreen();
-    //                 break;
-    //         }
-    //     };
-
-    //     document.body.addEventListener('keydown', handleKeyDown);
-    // });
-
-
 
     return (
         <div className={fullScreenClassList}>
@@ -232,7 +255,7 @@ const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
                 {
                     currentTrack &&
                     <div onClick={toggleFullScreen} className="left_elements">
-                        <img src={currentTrack.albumImg} alt="album" />
+                        <img className="album_img" src={currentTrack.albumImg} alt="album" />
                         <div className="track_info">
                             <span>{currentTrack.title}</span>
                             <span className="artists">{currentTrack.artists}</span>
