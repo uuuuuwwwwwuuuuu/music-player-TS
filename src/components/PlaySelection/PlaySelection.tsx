@@ -22,6 +22,7 @@ interface IKeyInfo {
 
 const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
     const {currentPlayList: playList, trackId, shuffledArr, showCurrentPlayList} = useAppSelector(state => state.current);
+    const isFocus = useAppSelector(state => state.search.isFocus)
     const dispatch = useAppDispatch();
 
     const [isPlay, setIsPlay] = useState(false);
@@ -187,49 +188,48 @@ const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
     }
 
     useEffect(() => {
-        let currentTime = audioRef.current?.currentTime
-        if (key) {
-                if (key.shiftKey && key?.keyCode === 'ArrowRight') {
-                    nextTrack();
-                }
-        
-                if (key.shiftKey && key?.keyCode === 'ArrowLeft') {
-                    prevTrack();
-                }
-                try {
-                    switch (key.keyCode) {
-                        case 'KeyR':
-                            toggleIsRepeat();
-                            break;
-                        case 'KeyP':
-                            toggleShowCurrentPlayList();
-                            break;
-                        case 'KeyN':
-                            toggleIsRandom();
-                            break;
-                        case 'Space':
-                            toggleIsPlay();
-                            break;
-                        case 'ArrowRight':
-                            if (currentTime) {
-                                currentTime = currentTime + 5;
-                            }
-                            break;
-                        case 'ArrowLeft':
-                            if (currentTime) {
-                                currentTime = currentTime - 5;
-                            }
-                            break;
-                        case 'KeyF':
-                            toggleFullScreen();
-                            break;
-                        
-                    }
-                } finally {
-                    setKey(null);
-                }
+        if (key && !isFocus) {
+            if (key.shiftKey && key?.keyCode === 'ArrowRight') {
+                nextTrack();
             }
-    }, [key])
+    
+            if (key.shiftKey && key?.keyCode === 'ArrowLeft') {
+                prevTrack();
+            }
+            try {
+                switch (key.keyCode) {
+                    case 'KeyR':
+                        toggleIsRepeat();
+                        break;
+                    case 'KeyP':
+                        toggleShowCurrentPlayList();
+                        break;
+                    case 'KeyN':
+                        toggleIsRandom();
+                        break;
+                    case 'Space':
+                        toggleIsPlay();
+                        break;
+                    case 'ArrowRight':
+                        if (audioRef.current) {
+                            audioRef.current.currentTime += 5;
+                        }
+                        break;
+                    case 'ArrowLeft':
+                        if (audioRef.current) {
+                            audioRef.current.currentTime -= 5;
+                        }
+                        break;
+                    case 'KeyF':
+                        toggleFullScreen();
+                        break;
+                    
+                }
+            } finally {
+                setKey(null);
+            }
+        }
+    }, [key, isFocus])
 
     useEffect(() => {
         document.body.addEventListener('keydown', (e) => {

@@ -3,7 +3,7 @@
 .nav_panel {
     font-weight: bold;
     font-size: 1.6rem;
-    width: 300px;
+    width: calc(100% - 60px);
     flex: 0 0 100px;
     background-color: $main-bg-color;
     border-radius: 15px;

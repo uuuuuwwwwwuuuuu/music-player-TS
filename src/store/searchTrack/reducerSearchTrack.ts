@@ -1,12 +1,18 @@
 import { PayloadAction, createReducer } from "@reduxjs/toolkit";
-import { searchLikedTrack } from "./actionsSearchTrack";
+import { searchLikedTrack, toggleIsFocus } from "./actionsSearchTrack";
 
-const initialState: string = ''
+const initialState = {
+    search: '',
+    isFocus: false
+}
 
 const searchReducer = createReducer(initialState, (builder) => {
     builder
         .addCase(searchLikedTrack, (state, action: PayloadAction<string>) => {
-            return state = action.payload
+            state.search = action.payload;
+        })
+        .addCase(toggleIsFocus, (state, {payload}) => {
+            state.isFocus = payload;
         })
 })
 

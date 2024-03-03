@@ -227,6 +227,10 @@ button {
     .current_play_list_control {
         display: none;
     }
+
+    .music_progress {
+        animation: fade-in 1.6s ease;
+    }
 }
 
 @keyframes fade-in {
@@ -243,4 +247,4 @@ button {
     } to {
         opacity: 1;
     }
-    }
+}

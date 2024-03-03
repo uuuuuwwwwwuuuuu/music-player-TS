@@ -10,5 +10,5 @@ export const selectVisibleLikedTracks = createSelector(
         track => track.title.toLowerCase().includes(inputValue.toLowerCase())
       );
     }
-  );
+);
   

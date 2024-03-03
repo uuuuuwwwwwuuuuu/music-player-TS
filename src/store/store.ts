@@ -4,13 +4,15 @@ import likedReducer from "./likedPlayList/reducerLiked";
 import searchReducer from "./searchTrack/reducerSearchTrack";
 import currentPlayListReducer from "./current/reducerCurrent";
 import navReducer from "./navigation/reducerNavigation";
+import selectionReducer from "./selections/reducerSelections";
 
 const store = configureStore({
     reducer: {
         liked: likedReducer,
         search: searchReducer,
         current: currentPlayListReducer,
-        nav: navReducer
+        nav: navReducer,
+        selection: selectionReducer
     },
     devTools: true,
 });
