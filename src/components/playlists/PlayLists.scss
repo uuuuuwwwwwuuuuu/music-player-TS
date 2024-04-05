@@ -1,0 +1,50 @@
+@import '../../constants';
+
+.playlist_card {
+    display: flex;
+    margin-bottom: 10px;
+    cursor: pointer;
+    width: 100%;
+    align-items: flex-start;
+    height: 45px;
+
+    img {
+        width: 45px;
+        height: 45px;
+        border-radius: 5px;
+        margin-right: 10px;
+    }
+
+    .custom_album_bg {
+        width: 45px;
+        height: 45px;
+        border-radius: 5px;
+        margin-right: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(139deg, rgba(34,228,214,1) 0%, rgba(150,133,221,1) 28%, rgba(176,108,210,1) 74%, rgba(33,215,120,1) 100%);
+
+        svg {
+            width: 20px;
+            height: 20px;
+        }
+    }
+
+    span {
+        font-weight: 600;
+        font-size: 1.5rem;
+    }
+
+    .playlist_card_count {
+        font-size: 1.3rem;
+        color: $text-second-color;
+    }
+
+    &_info {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        height: 100%;
+    }
+}

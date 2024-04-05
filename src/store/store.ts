@@ -5,6 +5,8 @@ import searchReducer from "./searchTrack/reducerSearchTrack";
 import currentPlayListReducer from "./current/reducerCurrent";
 import navReducer from "./navigation/reducerNavigation";
 import selectionReducer from "./selections/reducerSelections";
+import playlistsReducer from "./playlists/reducerPlaylists";
+import userReducer from "./user/reducerUser";
 
 const store = configureStore({
     reducer: {
@@ -12,7 +14,9 @@ const store = configureStore({
         search: searchReducer,
         current: currentPlayListReducer,
         nav: navReducer,
-        selection: selectionReducer
+        selection: selectionReducer,
+        playlists: playlistsReducer,
+        userReducer
     },
     devTools: true,
 });

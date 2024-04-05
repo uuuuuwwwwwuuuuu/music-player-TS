@@ -1,0 +1,205 @@
+@import '../../constants';
+@import url('https://fonts.googleapis.com/css2?family=Inria+Sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
+
+.auth {
+    background: linear-gradient(0deg, rgba(38,22,22,1) 0%, rgba(144,55,55,1) 28%, rgba(19,19,19,1) 100%);
+    height: 100svh;
+
+    &_title {
+        font-size: 4.8rem;
+        color: $text-color;
+        letter-spacing: 25px;
+        font-weight: bold;
+        opacity: 0.8;
+        display: flex;
+        justify-content: center;
+        padding-top: 25px;
+        font-family: 'Inria Sans';
+        position: relative;
+        left: 17px;
+    }
+}
+
+.auth_wrapper {
+    display: flex;
+    justify-content: space-evenly;
+    height: calc(100% - 195px);
+    align-items: center;
+    margin-top: 30px;
+}
+
+.choice_action {
+    width: 400px;
+    height: 100px;
+    background-color: $main-bg-color; 
+    border-radius: 20px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+    transition: 0.5s all ease;
+    box-shadow: 0px 4px 8px 0px $second-bg-color;
+    cursor: pointer;
+    position: relative;
+
+    &_title {
+        font-family: 'Open Sans';
+        font-size: 2.8rem;
+        font-weight: bold;
+        opacity: 0.7;
+        transition: 0.5s all ease;
+    }
+
+    @media (hover: hover) {
+        &:hover {
+            background-color: $accent-color;
+            box-shadow: 0px 0px 30px 1px $accent-color;
+            height: 120px;
+            width: 440px;
+
+            .choice_action_title {
+                opacity: 1;
+            }
+        }
+    }
+}
+
+.active {
+    width: 400px;
+    height: calc(100% - 80px) ;
+    padding: 20px 100px 50px 100px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    background-color: $main-bg-color;
+    transition: 0.5s all ease;
+    box-shadow: none;
+    cursor: auto;
+    position: relative;
+    z-index: 1;
+    &:hover {
+        @extend .active
+    }
+
+    &_title {
+        display: block;
+        text-align: center;
+        font-size: 2.8rem;
+        font-weight: bold; 
+        opacity: 0.9;    
+    }
+}
+
+.reg_wrapper {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.inputs_wrapper {
+    width: 100%;
+}
+
+.input_field {
+    display: flex;
+    flex-direction: column;
+
+    &:not(:last-child) {
+        margin-bottom: 30px;
+    }
+    
+    label {
+        font-size: 1.4rem;
+        font-family: 'Open Sans';
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    input {
+        background: transparent;
+        border: 2px solid $text-second-color;
+        border-radius: 5px;
+        height: 30px;
+        outline: none;
+        color: $text-color;
+        padding: 0 10px;
+        font-weight: 600;
+        transition: 0.2s all ease;
+
+        &:focus {
+            border-color: $accent-color;
+            box-shadow: 0 0 10px 0 $accent-color;
+        }
+    }
+}
+
+.submit_auth_btn {
+    width: 200px;
+    height: 50px;
+    border: 2px solid $text-second-color;
+    border-radius: 100px;
+    animation: reg-auth-data-fade-in 1s ease-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    span {
+        text-align: center;
+        font-size: 1.8rem;
+        font-weight: bold;
+        opacity: 0.9;
+        font-family: 'Open Sans';
+    }
+}
+
+.auth_info {
+    font-size: 1.2rem;
+    color: $text-second-color;
+}
+
+@keyframes reg-auth-data-fade-in {
+    from {
+        opacity: 0;
+    } to {
+        opacity: 1;
+    }
+}
+
+.disable_action {
+    width: 100px;
+    height: 100px;
+    box-shadow: none;
+
+    &:hover {
+        @extend .disable_action;
+        box-shadow: 0px 0px 30px 1px $accent-color;
+    }
+}
+
+.sign_in_logo {
+    position: relative;
+    right: 2px;
+    top: 2px;
+}
+
+.validation_error {
+    margin-top: 10px;
+    color: $accent-color;
+    font-size: 1.4rem;
+    font-weight: 500;
+}
+
+.loader {
+    width: 15px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    animation: l5 1s infinite linear alternate;
+  }
+  @keyframes l5 {
+      0%  {box-shadow: 20px 0 $accent-color, -20px 0 $accent-color-dark;background: $accent-color }
+      33% {box-shadow: 20px 0 $accent-color, -20px 0 $accent-color-dark;background: $accent-color-dark}
+      66% {box-shadow: 20px 0 $accent-color-dark,-20px 0 $accent-color; background: $accent-color-dark}
+      100%{box-shadow: 20px 0 $accent-color-dark,-20px 0 $accent-color; background: $accent-color }
+  }

@@ -2,7 +2,7 @@ import {FC} from 'react';
 import './TrackListPreloader.scss';
 
 const TrackListPreloader: FC = () => {
-    const wrapperWidth = document.querySelector('.liked_play_list_wrapper')?.clientHeight;
+    const wrapperWidth = document.querySelector('.info_bar_wrapper')?.clientHeight;
 
     const culcPreloaderCount = () => {
         let preloaderCount = 0;

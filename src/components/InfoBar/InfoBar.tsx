@@ -10,10 +10,13 @@ import { selectVisibleLikedTracks } from "../../store/likedPlayList/selectorsLik
 import { searchLikedTrack, toggleIsFocus } from "../../store/searchTrack/actionsSearchTrack";
 import { selectSelection } from "../../store/selections/actionsSelections";
 import { useRef } from "react";
+import { loadPlayLists } from "../../store/playlists/reducerPlaylists";
+import PlayLists from "../playlists/PlayLists";
 
 const InfoBar: FC = () => {
     const selectedSearch = useAppSelector(state => state.search.search)
     const likedTrackList = useAppSelector(state => selectVisibleLikedTracks(state, selectedSearch));
+    const {playlists, loading: loadingPlaylists, error: errorPlaylists} = useAppSelector(state => state.playlists)
     const currentSelection = useAppSelector(state => state.selection);
     const {error, loading} = useAppSelector(state => state.liked);
     
@@ -26,7 +29,8 @@ const InfoBar: FC = () => {
 
     useEffect(() => {
         likedTrackList.length === 0 && dispatch(loadLikedTrackList());
-    }, []);
+        playlists.length === 0 && dispatch(loadPlayLists())
+    }, [likedTrackList, playlists, dispatch]);
 
     const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
         dispatch(searchLikedTrack(e.target.value));
@@ -56,7 +60,37 @@ const InfoBar: FC = () => {
                 }
             }
         });
-    }, [currentSelection]);
+    }, [currentSelection, buttonsArray]);
+
+    const renderContent = () => {
+        if (currentSelection === 'liked') {
+            return (
+                <>
+                    {error &&
+                        <div className="error_block">
+                            <span className="error_message">{error}</span>
+                            <VscRunErrors className="error_icon"/>
+                        </div>}
+                    {loading && <TrackListPreloader />}
+                    {likedTrackList 
+                        ? <LikedPlayList likedTrackList={likedTrackList}/> 
+                        : <h2>Вы не добавили ни одного трека</h2>}
+                </>
+            )
+        } else if (currentSelection === 'playlists') {
+            return (
+                <>
+                    {errorPlaylists &&
+                        <div className="error_block">
+                            <span className="error_message">{errorPlaylists}</span>
+                            <VscRunErrors className="error_icon"/>
+                        </div>}
+                    {loadingPlaylists && <TrackListPreloader />}
+                    {playlists && <PlayLists playlistsArr={playlists} />}
+                </>
+            )
+        }
+    }
 
     return (
         <div className="info_bar">
@@ -69,18 +103,10 @@ const InfoBar: FC = () => {
                 <button onClick={changeSelection} ref={playlistButton} id="playlists" className="info_bar_btn">Плейлисты</button>
                 <button onClick={changeSelection} ref={artistButton} id="artists" className="info_bar_btn">Артисты</button>
             </div>
-            <input onFocus={onInputFocus} onBlur={onInputBlur} type="text" className="search_bar" placeholder="Поиск" onChange={handleInput}/>
+            {currentSelection === 'liked' && <input onFocus={onInputFocus} onBlur={onInputBlur} type="text" className="search_bar" placeholder="Поиск" onChange={handleInput}/>}
             <div className="info_bar_container">
-                <div className="liked_play_list_wrapper">
-                    {error &&
-                    <div className="error_block">
-                        <span className="error_message">{error}</span>
-                        <VscRunErrors className="error_icon"/>
-                    </div>}
-                    {loading && <TrackListPreloader />}
-                    {likedTrackList 
-                        ? <LikedPlayList likedTrackList={likedTrackList}/> 
-                        : <h2>Вы не добавили ни одного трека</h2>}
+                <div className="info_bar_wrapper">
+                    {renderContent()}
                 </div>
             </div>
         </div>
