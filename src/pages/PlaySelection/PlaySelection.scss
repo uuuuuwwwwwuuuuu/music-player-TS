@@ -1,0 +1,210 @@
+@import '../../constants';
+
+button {
+    background: transparent;
+    padding: 0;
+    border: none;
+
+    width: 20px;
+    height: 20px;
+    transition: 0.2s all ease;
+    color: $text-color;
+
+    svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+.play_selection {
+    height: 50px;
+    background-color: $second-bg-color-for-blur;
+    backdrop-filter: blur(20px);
+    display: flex;
+    padding: 15px 40px;
+    transition: 0.3s all ease;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    width: calc(100% - 80px);
+    z-index: 999;
+}
+
+.left_elements {
+    display: flex;
+    flex: 0 0 400px;
+    cursor: pointer;
+    animation: fade-out 1s ease;
+    img {
+        width: 50px;
+        height: 50px;
+        border-radius: 5px;
+        margin-right: 15px;
+        transition: 0.3s all ease;
+    }
+}
+
+.track_info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: $text-color;
+    transition: 0.3s all ease;
+
+    .artists {
+        color: $text-second-color;
+        font-size: 1.4rem;
+        cursor: pointer;
+        transition: 0.15s all ease-in;
+
+        @media (hover: hover) {
+            &:hover {
+                color: $accent-color;
+            }
+        }
+    }
+}
+
+.right_elements {
+    flex: 1 1 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    animation: fade-out 1s ease;
+    
+    button {
+        &:not(:first-child) {
+            margin-left: 5px;
+        }
+    }
+}
+
+.music_controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    .next_rewind {
+        transform: rotate(180deg);
+    }
+}
+
+.center_controls {
+    flex: 0 0 160px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.right_controls {
+    @extend .center_controls;
+    justify-content: flex-end;
+}
+
+.left_controls {
+    @extend .center_controls;
+    justify-content: flex-start;
+}
+
+
+
+.music_progress {
+    flex: 0 0 92%;
+    height: 4px;
+    border-radius: 5px;
+    background-color: $text-disable-color;
+    cursor: pointer;
+    transition: 0.5s ease all;
+    @media (hover: hover) {
+        &:hover .target_circle {
+            opacity: 1;
+        }
+    }
+    
+    .progress_bar {
+        height: 100%;
+        background-color: $accent-color;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        transition: 0.5s ease all;
+    }
+
+    .target_circle {
+        position: relative;
+        left: 5px;
+        width: 10px;
+        height: 10px;
+        background-color: $text-color;
+        border-radius: 100px;
+        opacity: 0;
+        transition: 0.15s all ease;
+    }
+}
+
+.control {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+}
+
+.play {
+    position: relative;
+    left: 2px;
+    width: 15px;
+    height: 15px;
+
+    svg {
+        width: 15px;
+        height: 15px;
+    }
+}
+
+.disable_control {
+    color: $text-second-color;
+    fill: $text-second-color;
+}
+
+.active_control {
+    fill: $accent-color;
+}
+
+.active_repeat {
+    color: $accent-color
+}
+
+.additional_track_info {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    width: 100%;
+    height: 12px;
+}
+
+.time {
+    font-size: 1rem;
+    flex: 0 0 30px;
+    position: relative;
+    top: 3px;
+    font-weight: 500;
+}
+ 
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    } to {
+        opacity: 1;
+    }
+}
+
+@keyframes fade-out {
+    from {
+        opacity: 0;
+    } to {
+        opacity: 1;
+    }
+}

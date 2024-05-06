@@ -1,0 +1,89 @@
+@import '../../constants';
+
+.idle_icon {
+    color: $text-color;
+    transition: 0.3s all ease;
+
+    @media (hover: hover) {
+        &:hover {
+            color: $accent-color-hover;
+            fill: $accent-color-hover;
+        }
+    }
+}
+
+.disable_icon {
+    color: $text-disable-color;
+}
+
+.active_icon {
+    color: $accent-color;
+    transition: 0.3s all ease;
+
+    @media (hover: hover) {
+        &:hover {
+            color: $accent-color-hover;
+
+        }
+    }
+}
+
+.like_icon {
+    stroke-width: 2px;
+    fill: none;
+
+    &:hover {
+        color: $accent-color;
+    }
+}
+
+
+.add_playlist {
+    path {
+        &:nth-child(2) {
+            d: path('M19 6h-17');
+        }
+        &:nth-child(3) {
+            d: path('M2 12h11');
+        }
+        &:nth-child(4) {
+            d: path('M11 18h-9');
+        }
+        stroke-width: 2.5;
+    }
+}
+
+.playing_track_tag {
+    div {
+        background-color: $accent-color;
+        border-radius: 100px;
+        display: flex;
+        justify-content: space-between;
+        width: 7px;
+        height: 30px;
+        animation: playing-track-tag 1s ease infinite;
+        
+        &:first-child {
+            animation: playing-track-tag 1s ease infinite 0.5s;
+        }
+
+        &:last-child {
+            animation: playing-track-tag 1s ease infinite 0.75s;
+        }
+    }
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+@keyframes playing-track-tag {
+    0% {
+        height: 30px;
+    } 50% {
+        height: 10px;
+    } 100% {
+        height: 30px;
+    }
+}

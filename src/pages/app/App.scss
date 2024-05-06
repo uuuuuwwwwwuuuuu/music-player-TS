@@ -1,0 +1,13 @@
+@import '../../constants';
+
+.App {
+    display: flex;
+    flex-direction: column;
+    height: 100svh;
+    background-color: $second-bg-color;
+}
+
+.app_wrapper {
+    display: flex;
+    flex: 1 0 500px;
+}

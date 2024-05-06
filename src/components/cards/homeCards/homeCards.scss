@@ -1,0 +1,141 @@
+@import '../../../constants';
+
+.home_card {
+    background-position: center;
+    border-radius: 35px;
+    transition: 0.5s ease filter;
+    background-repeat: no-repeat;
+
+    .home_card_wrapper {
+        padding: 10px 40px 20px 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        overflow: hidden;
+        height: calc(100% - 30px);
+        cursor: pointer;
+        transition: 1s all ease;
+        border-radius: 35px;
+        
+    
+        button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            right: -100px;
+            opacity: 0;
+            transition: 0.5s all ease;
+    
+            svg {
+                position: relative;
+                left: 3px;
+                color: $text-second-color;
+                transition: 0.2s ease color;
+            }
+
+            &:hover {
+                svg {
+                    color: $accent-color-hover;
+                }
+            }
+        }
+    
+        .home_card_category {
+            font-size: 6.4rem;
+            font-weight: 800;
+            color: $text-color;
+            position: relative;
+            top: 45px;
+            left: 30px;
+            transition: 0.5s all ease;
+        }
+    
+        .home_card_content {
+            font-size: 4rem;
+            font-weight: 600;
+            position: relative;
+            left: -500px;
+            opacity: 0;
+            transition: 1.5s all ease;
+        }
+    
+        .home_card_info {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+        
+        .home_card_additional {
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: $text-second-color;
+            position: relative;
+            left: -250px;
+            opacity: 0;
+            transition: 1s all ease;
+        }
+    
+        .home_card_info_data {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+}
+
+.home_card_hovered {
+    filter: contrast(1.05);
+    .home_card_wrapper {
+        padding: 10px 40px 20px 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        backdrop-filter: blur(5px);
+    
+        button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            right: 0;
+            opacity: 1;
+    
+            svg {
+                position: relative;
+                left: 3px;
+            }
+        }
+    
+        .home_card_category {
+            font-size: 3.2rem;
+            font-weight: 500;
+            left: 0;
+            top: 0;
+            color: $text-second-color;
+        }
+    
+        .home_card_content {
+            position: relative;
+            left: 0;
+            opacity: 1;
+        }
+    
+        .home_card_info {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+    
+        .home_card_additional {
+            left: 0;
+            opacity: 1;    
+        }
+    
+        .home_card_info_data {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+}

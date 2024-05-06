@@ -1,0 +1,27 @@
+@import '../../constants';
+
+.input_field_component {
+    background-color: $inputs-bg-color;
+        border-radius: 5px;
+        border: 1px solid $inputs-bg-color;
+        outline: none;
+        color: $text-color;
+        padding: 0 40px 0 20px;
+        font-weight: 600;
+        transition: 0.2s all ease;
+        position: relative;
+        z-index: 2;
+        &::placeholder {
+            font-family: 'Rubik';
+            font-weight: 500;
+        }
+
+        &:hover {
+            border-color: $text-color;
+        }
+
+        &:focus {
+            border-color: $accent-color;
+            box-shadow: 0 0 10px 0 $accent-color;
+        }
+}

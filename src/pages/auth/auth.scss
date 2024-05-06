@@ -1,0 +1,200 @@
+@import '../../constants';
+@import url('https://fonts.googleapis.com/css2?family=Inria+Sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
+
+.auth {
+    background-color: $main-bg-color;
+
+    &_header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 100px;
+        padding: 0 60px;
+
+        .reg_btn {
+            width: 200px;
+            height: 42px;
+            border: 1px solid $text-color;
+            border-radius: 10px;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-right: 20px;
+        }
+
+        .auth_btn {
+            width: 150px;
+            height: 42px;
+            background-color: $accent-color;
+            border-radius: 10px;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+    }
+
+    &_title {
+        font-size: 4rem;
+        color: $text-color;
+        letter-spacing: 5px;
+        font-weight: bold;
+        font-family: 'Inria Sans';
+    }
+}
+
+.auth_wrapper {
+    display: flex;
+    justify-content: space-evenly;
+    height: calc(100svh - 100px);
+    align-items: center;
+    background-color: $second-bg-color;
+}
+
+
+.reg_wrapper {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.auth_reg_form {
+    width: 550px;
+    height: 640px;
+    background-color: $main-bg-color;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 14px;
+}
+
+.auth_reg_title {
+    font-weight: 600;
+    font-size: 3.2rem;
+    width: 355px;
+    text-align: center;
+    margin-top: 30px;
+    .brooklyn_word {
+        color: $accent-color;
+    }
+}
+
+.inputs_wrapper {
+    width: 446px;
+}
+
+.input_field {
+    display: flex;
+    flex-direction: column;
+
+    &:not(:last-child) {
+        margin-bottom: 30px;
+    }
+    
+    label {
+        font-size: 1.5rem;
+        font-weight: 500;
+        margin-bottom: 10px;
+        position: relative;
+        transition: 0.5s all ease;
+    }
+}
+
+.label_icon_wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 20px;
+
+    .auth_error_icon {
+        width: 20px;
+        height: 20px;
+        position: relative;
+        top: 30px;
+        right: 10px;
+        z-index: 11;
+        color: $error-color;
+        transition: 0.2s all ease;
+        cursor: pointer;
+    }
+}
+
+.response_message {
+    position: absolute;
+    bottom: 70px;
+    background-color: $main-bg-color-for-blur;
+    backdrop-filter: blur(4px);
+    padding: 10px 20px;
+    font-size: 1.4rem;
+    font-weight: 500;
+    border-radius: 10px;
+}
+
+.forgot_pass {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+    
+    button {
+        color: $text-disable-color;
+        width: max-content;
+        cursor: pointer;
+        font-size: 1.4rem;
+        font-weight: 300;
+        
+        @media (hover: hover) {
+            &:hover {
+                color: $text-color;
+            }
+        }
+    }
+}
+
+.submit_auth_btn {
+    margin-bottom: 90px;
+}
+
+.disable_action {
+    width: 100px;
+    height: 100px;
+    box-shadow: none;
+
+    &:hover {
+        @extend .disable_action;
+        box-shadow: 0px 0px 30px 1px $accent-color;
+    }
+}
+
+.sign_in_logo {
+    position: relative;
+    right: 2px;
+    top: 2px;
+}
+
+.validation_error {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    color: $error-color;
+    font-size: 1.2rem;
+    font-weight: 500;
+    position: absolute;
+    width: max-content;
+    padding: 10px 20px;
+    margin-left: 470px;
+    margin-top: 23px;
+    background-color: $main-bg-color-for-blur;
+    backdrop-filter: blur(4px);
+    border-radius: 10px;
+    z-index: 1;
+    animation: error-fade-in 0.7s ease;
+}
+
+@keyframes error-fade-in {
+    from {
+        opacity: 0;
+        margin-left: 350px;
+    } to {
+        opacity: 1;
+        margin-left: 470px;
+    }
+}
+

@@ -1,0 +1,218 @@
+@import '../../constants';
+
+.main {
+    background-color: $main-bg-color;
+    flex: 1 1 500px;
+    height: 100%;
+    transition: 0.5s all ease;
+    padding: 0 40px;
+    overflow: scroll;
+
+    .header_search_panel {
+        display: flex;
+        align-items: center;
+        button {
+            width: 20px;
+            height: 20px;
+            position: relative;
+            left: 40px;
+            z-index: 12;
+            cursor: pointer;
+            svg {
+                color: $text-disable-color;
+                opacity: 1;
+                transition: 0.2s all ease;
+            }
+            &:hover svg {
+                color: $accent-color;
+            }
+        }
+    }
+    
+
+    header {
+        height: 80px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;        
+    }
+    
+    .header_account {
+        display: flex;
+        width: 200px;
+        height: 50px;
+        justify-content: flex-end;
+        margin-right: 20px;
+
+        &_info {
+            display: flex;
+            flex-direction: column;
+            text-align: end;
+            justify-content: space-between;
+            padding: 5px 0;
+            margin-right: 20px;
+
+            span {
+                &:first-child {
+                    font-size: 1.8rem;
+                    font-weight: 600;
+                }
+                &:last-child {
+                    font-size: 1.6rem;
+                    font-weight: 500;
+                    color: $text-disable-color;
+                }
+            }
+        }
+
+    }
+    
+    .header_info {
+        display: flex;
+        align-items: center;
+    }
+
+    .account_photo {
+        width: 50px;
+        height: 50px;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 100px;
+        img {
+            width: 50px;
+        }
+    }
+}
+
+.cards_wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.cards {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+    .home_card:not(:last-child) {
+        margin-right: 30px;
+    }
+
+    &:not(:last-child) {
+        margin-bottom: 30px;
+    }
+}
+
+.artists_line {
+    margin-top: 23px;
+
+    
+
+    button {
+        position: absolute;
+        top: 650px;
+        background-color: rgba($color: #2B2A2D, $alpha: 0.6);
+        backdrop-filter: blur(4px);
+        z-index: 11;
+        animation: fade-in 0.5s ease;
+        &:last-child {
+            right: 65px;
+        }
+
+        &:first-child {
+            left: 65px;
+        }
+    }
+
+    .artist_home_card:not(:last-child) {
+        margin-right: 30px;
+    }
+}
+
+
+.shade {
+    background: linear-gradient(270deg, rgba(38,22,22,0) 0%, $main-bg-color 100%);
+    position: absolute;
+    width: 100px;
+    left: 40px;
+    top: 580px;
+    z-index: 10;
+    height: 210px;
+
+    animation: fade-in 0.5s ease;
+}
+
+.home_artists_line {
+    height: 210px;
+    width: calc(100svw - 80px);
+    overflow: hidden;
+
+    &::after {
+        content: '';
+        background: linear-gradient(90deg, rgba(38,22,22,0) 0%, $main-bg-color 100%);
+        position: absolute;
+        width: 100px;
+        right: 40px;
+        top: 570px;
+        height: 210px;
+    }
+
+    span {
+        font-weight: 700;
+        font-size: 3.2rem;
+    }
+}
+
+.artists_line_wrapper {
+    display: flex;
+    align-items: center;
+    transition: 1s all ease;
+}
+
+.something_new {
+    margin-bottom: 20px;
+}
+
+.something_new_title {
+    font-size: 3.2rem;
+    font-weight: 700;
+}
+
+.home_track_cards_wrapper {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.loader {
+    width: 50px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 8px solid $accent-color;
+    animation:
+      l20-1 0.8s infinite linear alternate,
+      l20-2 1.6s infinite linear;
+  }
+  @keyframes l20-1{
+     0%    {clip-path: polygon(50% 50%,0       0,  50%   0%,  50%    0%, 50%    0%, 50%    0%, 50%    0% )}
+     12.5% {clip-path: polygon(50% 50%,0       0,  50%   0%,  100%   0%, 100%   0%, 100%   0%, 100%   0% )}
+     25%   {clip-path: polygon(50% 50%,0       0,  50%   0%,  100%   0%, 100% 100%, 100% 100%, 100% 100% )}
+     50%   {clip-path: polygon(50% 50%,0       0,  50%   0%,  100%   0%, 100% 100%, 50%  100%, 0%   100% )}
+     62.5% {clip-path: polygon(50% 50%,100%    0, 100%   0%,  100%   0%, 100% 100%, 50%  100%, 0%   100% )}
+     75%   {clip-path: polygon(50% 50%,100% 100%, 100% 100%,  100% 100%, 100% 100%, 50%  100%, 0%   100% )}
+     100%  {clip-path: polygon(50% 50%,50%  100%,  50% 100%,   50% 100%,  50% 100%, 50%  100%, 0%   100% )}
+  }
+  @keyframes l20-2{ 
+    0%    {transform:scaleY(1)  rotate(0deg)}
+    49.99%{transform:scaleY(1)  rotate(135deg)}
+    50%   {transform:scaleY(-1) rotate(0deg)}
+    100%  {transform:scaleY(-1) rotate(-135deg)}
+  }

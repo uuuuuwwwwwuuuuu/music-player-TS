@@ -1,0 +1,111 @@
+@import '../../../constants';
+
+.home_track_card {
+    box-sizing: border-box;
+    flex: 0 0 250px;
+    height: 300px;
+    background-color: $inputs-bg-color;
+    border-radius: 10px;
+    padding: 5px 5px 10px 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: 0.5s ease all;
+    img {
+        width: 240px;
+        transition: 0.5s ease all;
+        
+        &:hover {
+            transform: scale(1.1);
+            filter: blur(4px);
+        }
+    }
+
+    box-shadow: 0 6px 8px 0 $second-bg-color;
+
+    &:hover {
+        box-shadow: 0 0 10px 0 $accent-color;
+    }
+}
+
+.home_track_card_play {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 70px;
+    height: 70px;
+    border-radius: 100px;
+    background-color: $main-bg-color-for-blur;
+    backdrop-filter: blur(10px);
+    z-index: 2;
+    transition: 0.5s ease all;
+    &:hover {
+        & ~ img {
+            transform: scale(1.1);
+            filter: blur(4px);
+        }
+
+        svg {
+            fill: $accent-color-hover;
+        }
+    }
+
+    &_icon {
+        fill: $text-second-color;
+    }
+
+    svg {
+        position: relative;
+        left: 3px;
+    }
+}
+
+.home_track_card_wrapper {
+    width: 240px;
+    height: 240px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 8px;
+
+}
+
+.home_track_card_data {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    padding: 0 10px 0 5px;
+}
+
+.home_track_card_info {
+    flex: 0 0 160px;
+    display: flex;
+    height: 36px;
+    justify-content: space-between;
+    flex-direction: column;
+
+    span {
+        &:first-child {
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        &:last-child {
+            font-size: 1.4rem;
+            font-weight: 400;
+            color: $text-second-color;
+        }
+    }
+}
+
+.home_track_card_buttons {
+    height: 20px;
+    button {
+        &:not(:last-child) {
+            margin-right: 10px;
+        }
+    } 
+}

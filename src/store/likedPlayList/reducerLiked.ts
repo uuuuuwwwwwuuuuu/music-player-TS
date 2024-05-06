@@ -1,5 +1,4 @@
 import { createReducer, createAsyncThunk } from "@reduxjs/toolkit";
-import { IPlayList } from "../playlists/reducerPlaylists";
 
 export interface ITrack {
     title: string,
@@ -7,7 +6,6 @@ export interface ITrack {
     albumImg: string,
     music: string,
     id: string,
-    liked: boolean
 }
 
 interface ILikedState {
@@ -26,11 +24,21 @@ export const loadLikedTrackList = createAsyncThunk<ITrack[], undefined, {rejectV
     '@@liked/LOAD_LIKED_TRACK_LIST', 
     async (_, {rejectWithValue}) => {
         try {
-            const res = await fetch('http://localhost:3001/appDB');
+            const URL = 'http://127.0.0.1:8000/';
+            const res = await fetch('http://127.0.0.1:8000/api/tracks/getliked/', {
+                method: 'GET',
+                headers: {
+                    'Token': localStorage.getItem('Token')!
+                }
+            });
             const data = await res.json();
-            const likedPlayList = data.playlists[0].playlist;
-            return await likedPlayList;
+            return data.data.map(item => {
+                item.albumImg = URL + item.albumImg;
+                item.music = URL + item.music;
+                return item
+            })
         } catch (err) {
+            console.error(err);
             return rejectWithValue('Ошибка при получении понравившихся треков')
         }
     })

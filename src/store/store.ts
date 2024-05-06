@@ -1,22 +1,18 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 import likedReducer from "./likedPlayList/reducerLiked";
-import searchReducer from "./searchTrack/reducerSearchTrack";
 import currentPlayListReducer from "./current/reducerCurrent";
-import navReducer from "./navigation/reducerNavigation";
-import selectionReducer from "./selections/reducerSelections";
-import playlistsReducer from "./playlists/reducerPlaylists";
 import userReducer from "./user/reducerUser";
+import trackListReducer from "./tracks/reducerTrackList";
+import artistsReducer from "./artists/reducerArtists";
 
 const store = configureStore({
     reducer: {
         liked: likedReducer,
-        search: searchReducer,
         current: currentPlayListReducer,
-        nav: navReducer,
-        selection: selectionReducer,
-        playlists: playlistsReducer,
-        userReducer
+        user: userReducer,
+        trackList: trackListReducer,
+        artists: artistsReducer
     },
     devTools: true,
 });

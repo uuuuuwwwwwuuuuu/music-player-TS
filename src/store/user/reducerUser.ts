@@ -3,8 +3,6 @@ import { createReducer, createAsyncThunk } from "@reduxjs/toolkit";
 interface IUser {
     username: string,
     email: string,
-    liked_track_list: string[] | string | null,
-    playlists_list: string[] | string | null
 }
 
 interface IUserState {
@@ -24,14 +22,7 @@ export const loadUserData = createAsyncThunk<IUser, undefined, {rejectValue: str
     async (_, {rejectWithValue}) => {
         try {
             const res = await fetch(`http://127.0.0.1:8000/api/users/getdata/${localStorage.getItem('Token')}/`);
-            const data: IUser = await res.json()
-            const {liked_track_list, playlists_list} = data
-            if (typeof liked_track_list === 'string' && typeof playlists_list === 'string') {
-                data.liked_track_list = liked_track_list ? liked_track_list.split(',') : null;
-                data.playlists_list = playlists_list ? playlists_list.split(',') : null;
-            }
-
-            return data;
+            return await res.json();
         } catch {
             return rejectWithValue('Произошла ошибка при получении данных')
         }

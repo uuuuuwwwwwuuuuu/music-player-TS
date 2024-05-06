@@ -1,0 +1,58 @@
+@import '../../constants';
+
+.general_btn {
+    width: max-content;
+    font-family: 'Rubik';
+}
+
+.accent {
+    background-color: $accent-color;
+    border-radius: 10px;
+    transition: 0.4s all ease;
+    cursor: pointer;
+
+    @media (hover: hover) {
+        &:hover {
+            background-color: $accent-color-hover;
+        }
+    }
+}
+
+.simple {
+    border: 1px solid $text-color;
+    border-radius: 10px;
+    transition: 0.4s all ease;
+    cursor: pointer;
+
+    @media (hover: hover) {
+        &:hover {
+            background-color: $text-color;
+            color: $accent-color;
+        }
+    }
+}
+
+.alternative {
+    background-color: $inputs-bg-color;
+    color: $text-disable-color;
+    border-radius: 100px;
+    transition: 0.3s all ease;
+    cursor: pointer;
+    
+    @media (hover: hover) {
+        &:hover {
+            color: $text-color;
+            transform: scale(1.02);
+
+            svg {
+                color: $accent-color;
+            }
+        }
+    }
+}
+
+.disable {
+    background-color: $disabled-bg-color;
+    color: $text-disable-color;
+    border-radius: 10px;
+}
