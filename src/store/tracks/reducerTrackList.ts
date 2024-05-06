@@ -17,7 +17,7 @@ export const loadTrackList = createAsyncThunk<ITrack[], undefined, {rejectValue:
     '@@trackList_LOAD_TRACK_LIST',
     async (_, {rejectWithValue}) => {
         try {
-            const response = await fetch('http://127.0.0.1:8000/api/tracks/')
+            const response = await fetch('http://127.0.0.1:8000/api/tracks/');
             return await response.json()
         } catch (err) {
             if (err) {

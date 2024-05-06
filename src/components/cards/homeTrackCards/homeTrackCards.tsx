@@ -31,6 +31,8 @@ export const HomeTrackCard: FC<IProp> = ({name, artists, img, id, playList}) => 
         dispatch(selectCurrentTrack(id));
     };
 
+    const audio = document.querySelector('audio');
+
     const imgHoverStyles: React.CSSProperties = {
         transform: currentTrackId === id ? 'scale(1.1)' : '',
         filter: currentTrackId === id ? 'blur(4px)' : ''

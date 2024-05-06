@@ -1,4 +1,4 @@
-import { FC, useState, useEffect, SyntheticEvent, useRef } from "react";
+import { FC, useState, useEffect, SyntheticEvent, useRef, ReactNode } from "react";
 
 import './PlaySelection.scss';
 
@@ -53,14 +53,7 @@ const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
     const [key, setKey] = useState<IKeyInfo | null>(null);
     const [humanizedTime, setHumanizedTime] = useState<string>('00:00');
     // const [randomTrackPoint, setRandomTrackPoint] = useState<number | null>(null);
-    const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null);
     const audioRef = useRef<HTMLAudioElement>(null);
-
-    useEffect(() => {
-        if (audioRef.current && currentTrack) {
-            audioRef.current.src = currentTrack.music
-        }
-    }, [currentTrack])
 
     useEffect(() => {
         if (shuffledArr.length !== 0) {
@@ -233,11 +226,10 @@ const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
     }
 
     const setCurrentTime = (e: SyntheticEvent<HTMLDivElement, MouseEvent>) => {
-        e.preventDefault();
         const {current: song} = audioRef;
         const offsetX = e.nativeEvent.offsetX;
         const clientWidth = document.querySelector('.music_progress')?.clientWidth;
-        if (song && clientWidth && song.readyState >= 3) {
+        if (song && clientWidth && song.readyState >= 3 && song.duration) {
             const maxOffsetX = clientWidth - 1;
             const newTime = ((offsetX > maxOffsetX ? maxOffsetX : offsetX) / clientWidth) * song.duration;
             song.currentTime = newTime;
