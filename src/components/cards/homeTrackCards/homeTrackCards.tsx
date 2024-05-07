@@ -11,10 +11,15 @@ interface IProp {
     artists: string,
     img: string,
     id: string,
-    playList: ITrack[]
+    playList: ITrack[],
+    music: string
 }
 
-export const HomeTrackCard: FC<IProp> = ({name, artists, img, id, playList}) => {
+// const getCurrentTrack = async (url) => {
+//     fetch(url);
+// }
+
+export const HomeTrackCard: FC<IProp> = ({name, artists, img, id, playList, music}) => {
     const [isHovered, setIsHovered] = useState<boolean>(false);
     const dispatch = useAppDispatch();
     const currentTrackId = useAppSelector(state => state.current.trackId);
@@ -30,8 +35,6 @@ export const HomeTrackCard: FC<IProp> = ({name, artists, img, id, playList}) => 
         dispatch(selectPlayList(playList));
         dispatch(selectCurrentTrack(id));
     };
-
-    const audio = document.querySelector('audio');
 
     const imgHoverStyles: React.CSSProperties = {
         transform: currentTrackId === id ? 'scale(1.1)' : '',

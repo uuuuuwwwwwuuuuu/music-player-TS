@@ -86,12 +86,12 @@ const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
         
         if (audioRef.current) {
             audioRef.current.loop = isRepeat;
-            audioRef.current.addEventListener('canplay', handleCanPlayPlay);
+            audioRef.current.addEventListener('canplay', handleCanPlay);
         }
 
         return () => {
             if (audioRef.current) {
-                audioRef.current.removeEventListener('canplay', handleCanPlayPlay);
+                audioRef.current.removeEventListener('canplay', handleCanPlay);
             }
         }
     }, [trackId, currentTrack, currentPlayList, isRepeat]);
@@ -129,7 +129,7 @@ const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
         }
     }
 
-    const handleCanPlayPlay = () => {
+    const handleCanPlay = () => {
         if (currentTrack) {
             if (isPlay) {
                 audioRef.current?.play();
@@ -229,10 +229,10 @@ const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
         const {current: song} = audioRef;
         const offsetX = e.nativeEvent.offsetX;
         const clientWidth = document.querySelector('.music_progress')?.clientWidth;
-        if (song && clientWidth && song.readyState >= 3 && song.duration) {
+        if (song && clientWidth && song.readyState >= 4 && song.duration) {
             const maxOffsetX = clientWidth - 1;
             const newTime = ((offsetX > maxOffsetX ? maxOffsetX : offsetX) / clientWidth) * song.duration;
-            song.currentTime = newTime;
+            song.currentTime = newTime
         }
     }
 
