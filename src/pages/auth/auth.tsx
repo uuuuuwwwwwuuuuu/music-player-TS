@@ -4,6 +4,7 @@ import Button from '../../components/buttons/buttons';
 import { LuInfo } from "react-icons/lu";
 import { FaTelegramPlane } from 'react-icons/fa';
 import { Input } from '../../components/inputFields/inputFields';
+import {useNavigate} from 'react-router-dom';
 
 interface IFormData {
     username: string | null,
@@ -28,7 +29,8 @@ const Auth: FC = () => {
 
     const initialFormState = {username: null, password: null, email: ''}
     const [formData, setFormData] = useState<IFormData>(initialFormState);
-    const [responseColor, setResponseColor] = useState<Colors>(Colors.success)
+    const [responseColor, setResponseColor] = useState<Colors>(Colors.success);
+    const navigate = useNavigate();
 
     const [validationMessages, setValidationMessages] = useState<IValidationMessage>(
         {usernameInvalid: 'Это поле не должно быть пустым', passwordInvalid: 'Это поле не должно быть пустым', emailInvalid: 'Это поле не должно быть пустым'}
@@ -258,9 +260,8 @@ const Auth: FC = () => {
 
     const handleSubmitAuth = (e: FormEvent<HTMLFormElement>) => {
         setValidationMessages({usernameInvalid: 'Это поле не должно быть пустым', passwordInvalid: 'Это поле не должно быть пустым', emailInvalid: 'Это поле не должно быть пустым'})
-        e.preventDefault()
+        e.preventDefault();
         const form = e.target as HTMLFormElement;
-
         setIsLoading(true);
 
         authUser(formData).then(data => {
@@ -268,11 +269,11 @@ const Auth: FC = () => {
                 data.error && setResponse(data.error)
                 setResponseColor(Colors.error)
             } else {
-                localStorage.setItem('Token', data.token)
-                window.location.reload();
+                localStorage.setItem('Token', data.token);
+                navigate('/home')
             }
         })
-        console.log('called');
+
         setIsLoading(false);
 
         setFormData(initialFormState)
@@ -319,7 +320,7 @@ const Auth: FC = () => {
                                 placeholder='Пароль'
                                 required />
                             {passwordInvalid && <div className='validation_error'>{passwordInvalid}</div>}
-                            {auth === 'auth' && <div className='forgot_pass'><button type='button'>Забыли пароль?</button></div>}
+                            {auth === 'auth' && <div className='forgot_pass'><button type='button'>Забыли пароль? нужно дописать</button></div>}
                         </div>
                         {auth === 'reg' 
                             ? <div className='input_field'>
@@ -339,9 +340,9 @@ const Auth: FC = () => {
                             </div>
                             : <div style={{display: 'flex', justifyContent: 'center'}}>
                                 <Button style={{marginTop: '20px'}}
-                                W={250} H={50}
+                                W={250} H={50} isLink path='/'
                                 content={<div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px'}}>
-                                    <FaTelegramPlane style={{width: '30px', height: '30px'}}/>
+                                    <FaTelegramPlane style={{width: '30px', height: '30px', marginRight: 10}}/>
                                     <span>Войти через Telegram</span>
                                 </div>}
                                 type='alternative' fontS={1.5} fontW={600}/>

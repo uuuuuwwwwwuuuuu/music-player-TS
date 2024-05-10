@@ -1,0 +1,99 @@
+@import '../../constants';
+
+.main_header {
+    height: 80px;
+    width: calc(100% - 80px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    backdrop-filter: blur(40px);
+    padding: 0 40px;
+    z-index: 200;
+
+    .header_search_panel {
+        display: flex;
+        align-items: center;
+        button {
+            width: 20px;
+            height: 20px;
+            position: relative;
+            left: 40px;
+            z-index: 12;
+            cursor: pointer;
+            svg {
+                color: $text-disable-color;
+                opacity: 1;
+                transition: 0.2s all ease;
+            }
+            &:hover svg {
+                color: $accent-color;
+            }
+        }
+    }
+    
+    .header_account {
+        display: flex;
+        width: 200px;
+        height: 50px;
+        justify-content: flex-end;
+        margin-right: 20px;
+    
+        &_info {
+            display: flex;
+            flex-direction: column;
+            text-align: end;
+            justify-content: space-between;
+            padding: 5px 0;
+            margin-right: 20px;
+    
+            span {
+                &:first-child {
+                    font-size: 1.8rem;
+                    font-weight: 600;
+                }
+                &:last-child {
+                    font-size: 1.6rem;
+                    font-weight: 500;
+                    color: $text-disable-color;
+                }
+            }
+        }
+    
+    }
+    
+    .header_info {
+        display: flex;
+        align-items: center;
+    }
+    
+    .account_photo {
+        width: 50px;
+        height: 50px;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 100px;
+        img {
+            width: 50px;
+        }
+    }
+}
+
+.simple_header {
+    height: 100px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    background-color: $main-bg-color;
+    span {
+        margin-left: 60px;
+        font-size: 4rem;
+        font-weight: 700;
+        font-family: 'Inria Sans';
+        letter-spacing: 5px;
+    }
+}

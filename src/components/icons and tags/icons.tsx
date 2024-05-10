@@ -6,8 +6,10 @@ import { FaPause, FaPlay, FaRandom } from 'react-icons/fa';
 import { BsFillRewindFill } from 'react-icons/bs';
 import { LuRepeat, LuRepeat1 } from 'react-icons/lu';
 import { PiPlaylistBold } from "react-icons/pi";
-import { AiOutlineFullscreen } from "react-icons/ai";
 import { TbPlaylistAdd } from "react-icons/tb";
+import { BsArrowsAngleExpand } from "react-icons/bs";
+import { BsArrowsAngleContract } from "react-icons/bs";
+import { FaUserPlus } from "react-icons/fa";
 
 interface IProps {
     scale?: number,
@@ -88,7 +90,19 @@ export const AddToPlayList: FC<IProps> = ({scale = 20, type = 'idle', className,
 }
 
 export const FullScreen: FC<IProps> = ({scale = 20, type = 'idle', className, style}) => {
-    return <AiOutlineFullscreen className={getClassList(type, className)}
+    if (type === 'idle') {
+        return <BsArrowsAngleExpand strokeWidth={1.5} className={getClassList(type, className)}
+                    style={{width: `calc(${scale}px - 35%)`, height: `calc(${scale}px - 35%)`, ...style}}/>
+    } else if (type === 'active') {
+        return <BsArrowsAngleContract strokeWidth={1.5} className={getClassList(type, className)}
+        style={{width: `calc(${scale}px - 35%)`, height: `calc(${scale}px - 35%)`, ...style}}/>
+    } else {
+        return <BsArrowsAngleExpand strokeWidth={1.5} className={getClassList(type, className)}
+        style={{width: `calc(${scale}px - 35%)`, height: `calc(${scale}px - 35%)`, ...style}}/>
+    }
+}
+export const Follow: FC<IProps> =({scale = 20, type = 'idle', className, style}) => {
+    return <FaUserPlus className={getClassList(type, className) + ' add_playlist'}
                 style={{width: `${scale}px`, height: `${scale}px`, ...style}}/>
 }
 

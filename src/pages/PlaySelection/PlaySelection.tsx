@@ -53,7 +53,54 @@ const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
     const [key, setKey] = useState<IKeyInfo | null>(null);
     const [humanizedTime, setHumanizedTime] = useState<string>('00:00');
     // const [randomTrackPoint, setRandomTrackPoint] = useState<number | null>(null);
-    const audioRef = useRef<HTMLAudioElement>(null);
+    const [audioData, setAudioData] = useState<string | null>(null);
+    const [audio, _] = useState(new Audio());
+
+    useEffect(() => {
+        const getTrackData = async () => {
+            try {
+                if (currentTrack) {
+                    const response = await fetch(currentTrack.music);
+                    const audioBlob = await response.blob();
+                    setAudioData(URL.createObjectURL(audioBlob));
+                }
+            } catch (err) {
+                if (err) {
+                    const error = err as Error;
+                    console.error(error)
+                }
+            }
+        }
+
+        getTrackData();
+
+        return () => {
+            if (audioData) {
+                URL.revokeObjectURL(audioData);
+            }
+        }
+    }, [currentTrack?.music]);
+
+    useEffect(() => {
+        if (audioData) {
+            audio.src = audioData;
+            audio.load();
+        }
+    }, [audioData, audio]);
+
+    useEffect(() => {
+        const handleCanPlay = () => {
+            audio.play();
+        }
+
+        audio.addEventListener('canplay', handleCanPlay);
+        audio.addEventListener('ended', onEnd);
+        audio.addEventListener('timeupdate', onUpdateCurrentTime);
+
+        return () => {
+            audio.removeEventListener('canplay', handleCanPlay);
+        }
+    });
 
     useEffect(() => {
         if (shuffledArr.length !== 0) {
@@ -70,10 +117,10 @@ const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
     }, [currentPlayList]);
 
     useEffect(() => {
-        if (currentTrack && audioRef) {
+        if (currentTrack) {
             postAudition(currentTrack.id);
         }
-    }, [audioRef, currentTrack]);
+    }, [currentTrack]);
 
     useEffect(() => {
         if (currentPlayList.length !== 0 && currentTrack?.id !== trackId) {
@@ -83,28 +130,19 @@ const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
         if (currentTrack?.id !== trackId) {
             setIsPlay(true);
         }
-        
-        if (audioRef.current) {
-            audioRef.current.loop = isRepeat;
-            audioRef.current.addEventListener('canplay', handleCanPlay);
-        }
 
-        return () => {
-            if (audioRef.current) {
-                audioRef.current.removeEventListener('canplay', handleCanPlay);
-            }
-        }
+        audio.loop = isRepeat ? true : false
     }, [trackId, currentTrack, currentPlayList, isRepeat]);
 
     useEffect(() => {
-        if (audioRef.current) {
+        if (currentTrack && audio.readyState >= 3) {
             if (isPlay) {
-                audioRef.current.play();
+                audio.play();
             } else {
-                audioRef.current.pause();
+                audio.pause();
             }
         }
-    }, [isPlay]);
+    }, [isPlay, currentTrack, audio]);
 
     useEffect(() => {
         if (isRandom) {
@@ -129,14 +167,6 @@ const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
         }
     }
 
-    const handleCanPlay = () => {
-        if (currentTrack) {
-            if (isPlay) {
-                audioRef.current?.play();
-            }
-        }
-    }
-
     const toggleFullScreen = () => {
         if (!showCurrentPlayList && playList.length > 0) {
             setIsFullScreen(!isFullScreen);
@@ -145,9 +175,7 @@ const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
     }
     
     const toggleIsRepeat = () => {
-        if (currentPlayList.length !== 1 ) {
-            setIsRepeat(!isRepeat);
-        }
+        setIsRepeat(!isRepeat);
     }
 
     const toggleIsRandom = () => {
@@ -180,15 +208,18 @@ const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
     }
 
     const nextTrack = () => {
-        const currentIndex = currentPlayList.findIndex(item => item.id === currentTrack?.id);
-
-        if (currentPlayList) {
-            if (currentIndex >= currentPlayList.length - 1) {
-                dispatch(selectCurrentTrack(currentPlayList[0].id))
-            } else {
-                dispatch(selectCurrentTrack(currentPlayList[currentIndex + 1].id))
+        if (currentPlayList && currentTrack) {
+            const currentIndex = currentPlayList.findIndex(item => item.id === currentTrack?.id);
+            
+            if (currentPlayList) {
+                if (currentIndex >= currentPlayList.length - 1) {
+                    dispatch(selectCurrentTrack(currentPlayList[0].id))
+                } else {
+                    dispatch(selectCurrentTrack(currentPlayList[currentIndex + 1].id))
+                }
             }
         }
+        
     }
 
     const humanizingNumbers = (time: number): string => {
@@ -217,8 +248,7 @@ const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
         }
     }
 
-    const onUpdateCurrentTime = (e: SyntheticEvent<HTMLAudioElement, MouseEvent>) => {
-        const audio = e.target as HTMLAudioElement;
+    const onUpdateCurrentTime = () => {
         const {currentTime, duration} = audio
 
         setCurrentWidth(currentTime * 100 / duration);
@@ -226,7 +256,7 @@ const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
     }
 
     const setCurrentTime = (e: SyntheticEvent<HTMLDivElement, MouseEvent>) => {
-        const {current: song} = audioRef;
+        const song = audio;
         const offsetX = e.nativeEvent.offsetX;
         const clientWidth = document.querySelector('.music_progress')?.clientWidth;
         if (song && clientWidth && song.readyState >= 4 && song.duration) {
@@ -265,14 +295,10 @@ const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
                     toggleIsPlay();
                     break;
                 case 'ArrowRight':
-                    if (audioRef.current) {
-                        audioRef.current.currentTime += 5;
-                    }
+                    audio.currentTime += 5;
                     break;
                 case 'ArrowLeft':
-                    if (audioRef.current) {
-                        audioRef.current.currentTime -= 5;
-                    }
+                    audio.currentTime -= 5;
                     break;
                 case 'KeyF':
                     toggleFullScreen();
@@ -310,9 +336,7 @@ const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
                         <div className="track_info">
                             <span>{currentTrack.title}</span>
                             <span className="artists">{currentTrack.artists}</span>
-                            {isFullScreen && <div className="track_text"></div>}
                         </div>
-                        <audio ref={audioRef} onEnded={onEnd} onTimeUpdate={onUpdateCurrentTime} src={currentTrack.music} />
                     </div>
                     <div className="right_elements">
                         <div className="music_controls">
@@ -323,7 +347,7 @@ const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
                             </div>
                             <div className="center_controls">
                                 <button className="control" onClick={toggleIsRandom}>
-                                    <Random type={currentTrack ? 'idle' : 'disable'} />
+                                    <Random type={currentTrack ? (isRandom ? 'active' : 'idle') : 'disable'} />
                                 </button>
                                 <button className="control" onClick={prevTrack}>
                                     <Rewind type={currentTrack ? 'idle' : 'disable'}/>
@@ -346,19 +370,19 @@ const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
                                     <CurrentPlayList 
                                         type={currentTrack ? (showCurrentPlayList ? 'active' : 'idle') : 'disable'} />
                                 </button>
-                                <button>
-                                    <FullScreen type="disable"/>
+                                <button onClick={toggleFullScreen} style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                    <FullScreen type={isFullScreen ? 'active' : "idle"}/>
                                 </button>
                             </div>
                         </div>
                         <div className="additional_track_info">
-                            {audioRef.current && <span className="time">{humanizedTime}</span>}
+                            {currentTrack && <span className="time">{humanizedTime}</span>}
                             <div className={"music_progress"} onClick={setCurrentTime}>
                                 <div className="progress_bar" style={{width: currentWidth + '%'}}>
                                     <div className="target_circle"></div>
                                 </div>
                             </div>
-                            {audioRef.current && <span className="time">{humanizingNumbers(audioRef.current.duration)}</span>}
+                            {currentTrack && <span className="time">{humanizingNumbers(audio.duration)}</span>}
                         </div>
                     </div>
                 </div>

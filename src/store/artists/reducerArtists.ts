@@ -6,7 +6,8 @@ interface IArtist {
     artistImg: string,
     likes: number,
     tracks: ITrack[],
-    id: number
+    id: number,
+    big_img: string
 }
 
 interface IArtistsState {

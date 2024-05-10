@@ -5,6 +5,11 @@
     font-family: 'Rubik';
 }
 
+a {
+    color: $text-color;
+    text-decoration: none;
+}
+
 .accent {
     background-color: $accent-color;
     border-radius: 10px;
@@ -55,4 +60,10 @@
     background-color: $disabled-bg-color;
     color: $text-disable-color;
     border-radius: 10px;
+}
+
+.general_link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
