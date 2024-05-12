@@ -1,0 +1,60 @@
+@import '../../../constants';
+
+.popular_track_item {
+    box-sizing: border-box;
+    padding: 5px;
+    flex: 0 1 35%;
+    height: 250px;
+    background-color: #2B2A2D;
+    border-radius: 10px;
+    transition: 0.5s ease all;
+    display: flex;
+    justify-content: space-between;
+    overflow: hidden;
+    &_info {
+        
+    }
+}
+
+.track_item_info {
+    display: flex;
+    flex-direction: column;
+    transition: 0.5s ease all;
+    align-items: end;
+    position: absolute;
+    z-index: 2;
+    top: 10px;
+    right: 15px;
+    span {
+        &:last-child {
+            text-wrap: nowrap;
+            color: $text-second-color;
+        }
+        &:first-child {
+            font-size: 2rem;
+            font-weight: 500;
+            text-align: end;
+            text-wrap: balance;
+        }
+        
+    }
+}
+
+.track_item_action_buttons {
+    display: flex;
+    flex-direction: column;
+    transition: 0.5s ease all;
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    z-index: 2;
+    align-items: center;
+    button:not(:last-child) {
+        margin-bottom: 10px;
+    }
+}
+
+.artist_tracks_wrapper {
+    display: flex;
+    flex-direction: column;
+}

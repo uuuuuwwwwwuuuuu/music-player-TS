@@ -1,11 +1,10 @@
 import { createAsyncThunk, createReducer } from "@reduxjs/toolkit";
-import { ITrack } from "../likedPlayList/reducerLiked";
 
 interface IArtist {
     name: string,
     artistImg: string,
     likes: number,
-    tracks: ITrack[],
+    tracks: string[],
     id: number,
     big_img: string
 }

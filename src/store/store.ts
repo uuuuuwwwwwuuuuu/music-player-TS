@@ -6,6 +6,7 @@ import userReducer from "./user/reducerUser";
 import trackListReducer from "./tracks/reducerTrackList";
 import artistsReducer from "./artists/reducerArtists";
 import notificationQueueReducer from "./notificationQueue/reducerNotification";
+import artistsTracksReducer from "./artistsTracks/reducerArtistsTracks";
 
 const store = configureStore({
     reducer: {
@@ -14,7 +15,8 @@ const store = configureStore({
         user: userReducer,
         trackList: trackListReducer,
         artists: artistsReducer,
-        notification :notificationQueueReducer
+        notification :notificationQueueReducer,
+        artistsTracks :artistsTracksReducer
     },
     devTools: true,
 });

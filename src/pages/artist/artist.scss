@@ -3,11 +3,17 @@
 
 .artist_info {
     margin: 60px 60px;
+    z-index: 3;
 }
 .artist_name {
     font-size: 6.4rem;
     font-weight: 800;
     text-transform: uppercase;
+}
+
+.artist {
+    padding-top: 80px;
+    background-color: $main-bg-color;
 }
 
 .additional_artist_info {
@@ -39,4 +45,16 @@
 .artist_action_buttons {
     margin-left: 40px;
     margin-bottom: 20px;
+    z-index: 3;
+}
+
+.artist_tracks_wrapper {
+    margin-top: 20px;
+    box-sizing: border-box;
+    padding: 0 40px;
+}
+
+.artist_track_title {
+    font-size: 3.2rem;
+    font-weight: 800;
 }

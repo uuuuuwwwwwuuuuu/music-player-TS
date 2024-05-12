@@ -3,7 +3,7 @@
 
 .auth {
     background-color: $main-bg-color;
-
+    flex: 1 1 500px;
     &_header {
         display: flex;
         justify-content: space-between;

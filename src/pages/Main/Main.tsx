@@ -62,7 +62,7 @@ const Main: FC = () => {
         if (trackList) {
             if (!tracksError) {
                 return trackList.map(({title, albumImg, artists, id, music}) => {
-                    return <HomeTrackCard music={music} key={id} id={id} playList={trackList} name={title} img={albumImg} artists={artists}/>
+                    return <HomeTrackCard key={id} id={id} playList={trackList} name={title} img={albumImg} artists={artists}/>
                 })
             } else {
                 return <ArtistsError errorMessage={tracksError}/>

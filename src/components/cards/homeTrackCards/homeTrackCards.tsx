@@ -12,14 +12,13 @@ interface IProp {
     img: string,
     id: string,
     playList: ITrack[],
-    music: string
 }
 
 // const getCurrentTrack = async (url) => {
 //     fetch(url);
 // }
 
-export const HomeTrackCard: FC<IProp> = ({name, artists, img, id, playList, music}) => {
+export const HomeTrackCard: FC<IProp> = ({name, artists, img, id, playList}) => {
     const [isHovered, setIsHovered] = useState<boolean>(false);
     const dispatch = useAppDispatch();
     const currentTrackId = useAppSelector(state => state.current.trackId);
@@ -30,7 +29,7 @@ export const HomeTrackCard: FC<IProp> = ({name, artists, img, id, playList, musi
         }
         return string;
     }
-;
+    
     const playTrack = () => {
         dispatch(selectPlayList(playList));
         dispatch(selectCurrentTrack(id));

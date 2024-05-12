@@ -1,7 +1,7 @@
 @import '../../constants';
 
 .main {
-    padding: 0 40px 40px 40px;
+    padding: 80px 40px 40px 40px;
     background-color: $main-bg-color;
 }
 
@@ -10,7 +10,6 @@
     flex-direction: column;
     width: 100%;
     margin-bottom: 20px;
-    margin-top: 80px;
 }
 
 .cards {

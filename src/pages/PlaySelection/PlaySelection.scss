@@ -28,6 +28,7 @@ button {
     bottom: 0;
     width: calc(100% - 80px);
     z-index: 999;
+    animation: play-selection-fade-in 0.5s ease;
 }
 
 .left_elements {
@@ -206,5 +207,13 @@ button {
         opacity: 0;
     } to {
         opacity: 1;
+    }
+}
+
+@keyframes play-selection-fade-in {
+    from {
+        bottom: -50px;
+    } to {
+        bottom: 0;
     }
 }

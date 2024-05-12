@@ -6,6 +6,7 @@ export interface ITrack {
     albumImg: string,
     music: string,
     id: string,
+    auditions: number
 }
 
 interface ILikedState {

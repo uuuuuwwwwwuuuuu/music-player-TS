@@ -2,7 +2,7 @@ import { FC } from "react";
 import './PreRegPage.scss';
 import Button from "../../components/buttons/buttons";
 
-const PreRegPage = () => {
+const PreRegPage: FC = () => {
     return (
         <div className="pre_reg_main">
             <header>
