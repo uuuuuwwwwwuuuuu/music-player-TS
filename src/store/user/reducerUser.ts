@@ -27,7 +27,7 @@ export const loadUserData = createAsyncThunk<IUser, undefined, {rejectValue: str
             return rejectWithValue('Произошла ошибка при получении данных')
         }
     }
-)
+);
 
 const userReducer = createReducer(initialState, (builder) => {
     builder
@@ -42,7 +42,7 @@ const userReducer = createReducer(initialState, (builder) => {
         .addCase(loadUserData.fulfilled, (state, {payload}) => {
             state.data = payload;
             state.error = undefined;
-            state.loading = false
+            state.loading = false;
         })
 })
 

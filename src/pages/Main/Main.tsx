@@ -1,28 +1,22 @@
 import { FC, MouseEventHandler, useEffect, useRef, useState } from "react";
 import './Main.scss';
 import Button from "../../components/buttons/buttons";
-import { Input } from "../../components/inputFields/inputFields";
-import { IoIosSearch } from "react-icons/io";
 import { HomeCard } from "../../components/cards/homeCards/homeCards";
 import { ArtistCard } from "../../components/cards/artistCards/artistCards";
-import { useAppDispatch, useAppSelector } from "../../hook";
+import { useAppSelector } from "../../hook";
 import { ArtistsError } from "../../components/errorMessages/artistsError";
 import { HomeTrackCard } from "../../components/cards/homeTrackCards/homeTrackCards";
-import { FaUserAltSlash } from "react-icons/fa";
-import Headers from "../../components/headers/headers";
 
 
 const Main: FC = () => {
     const {artists, error: artistError, loading: artistLoading} = useAppSelector(state => state.artists);
     const {trackList, error: tracksError, loading: tracksLoading} = useAppSelector(state => state.trackList);
-    const dispatch = useAppDispatch();
 
     const [isButtonShow, setIsButtonShow] = useState<boolean>(false);
     const [translateValue, setTranslateValue] = useState<number>(0);
 
     const artistLine = useRef<HTMLDivElement>(null);
 
-    const token = localStorage.getItem('Token');
     useEffect(() => {
         const artistLineWidth = artistLine.current?.clientWidth;
         const artistsCardsWidth = 130 * artists.length;
@@ -34,14 +28,14 @@ const Main: FC = () => {
 
     const slideToNextArtistPage = (e: MouseEventHandler<HTMLButtonElement>) => {
         if (artistLine.current) {
-            const newTranslateValue = translateValue + artistLine.current.clientWidth
+            const newTranslateValue = translateValue + artistLine.current.clientWidth - 150
             setTranslateValue(newTranslateValue);
         }
     }
 
     const slideToPrevArtistPage = () => {
         if (artistLine.current) {
-            const newTranslateValue = translateValue - artistLine.current.clientWidth
+            const newTranslateValue = translateValue - artistLine.current.clientWidth + 150
             setTranslateValue(newTranslateValue);
         }
     }
@@ -61,18 +55,18 @@ const Main: FC = () => {
     const renderTracks = () => {
         if (trackList) {
             if (!tracksError) {
-                return trackList.map(({title, albumImg, artists, id, music}) => {
-                    return <HomeTrackCard key={id} id={id} playList={trackList} name={title} img={albumImg} artists={artists}/>
+                return trackList.map(item => {
+                    return <HomeTrackCard key={item.id} track={item} playList={trackList}/>
                 })
             } else {
                 return <ArtistsError errorMessage={tracksError}/>
             }
         }
     }
-    const renderHomePage = () => {
-        return (
-            <>
-                <Headers type="main"/>
+
+    return (
+        <>
+            <div className='main'>
                 <main>
                     <div className="cards_wrapper">
                         <div className="cards">
@@ -122,31 +116,7 @@ const Main: FC = () => {
                             {tracksLoading ? <div className="loader"></div> : renderTracks()}
                         </div>
                     </div>
-                    <h1 style={{fontSize: 60, marginBottom: 100}}>Здесь должен быть футер</h1>
                 </main>
-            </>
-        )
-    }
-
-    const renderAuthErrorPage = () => {
-        return (
-            <>
-                <Headers type="simple"/>
-                <main>
-                    <div>
-                        <span>Для прехода на данный ресурс необходимо авторизоваться</span>
-                    </div>
-                    <FaUserAltSlash />
-                    <Button type="accent" isLink path="/auth" content="Перейти к авторизации" W={300} H={50} fontS={1.8} fontW={700}/>
-                </main>
-            </>
-        )
-    }
-
-    return (
-        <>
-            <div className={token ? 'main' : 'auth_error_page'}>
-                {token ? renderHomePage() : renderAuthErrorPage()}
             </div>
         </>
     );

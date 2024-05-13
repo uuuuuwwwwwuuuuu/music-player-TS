@@ -270,7 +270,8 @@ const Auth: FC = () => {
                 setResponseColor(Colors.error)
             } else {
                 localStorage.setItem('Token', data.token);
-                navigate('/home')
+                navigate('/home');
+                window.location.reload();
             }
         })
 

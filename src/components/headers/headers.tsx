@@ -4,6 +4,7 @@ import './headers.scss';
 import Button from "../buttons/buttons";
 import { IoIosSearch } from "react-icons/io";
 import { Input } from "../inputFields/inputFields";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface IHeadersProp {
     type: 'simple' | 'main',
@@ -12,6 +13,20 @@ interface IHeadersProp {
 }
 
 const Headers: FC<IHeadersProp> = ({type, className, style}) => {
+    const navigate = useNavigate();
+    const location = useLocation()
+
+    const goBack = () => {
+        navigate(-1);
+        if (location.pathname === '/' || location.pathname === '/auth') {
+            navigate(1);
+        }
+    }
+
+    const goForward = () => {
+        navigate(1);
+    }
+
     if (type === 'main') {
         return (
             <header style={style} className={"main_header " + className}>
@@ -22,13 +37,15 @@ const Headers: FC<IHeadersProp> = ({type, className, style}) => {
                         content='<'
                         fontS={3.2}
                         fontW={400}
-                        style={{marginRight: 10}}/>
+                        style={{marginRight: 10}}
+                        onClick={goBack}/>
                     <Button 
                         type="alternative"
                         H={40} W={40}
                         content='>'
                         fontS={3.2}
-                        fontW={400}/>
+                        fontW={400}
+                        onClick={goForward}/>
                 </div>
                 <div className="header_search_panel">
                     <button>

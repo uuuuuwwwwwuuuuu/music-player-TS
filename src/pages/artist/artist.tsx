@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect } from "react";
 
 import './artist.scss';
 import Headers from "../../components/headers/headers";
@@ -11,11 +11,6 @@ import { useAppDispatch, useAppSelector } from "../../hook";
 import { loadArtistTracks } from "../../store/artistsTracks/reducerArtistsTracks";
 import { HomeTrackCard } from "../../components/cards/homeTrackCards/homeTrackCards";
 import { selectCurrentTrack, selectPlayList } from "../../store/current/actionsCurrent";
-import { getCurrentArtist } from "../../store/artists/selectorArtists";
-
-interface IArtistProps {
-    artistName: string
-}
 
 const PopularTrackListWrapper = styled.div`
     display: flex;
@@ -71,11 +66,14 @@ const ErrorBlock = styled.div`
 
 `;
 
-const Artist: FC<IArtistProps> = ({artistName}) => {
+interface IProp {
+    artistName: string
+}
+
+const Artist: FC<IProp> = ({artistName}) => {
     const dispatch = useAppDispatch();
     const {tracks: trackList, loading, error} = useAppSelector(state => state.artistsTracks)
-    const artist = useAppSelector(state => getCurrentArtist(state, artistName))
-
+    const artist = useAppSelector(state => state.artists.artists.find(artist => artist.name === artistName));
     useEffect(() => {
         if (artist) {
             dispatch(loadArtistTracks(artist.tracks));
@@ -97,7 +95,7 @@ const Artist: FC<IArtistProps> = ({artistName}) => {
                                 if (index >= 3) {
                                     return null
                                 } else {
-                                    return <ArtistTrackCard playList={sortedTrackList} id={item.id} key={item.id} title={item.title} img={item.albumImg} auditions={item.auditions} />
+                                    return <ArtistTrackCard key={item.id} playList={sortedTrackList} track={item} />
                                 }
                             })
                         }
@@ -111,7 +109,7 @@ const Artist: FC<IArtistProps> = ({artistName}) => {
                                 if (index <= 2) {
                                     return null;
                                 } else {
-                                    return <HomeTrackCard key={item.id} id={item.id} img={item.albumImg} name={item.title} artists={item.artists} playList={sortedTrackList} />
+                                    return <HomeTrackCard key={item.id} track={item} playList={sortedTrackList} />
                                 }
                             })
                         }
@@ -132,7 +130,7 @@ const Artist: FC<IArtistProps> = ({artistName}) => {
     if (artist) {
         return (
             <main className="artist">
-                <Headers type="main" />
+                {/* <Headers type="main" /> */}
                 <ArtistBG id="bg" $big_img={artist.big_img}>
                     <div className="artist_info">
                         <span className="artist_name">{artist.name}</span>
@@ -163,7 +161,7 @@ const Artist: FC<IArtistProps> = ({artistName}) => {
             <main className="artist">
                 <Headers type="main" />
                 <ErrorBlock>
-                    
+
                 </ErrorBlock>
             </main>
         )

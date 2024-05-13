@@ -5,9 +5,6 @@ import Button from "../../components/buttons/buttons";
 const PreRegPage: FC = () => {
     return (
         <div className="pre_reg_main">
-            <header>
-                <span>BROOKLYN</span>
-            </header>
             <main>
                 <div className="main_content">
                     <div>

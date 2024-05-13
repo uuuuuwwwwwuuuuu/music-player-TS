@@ -12,6 +12,7 @@
     justify-content: space-between;
     transition: 0.5s ease all;
     img {
+        cursor: pointer;
         width: 240px;
         transition: 0.5s ease all;
         
@@ -40,6 +41,7 @@
     backdrop-filter: blur(10px);
     z-index: 2;
     transition: 0.5s ease all;
+    cursor: pointer;
     &:hover {
         & ~ img {
             transform: scale(1.1);
@@ -104,6 +106,7 @@
 .home_track_card_buttons {
     height: 20px;
     button {
+        cursor: pointer;
         &:not(:last-child) {
             margin-right: 10px;
         }

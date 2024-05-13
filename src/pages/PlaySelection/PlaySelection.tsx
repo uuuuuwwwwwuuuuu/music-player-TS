@@ -5,13 +5,9 @@ import './PlaySelection.scss';
 import { useAppDispatch, useAppSelector } from "../../hook";
 import { selectCurrentTrack, selectShuffledPlayList, showCurrentPlayListAction } from "../../store/current/actionsCurrent";
 
-import { ITrack } from "../../store/likedPlayList/reducerLiked";
+import { ITrack, toggleLike } from "../../store/likedPlayList/reducerLiked";
 
 import { AddToPlayList, CurrentPlayList, FullScreen, Like, PlayOrPause, Random, Repeat, Rewind } from "../../components/icons and tags/icons";
-
-interface props {
-    toggleIsFullScreen: (isFullScreen: boolean) => void
-}
 
 interface IKeyInfo {
     keyCode: string,
@@ -39,9 +35,10 @@ const postAudition = async (trackId) => {
     }
 }
 
-const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
-    const {currentPlayList: playList, trackId, shuffledArr, showCurrentPlayList} = useAppSelector(state => state.current);
+const PlaySelection: FC = () => {
     const dispatch = useAppDispatch();
+    const {currentPlayList: playList, trackId, shuffledArr, showCurrentPlayList} = useAppSelector(state => state.current);
+    const {likedTrackList} = useAppSelector(state => state.liked)
 
     const [isPlay, setIsPlay] = useState(false);
     const [currentWidth, setCurrentWidth] = useState(0);
@@ -52,9 +49,24 @@ const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
     const [isFullScreen, setIsFullScreen] = useState(false);
     const [key, setKey] = useState<IKeyInfo | null>(null);
     const [humanizedTime, setHumanizedTime] = useState<string>('00:00');
-    // const [randomTrackPoint, setRandomTrackPoint] = useState<number | null>(null);
     const [audioData, setAudioData] = useState<string | null>(null);
+    const [isLiked, setIsLiked] = useState(false)
     const [audio, _] = useState(new Audio());
+
+    useEffect(() => {
+        const likedTrack = likedTrackList.find(track => track.id === trackId)
+        if (likedTrack) {
+            setIsLiked(true);
+        } else {
+            setIsLiked(false)
+        }
+    }, [likedTrackList, trackId])
+
+    useEffect(() => {
+        if (playList.length !== 0 && !trackId) {
+            dispatch(selectCurrentTrack(playList[0].id));
+        }
+    }, [playList, trackId, dispatch]);
 
     useEffect(() => {
         const getTrackData = async () => {
@@ -155,6 +167,12 @@ const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
     const fullScreenClassList = isFullScreen ? 'full_screen' : ''
 
     //______________________________________________________
+    const toggleIsLiked = () => {
+        if (trackId) {
+            dispatch(toggleLike(trackId));
+        }
+    }
+
     const toggleIsPlay = () => {
         if (currentTrack) {
             setIsPlay(!isPlay);
@@ -170,7 +188,6 @@ const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
     const toggleFullScreen = () => {
         if (!showCurrentPlayList && playList.length > 0) {
             setIsFullScreen(!isFullScreen);
-            toggleIsFullScreen(!isFullScreen)
         }
     }
     
@@ -341,8 +358,8 @@ const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
                     <div className="right_elements">
                         <div className="music_controls">
                             <div className="left_controls">
-                                <button className="control">
-                                    <Like type={currentTrack ? 'idle' : 'disable'}/>
+                                <button onClick={toggleIsLiked} className="control">
+                                    <Like type={isLiked ? 'active' : 'idle'}/>
                                 </button>
                             </div>
                             <div className="center_controls">
@@ -363,9 +380,6 @@ const PlaySelection: FC<props> = ({toggleIsFullScreen}) => {
                                 </button>
                             </div>
                             <div className="right_controls">
-                                <button>
-                                    <AddToPlayList type={currentTrack ? 'idle' : "disable"} />
-                                </button>
                                 <button className="current_play_list_control" onClick={toggleShowCurrentPlayList}>
                                     <CurrentPlayList 
                                         type={currentTrack ? (showCurrentPlayList ? 'active' : 'idle') : 'disable'} />

@@ -1,0 +1,9 @@
+@import '../../constants';
+
+.logout_btn {
+    background-color: $error-color;
+
+    &:hover {
+        background-color: $error-color-hover;
+    }
+}

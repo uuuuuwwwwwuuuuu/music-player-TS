@@ -12,13 +12,13 @@ interface IArtist {
 interface IArtistsState {
     artists: IArtist[],
     loading: boolean,
-    error: string | undefined
+    error: string | undefined,
 }
 
 const initialState: IArtistsState = {
     artists: [],
     loading: false,
-    error: undefined
+    error: undefined,
 }
 
 export const loadArtists = createAsyncThunk<IArtist[], undefined, {rejectValue: string}>(

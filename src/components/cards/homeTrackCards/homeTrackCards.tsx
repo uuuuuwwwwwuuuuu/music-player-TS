@@ -3,25 +3,34 @@ import { FC, useEffect, useState } from "react";
 import './homeTrackCards.scss';
 import { AddToPlayList, Like, PlayOrPause, PlayingTrackTag } from "../../icons and tags/icons";
 import { useAppDispatch, useAppSelector } from "../../../hook";
-import { selectCurrentTrack, selectPlayList } from "../../../store/current/actionsCurrent";
-import { ITrack } from "../../../store/likedPlayList/reducerLiked";
+import { addToCurrentPlayList, selectCurrentTrack, selectPlayList } from "../../../store/current/actionsCurrent";
+import { ITrack, toggleLike } from "../../../store/likedPlayList/reducerLiked";
+import { addNotification } from "../../../store/notificationQueue/actionsNotification";
+import { v4 as randomId } from 'uuid'
+import { MdErrorOutline } from "react-icons/md";
 
 interface IProp {
-    name: string,
-    artists: string,
-    img: string,
-    id: string,
+    track: ITrack,
     playList: ITrack[],
 }
 
-// const getCurrentTrack = async (url) => {
-//     fetch(url);
-// }
-
-export const HomeTrackCard: FC<IProp> = ({name, artists, img, id, playList}) => {
+export const HomeTrackCard: FC<IProp> = ({track, playList}) => {
     const [isHovered, setIsHovered] = useState<boolean>(false);
     const dispatch = useAppDispatch();
     const currentTrackId = useAppSelector(state => state.current.trackId);
+    const {likedTrackList} = useAppSelector(state => state.liked)
+    const {currentPlayList} = useAppSelector(state => state.current)
+    const [isLiked, setIsLiked] = useState<boolean>(false);
+    const {id, title, albumImg, artists} = track;
+
+    useEffect(() => {
+        const likedTrack = likedTrackList.find(track => track.id === id)
+        if (likedTrack) {
+            setIsLiked(true);
+        } else {
+            setIsLiked(false)
+        }
+    }, [likedTrackList, id])
 
     const cutLongString = (string: string): string => {
         if (string.length > 17) {
@@ -40,6 +49,36 @@ export const HomeTrackCard: FC<IProp> = ({name, artists, img, id, playList}) => 
         filter: currentTrackId === id ? 'blur(4px)' : ''
     }
 
+    const toggleIsLiked = () => {
+        dispatch(toggleLike(id));
+        dispatch(addNotification({
+            notificationId: randomId(),
+            img: track.albumImg,
+            info: `${track.title} - ${track.artists}`,
+            additionalInfo: isLiked ? 'Трек удалён из <span>избранного</span>' : 'Трек добавлен в <span>избранное</span>'
+        }));
+    }
+
+    const addToPlayList = () => {
+        const arrOfId = currentPlayList.map(item => item.id);
+        if (!arrOfId.includes(id)) {
+            dispatch(addToCurrentPlayList(track));
+            dispatch(addNotification({
+                notificationId: randomId(),
+                img: track.albumImg,
+                info: `${track.title} - ${track.artists}`,
+                additionalInfo: "Трек добавлен в <span>текущий плейлист</span>"
+            }));
+        } else {
+            dispatch(addNotification({
+                notificationId: randomId(),
+                img: <MdErrorOutline style={{color: '#C84141'}} />,
+                info: `${track.title} - ${track.artists}`,
+                additionalInfo: "Трек уже добавлен в <span>текущий плейлист</span>"
+            }));
+        }
+    }
+
     return (
         <div className="home_track_card">
             <div className="home_track_card_wrapper">
@@ -51,16 +90,16 @@ export const HomeTrackCard: FC<IProp> = ({name, artists, img, id, playList}) => 
                         : <PlayOrPause scale={30} className="home_track_card_play_icon" type="idle"/>
                     }
                 </button>
-                <img style={imgHoverStyles} onClick={playTrack} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} src={img} alt="Фото трека" />
+                <img style={imgHoverStyles} onClick={playTrack} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} src={albumImg} alt="Фото трека" />
             </div>
             <div className="home_track_card_data">
                 <div className="home_track_card_info">
-                    <span>{cutLongString(name)}</span>
+                    <span>{cutLongString(title)}</span>
                     <span>{cutLongString(artists)}</span>
                 </div>
                 <div className="home_track_card_buttons">
-                    <button><AddToPlayList /></button>
-                    <button><Like /></button>
+                    <button onClick={addToPlayList}><AddToPlayList /></button>
+                    <button onClick={toggleIsLiked}><Like type={isLiked ? 'active' : 'idle'}/></button>
                 </div>
             </div>
         </div>

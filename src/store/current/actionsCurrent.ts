@@ -19,6 +19,10 @@ export const showCurrentPlayListAction = createAction('@@current/SHOW_CURRENT_PL
     payload: bool
 }));
 
-export const deleteCurrentTrack = createAction('@@DELETE_CURRENT_TRACK', (id: string) => ({
+export const deleteCurrentTrack = createAction('@@current/DELETE_CURRENT_TRACK', (id: string) => ({
     payload: id
 }));
+
+export const addToCurrentPlayList = createAction('@@current/ADD_TO_CURRENT_PLAY_LIST', (track: ITrack) => ({
+    payload: track
+}))

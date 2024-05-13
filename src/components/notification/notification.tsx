@@ -41,7 +41,7 @@ const NotificationItem: FC<INotificationItemProps> = ({notificationData}) => {
                     dispatch(deleteNotification(notificationId));
                 }, 495)
             }
-        }, 5000);
+        }, 3000);
 
         return () => void clearTimeout(timerId);
     }, [dispatch]);

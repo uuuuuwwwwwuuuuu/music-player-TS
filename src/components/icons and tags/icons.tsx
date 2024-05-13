@@ -10,6 +10,7 @@ import { TbPlaylistAdd } from "react-icons/tb";
 import { BsArrowsAngleExpand } from "react-icons/bs";
 import { BsArrowsAngleContract } from "react-icons/bs";
 import { FaUserPlus } from "react-icons/fa";
+import styled, { keyframes } from 'styled-components';
 
 interface IProps {
     scale?: number,
@@ -36,8 +37,20 @@ const getClassList = (type: 'active' | 'idle' | 'disable', className: string | u
 }
 
 export const Like: FC<IProps> = ({scale = 20, type = 'idle', className, style}) => {
+    switch (type) {
+        case 'idle':
+            return <TiHeartFullOutline className={getClassList(type, className) + ' like_icon'}
+                style={{width: `${scale}px`, height: `${scale}px`, ...style}}/> 
+        case 'active':
+            return <TiHeartFullOutline className={getClassList(type, className)}
+                style={{width: `${scale}px`, height: `${scale}px`, ...style}}/> 
+        case 'disable':
+            return <TiHeartFullOutline className={getClassList(type, className)  + ' like_icon'}
+            style={{width: `${scale}px`, height: `${scale}px`, ...style}}/> 
+    }
+
     return <TiHeartFullOutline className={getClassList(type, className) + 
-                type === 'idle' || 'disable' ? ' like_icon' : ''}
+                type === 'idle' || type === 'disable' ? ' like_icon' : ''}
                 style={{width: `${scale}px`, height: `${scale}px`, ...style}}/>
 }
 
@@ -106,12 +119,50 @@ export const Follow: FC<IProps> =({scale = 20, type = 'idle', className, style})
                 style={{width: `${scale}px`, height: `${scale}px`, ...style}}/>
 }
 
-export const PlayingTrackTag: FC = () => {    
+const TagAnimation = (height: number) => keyframes`
+    0% {
+        height: ${height}px;
+    } 50% {
+        height: ${33 * height / 100}px;
+    } 100% {
+        height: ${height}px;
+    }
+`
+
+const PlayingTag = styled.div<{$height: number}>`
+    animation: fade-in 500ms ease;
+    width: ${({$height}) => $height}px;
+    height: ${({$height}) => $height}px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    div {
+        background-color: ${({theme}) => theme.accent};
+        border-radius: 100px;
+        display: flex;
+        justify-content: space-between;
+        width: ${({$height}) => $height === 30 ? 7 : 11}px;
+        height: ${({$height}) => $height}px;
+        animation: ${({$height}) => TagAnimation($height)} 1s ease infinite;
+        
+        &:first-child {
+            animation: ${({$height}) => TagAnimation($height)} 1s ease infinite 0.5s;
+        }
+
+        &:last-child {
+            animation: ${({$height}) => TagAnimation($height)} 1s ease infinite 0.75s;
+        }
+    }
+`;
+
+export const PlayingTrackTag: FC<{height?: number}> = ({height = 30}) => {    
     return (
-        <div className='playing_track_tag'>
+        <PlayingTag $height={height} >
             <div></div>
             <div></div>
             <div></div>
-        </div>
+        </PlayingTag>
+
     )
 }

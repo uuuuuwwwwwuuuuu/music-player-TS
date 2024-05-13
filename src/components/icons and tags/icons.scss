@@ -23,7 +23,6 @@
     @media (hover: hover) {
         &:hover {
             color: $accent-color-hover;
-
         }
     }
 }
@@ -33,6 +32,7 @@
     fill: none;
 
     &:hover {
+        fill: none;
         color: $accent-color;
     }
 }
@@ -53,33 +53,6 @@
     }
 }
 
-.playing_track_tag {
-    animation: playing-track-tag-fade-in 500ms ease;
-    
-    div {
-        background-color: $accent-color;
-        border-radius: 100px;
-        display: flex;
-        justify-content: space-between;
-        width: 7px;
-        height: 30px;
-        animation: playing-track-tag 1s ease infinite;
-        
-        &:first-child {
-            animation: playing-track-tag 1s ease infinite 0.5s;
-        }
-
-        &:last-child {
-            animation: playing-track-tag 1s ease infinite 0.75s;
-        }
-    }
-    width: 30px;
-    height: 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
 @keyframes playing-track-tag {
     0% {
         height: 30px;
@@ -87,13 +60,5 @@
         height: 10px;
     } 100% {
         height: 30px;
-    }
-}
-
-@keyframes playing-track-tag-fade-in {
-    from {
-        opacity: 0;
-    } to {
-        opacity: 1;
     }
 }
