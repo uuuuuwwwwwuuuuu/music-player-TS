@@ -1,6 +1,6 @@
 import { createAsyncThunk, createReducer } from "@reduxjs/toolkit";
 
-interface IArtist {
+export interface IArtist {
     name: string,
     artistImg: string,
     likes: number,
@@ -21,11 +21,13 @@ const initialState: IArtistsState = {
     error: undefined,
 }
 
+const serverUrl = 'http://127.0.0.1:8000';
+
 export const loadArtists = createAsyncThunk<IArtist[], undefined, {rejectValue: string}>(
     '@@artists/LOAD_ARTISTS',
     async (_, {rejectWithValue}) => {
         try {
-            const response = await fetch('http://127.0.0.1:8000/api/artists/');
+            const response = await fetch(serverUrl + '/api/artists/');
             return await response.json()
         } catch (err) {
             if (err) {

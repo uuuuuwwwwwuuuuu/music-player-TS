@@ -23,6 +23,8 @@ const initialState: ILikedState = {
     errorMessage: undefined
 };
 
+const serverUrl = 'http://127.0.0.1:8000';
+
 export const loadLikedTrackList = createAsyncThunk<ITrack[], undefined, {rejectValue: string}>(
     '@@liked/LOAD_LIKED_TRACK_LIST', 
     async (_, {rejectWithValue}) => {
@@ -34,9 +36,9 @@ export const loadLikedTrackList = createAsyncThunk<ITrack[], undefined, {rejectV
                 }
             });
             const data = await res.json();
-            return data.data.map(item => {
-                item.albumImg = URL + item.albumImg;
-                item.music = URL + item.music;
+            return data.data.map((item: ITrack) => {
+                item.albumImg = serverUrl + item.albumImg;
+                item.music = serverUrl + item.music;
                 return item
             })
         } catch (err) {
@@ -57,8 +59,12 @@ export const toggleLike = createAsyncThunk<ITrack[], string, {rejectValue: strin
                 },
                 body: JSON.stringify({'liked_track_list': [trackId]})
             });
-            const data = await response.json()
-            return data.data;
+            const data = await response.json();
+            return data.data.map((item: ITrack) => {
+                item.albumImg = serverUrl + item.albumImg;
+                item.music = serverUrl + item.music;
+                return item;
+            });
         } catch (err) {
             console.error(err);
             return rejectWithValue('Не удалось добавить в избранное');

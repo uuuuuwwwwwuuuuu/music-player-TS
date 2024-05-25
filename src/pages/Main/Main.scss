@@ -29,9 +29,6 @@
 
 .artists_line {
     margin-top: 23px;
-
-    
-
     button {
         position: absolute;
         top: 650px;
@@ -82,7 +79,7 @@
         pointer-events: none;
     }
 
-    span {
+    span:first-child {
         font-weight: 700;
         font-size: 3.2rem;
     }

@@ -1,0 +1,157 @@
+@import '../../constants';
+
+.fullscreen_top_elements {
+    flex: 0 0 500px;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+    display: flex;
+
+    img:first-child {
+        flex: 0 0 500px;
+        height: 500px;
+        border-radius: 20px;
+        margin-right: 20px;
+    }
+}
+
+.fullscreen_bottom_elements {
+    flex: 0 0 110px;
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+
+}
+
+.fullscreen_info {
+    flex: 1 1 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: calc(100svw - 660px);
+}
+
+.fullscreen_track_info {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.fullscreen_artist {
+    font-size: 3.6rem;
+    font-weight: 500;
+    color: $text-second-color;
+}
+
+.fullscreen_next_button {
+    position: absolute;
+    right: 45px;
+    z-index: 20;
+    background-color: $main-bg-color-for-blur;
+    backdrop-filter: blur(2px);
+
+    animation: fade-in 0.5s ease;
+}
+
+.fullscreen_prev_button {
+    position: absolute;
+    left: 45px;
+    z-index: 20;
+    background-color: $main-bg-color-for-blur;
+    backdrop-filter: blur(2px);
+
+    animation: fade-in 0.5s ease;
+}
+
+.fullscreen_controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+
+    > div {
+        display: flex;
+        align-items: center;
+        height: 50px;
+
+        &:first-child {
+            flex: 0 0 90px;
+        }
+
+        button {
+            &:not(:last-child) {
+                margin-right: 40px;
+            }
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+        }
+
+        &:last-child {
+            button {
+                &:not(:last-child) {
+                    margin-right: 10px;
+                }
+            }
+        }
+    }
+}
+
+.fullscreen_play_btn {
+    flex: 0 0 70px;
+    background-color: $accent-color;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:hover {
+        transform: scale(1.05);
+
+        svg {
+            transform: scale(0.95);
+        }
+    }
+}
+
+.play_or_pause_icon {
+    color: $text-color;
+    position: relative;
+    left: 2px;
+
+    &:hover {
+        @extend .play_or_pause_icon;
+    }
+}
+
+.time_wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    
+    span {
+        font-size: 1.8rem;
+        color: $text-disable-color;
+    }
+}
+
+.progress_bar_wrapper {
+    width: 100%;
+    height: 7px;
+    background-color: $text-disable-color;
+    border-radius: 100px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.fullscreen_progress_controls {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 40px;
+}

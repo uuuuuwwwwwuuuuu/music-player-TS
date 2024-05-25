@@ -8,7 +8,7 @@ import { loadUserData } from "../../store/user/reducerUser";
 import { loadArtists } from "../../store/artists/reducerArtists";
 import { loadTrackList } from "../../store/tracks/reducerTrackList";
 import Notification from "../../components/notification/notification";
-import { Outlet, Route, Routes, useLocation } from "react-router-dom";
+import { Outlet, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import PreRegPage from "../preRegPage/PreRegPage";
 import Artist from "../artist/artist";
 import { ThemeProvider } from "styled-components";
@@ -17,11 +17,18 @@ import Headers from "../../components/headers/headers";
 import AuthAfterReg from "../authAfterReg/authAfterReg";
 import PreRegErrorPage from "../preRegErrorPage/preRegErrorPage";
 import { loadLikedTrackList } from "../../store/likedPlayList/reducerLiked";
+import AsideBar from "../../components/asideBar/asideBar";
+import { loadLikedArtists } from "../../store/likedArtists/reducerLikedArtists";
+import FullScreen from "../fullScreen/fullScreen";
 
 const AppWrapper: FC = () => {
     const showUserData = useAppSelector(state => state.user);
     const artists = useAppSelector(state => state.artists.artists);
+    const {trackList} = useAppSelector(state => state.trackList);
+
     const dispatch = useAppDispatch();
+    const location = useLocation();
+    const navigate = useNavigate();
 
     const token: string | null = localStorage.getItem('Token');
 
@@ -35,7 +42,14 @@ const AppWrapper: FC = () => {
         dispatch(loadArtists());
         dispatch(loadTrackList());
         dispatch(loadLikedTrackList());
+        dispatch(loadLikedArtists());
     }, [dispatch, token]);
+
+    useEffect(() => {
+        if (location.pathname === '/' && token) {
+            navigate('/home');
+        }
+    }, [location, token, navigate]);
 
     return (
         <Routes>
@@ -46,6 +60,7 @@ const AppWrapper: FC = () => {
                 {artists.map(artist => {
                     return <Route key={artist.id} path={'/artist/' + artist.name} element={<Artist artistName={artist.name}/>}/>
                 })}
+                <Route path="/home/fullscreen" element={<FullScreen />} />
                 <Route path="*" element={<div>hyi</div>} />
             </Route>
         </Routes>
@@ -56,26 +71,7 @@ interface IAppProp {
     token: string | null
 }
 
-const App: FC<IAppProp> = ({token}) => {
-    const location = useLocation();
-    const {trackId} = useAppSelector(state => state.current)
-    return (
-        <div className="App">
-            <ThemeProvider theme={baseTheme} >
-                <div className="app_wrapper" style={{paddingBottom: trackId ? 50 : 0}}>
-                    {location.pathname !== '/auth' && (token ? <Headers type="main" /> : <Headers type="simple" />)}
-                    <Outlet />
-                </div>
-                {token && <PlaySelection/>}
-                {token && <Notification />}
-            </ThemeProvider>
-        </div>
-    )
-}
-
-export default AppWrapper;
-
-const baseTheme: ITheme = {
+export const baseTheme: ITheme = {
     accent: '#5E37CC',
     accentHover: '#4927a8',
     text: '#E0DCEA',
@@ -90,3 +86,25 @@ const baseTheme: ITheme = {
     errorColor: '#C84141',
     successColor: '#4EBA3C',
 }
+
+const App: FC<IAppProp> = ({token}) => {
+    const location = useLocation();
+    const {trackId} = useAppSelector(state => state.current)
+    return (
+        <div className="App">
+            <ThemeProvider theme={baseTheme} >
+                <div className="app_wrapper" style={{paddingBottom: trackId ? 50 : 0}}>
+                    {(location.pathname !== '/auth' && location.pathname !== '/home/fullscreen')
+                        && (token ? <Headers type="main" /> : <Headers type="simple" />)}
+                    <Outlet />
+                </div>
+                {location.pathname !== '/home/fullscreen' && token && <PlaySelection/>}
+                {token && <Notification />}
+                {location.pathname !== '/home/fullscreen' && token && <AsideBar />}
+            </ThemeProvider>
+        </div>
+    )
+}
+
+export default AppWrapper;
+

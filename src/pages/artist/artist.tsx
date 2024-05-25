@@ -1,16 +1,19 @@
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 
 import './artist.scss';
 import Headers from "../../components/headers/headers";
 
 import {styled} from 'styled-components'
 import Button from "../../components/buttons/buttons";
-import { Follow, PlayOrPause } from "../../components/icons and tags/icons";
+import { Follow, PlayOrPause, UnFollow } from "../../components/icons and tags/icons";
 import ArtistTrackCard from "../../components/cards/artistTrackCards/artistTrackCards";
 import { useAppDispatch, useAppSelector } from "../../hook";
 import { loadArtistTracks } from "../../store/artistsTracks/reducerArtistsTracks";
 import { HomeTrackCard } from "../../components/cards/homeTrackCards/homeTrackCards";
 import { selectCurrentTrack, selectPlayList } from "../../store/current/actionsCurrent";
+import { toggleArtist } from "../../store/likedArtists/reducerLikedArtists";
+import { addNotification } from "../../store/notificationQueue/actionsNotification";
+import {v4 as randomId} from 'uuid';
 
 const PopularTrackListWrapper = styled.div`
     display: flex;
@@ -74,11 +77,24 @@ const Artist: FC<IProp> = ({artistName}) => {
     const dispatch = useAppDispatch();
     const {tracks: trackList, loading, error} = useAppSelector(state => state.artistsTracks)
     const artist = useAppSelector(state => state.artists.artists.find(artist => artist.name === artistName));
+    const likedArtistList = useAppSelector(state => state.likedArtists.likedArtists);
+
+    const [isLikedArtist, setIsLikedArtist] = useState(false);
+
     useEffect(() => {
         if (artist) {
             dispatch(loadArtistTracks(artist.tracks));
         }
     }, [dispatch, artist]);
+
+    useEffect(() => {
+        const isLikedArtist = likedArtistList.find(item => item.name === artistName);
+        if (isLikedArtist) {
+            setIsLikedArtist(true);
+        } else {
+            setIsLikedArtist(false);
+        }
+    }, [artistName, likedArtistList]);
 
     const renderBetterTracks = (isBetter: boolean) => {
         if (trackList.length !== 0) {
@@ -127,10 +143,22 @@ const Artist: FC<IProp> = ({artistName}) => {
         dispatch(selectCurrentTrack(sortedTrackList[0].id));
         dispatch(selectPlayList(sortedTrackList));
     }
+
+    const toggleIsFollowed = () => {
+        if (artist) {
+            dispatch(toggleArtist(artist.id))
+            dispatch(addNotification({
+                notificationId: randomId(),
+                img: artist.artistImg,
+                info: artist.name,
+                additionalInfo: !isLikedArtist ? 'Вы <span>подписались</span> на артиста' : 'Вы <span>отписались</span> от артиста'
+            }));
+        }
+    }
+
     if (artist) {
         return (
             <main className="artist">
-                {/* <Headers type="main" /> */}
                 <ArtistBG id="bg" $big_img={artist.big_img}>
                     <div className="artist_info">
                         <span className="artist_name">{artist.name}</span>
@@ -141,7 +169,13 @@ const Artist: FC<IProp> = ({artistName}) => {
                     </div>
                     <div className="artist_action_buttons">
                         <Button type="accent" W={70} H={70} style={{borderRadius: 100}} onClick={setCurrentTrack} content={<PlayOrPause scale={26} style={{color: '#E0DCEA', position: 'relative', top: 2, left: 2}} />} />
-                        <Button type="simple" W={50} H={50} style={{borderRadius: 100}} propClassList="follow_artist_btn" content={<Follow scale={20} style={{position: 'relative', top: 1, left: 1}}/>} />
+                        <Button 
+                        onClick={toggleIsFollowed}
+                        type="simple" W={50} H={50} 
+                        style={{borderRadius: 100}} propClassList="follow_artist_btn" 
+                        content={isLikedArtist
+                            ? <UnFollow scale={20} style={{position: 'relative', top: 1, left: 1}}/>
+                            : <Follow scale={20} style={{position: 'relative', top: 1, left: 1}}/>} />
                     </div>
                 </ArtistBG>
                 <div className="artist_tracks_wrapper">

@@ -2,6 +2,7 @@ import {FC} from 'react';
 import './buttons.scss';
 
 import { Link } from 'react-router-dom';
+import styled, { css } from 'styled-components';
 
 
 interface IProp {
@@ -16,10 +17,12 @@ interface IProp {
     actionType?: undefined | 'submit',
     propClassList?: string,
     onClick?: any,
-    style?: React.CSSProperties
+    style?: React.CSSProperties,
+    rounded?: boolean
 }
 
-const Button: FC<IProp> = ({type, W, H, content, fontS, fontW, actionType, propClassList = '', onClick = () => {}, style, isLink, path}) => {
+const Button: FC<IProp> = ({type, W, H, content, fontS, fontW, actionType, propClassList = '', onClick = () => {}, style, isLink, path, rounded = false}) => {
+
     if (!isLink) {
         let genericClassName: typeof type = 'accent' 
     
@@ -32,7 +35,7 @@ const Button: FC<IProp> = ({type, W, H, content, fontS, fontW, actionType, propC
         } else {
             genericClassName = 'disable';
         }
-    
+
         return (
             <button
                 type={actionType ? actionType : 'button'}

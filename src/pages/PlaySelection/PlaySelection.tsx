@@ -40,17 +40,17 @@ const PlaySelection: FC = () => {
     const {currentPlayList: playList, trackId, shuffledArr, showCurrentPlayList} = useAppSelector(state => state.current);
     const {likedTrackList} = useAppSelector(state => state.liked)
 
-    const [isPlay, setIsPlay] = useState(false);
     const [currentWidth, setCurrentWidth] = useState(0);
     const [currentTrack, setCurrentTrack] = useState<ITrack | undefined>(undefined);
-    const [isRepeat, setIsRepeat] = useState(false);
     const [currentPlayList, setCurrentPlayList] = useState<ITrack[]>([]);
-    const [isRandom, setIsRandom] = useState(false);
-    const [isFullScreen, setIsFullScreen] = useState(false);
     const [key, setKey] = useState<IKeyInfo | null>(null);
     const [humanizedTime, setHumanizedTime] = useState<string>('00:00');
+    
+    const [isLiked, setIsLiked] = useState(false);
+    const [isPlay, setIsPlay] = useState(false);
+    const [isRepeat, setIsRepeat] = useState(false);
+    const [isRandom, setIsRandom] = useState(false);
     const [audioData, setAudioData] = useState<string | null>(null);
-    const [isLiked, setIsLiked] = useState(false)
     const [audio, _] = useState(new Audio());
 
     useEffect(() => {
@@ -164,8 +164,6 @@ const PlaySelection: FC = () => {
         }
     }, [isRandom])
 
-    const fullScreenClassList = isFullScreen ? 'full_screen' : ''
-
     //______________________________________________________
     const toggleIsLiked = () => {
         if (trackId) {
@@ -180,15 +178,13 @@ const PlaySelection: FC = () => {
     }
 
     const toggleShowCurrentPlayList = () => {
-        if (currentPlayList && !isFullScreen) {
+        if (currentPlayList) {
             dispatch(showCurrentPlayListAction(!showCurrentPlayList));
         }
     }
 
     const toggleFullScreen = () => {
-        if (!showCurrentPlayList && playList.length > 0) {
-            setIsFullScreen(!isFullScreen);
-        }
+
     }
     
     const toggleIsRepeat = () => {
@@ -345,7 +341,7 @@ const PlaySelection: FC = () => {
     }, []);
 
     return (
-        <div className={fullScreenClassList}>
+        <>
             {currentTrack &&
                 <div className="play_selection" >
                     <div className="left_elements">
@@ -385,7 +381,7 @@ const PlaySelection: FC = () => {
                                         type={currentTrack ? (showCurrentPlayList ? 'active' : 'idle') : 'disable'} />
                                 </button>
                                 <button onClick={toggleFullScreen} style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                                    <FullScreen type={isFullScreen ? 'active' : "idle"}/>
+                                    <FullScreen type={"idle"}/>
                                 </button>
                             </div>
                         </div>
@@ -401,7 +397,7 @@ const PlaySelection: FC = () => {
                     </div>
                 </div>
             }
-        </div>
+        </>
     )
 }
 

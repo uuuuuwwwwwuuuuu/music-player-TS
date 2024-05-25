@@ -1,0 +1,19 @@
+@import '../../../constants';
+
+.small_track_item_info {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+
+    span {
+        &:first-child {
+            font-size: 1.6rem;
+            font-weight: 500;
+        }
+        &:last-child {
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: $text-second-color;
+        }
+    }
+}

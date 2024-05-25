@@ -16,6 +16,11 @@ html {
     background-color: $main-bg-color;
 }
 
+a {
+    color: $text-color;
+    text-decoration: none;
+}
+
 
 svg {
     transition: 0.3s color ease;

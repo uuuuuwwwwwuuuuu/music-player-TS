@@ -11,6 +11,8 @@ import { BsArrowsAngleExpand } from "react-icons/bs";
 import { BsArrowsAngleContract } from "react-icons/bs";
 import { FaUserPlus } from "react-icons/fa";
 import styled, { keyframes } from 'styled-components';
+import { RxCross2 } from 'react-icons/rx';
+import { FaUserCheck } from "react-icons/fa";
 
 interface IProps {
     scale?: number,
@@ -119,6 +121,16 @@ export const Follow: FC<IProps> =({scale = 20, type = 'idle', className, style})
                 style={{width: `${scale}px`, height: `${scale}px`, ...style}}/>
 }
 
+export const Cross: FC<IProps> =({scale = 20, type = 'idle', className, style}) => {
+    return <RxCross2 className={getClassList(type, className) + ' add_playlist'}
+                style={{width: `${scale}px`, height: `${scale}px`, ...style}}/>
+}
+
+export const UnFollow: FC<IProps> =({scale = 20, type = 'idle', className, style}) => {
+    return <FaUserCheck className={getClassList(type, className) + ' add_playlist'}
+                style={{width: `${scale}px`, height: `${scale}px`, ...style}}/>
+}
+
 const TagAnimation = (height: number) => keyframes`
     0% {
         height: ${height}px;
@@ -127,7 +139,7 @@ const TagAnimation = (height: number) => keyframes`
     } 100% {
         height: ${height}px;
     }
-`
+`;
 
 const PlayingTag = styled.div<{$height: number}>`
     animation: fade-in 500ms ease;
