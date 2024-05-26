@@ -20,6 +20,7 @@ import { loadLikedTrackList } from "../../store/likedPlayList/reducerLiked";
 import AsideBar from "../../components/asideBar/asideBar";
 import { loadLikedArtists } from "../../store/likedArtists/reducerLikedArtists";
 import FullScreen from "../fullScreen/fullScreen";
+import AudioModule from "../audioModule/audioModule";
 
 const AppWrapper: FC = () => {
     const showUserData = useAppSelector(state => state.user);
@@ -101,6 +102,7 @@ const App: FC<IAppProp> = ({token}) => {
                 {location.pathname !== '/home/fullscreen' && token && <PlaySelection/>}
                 {token && <Notification />}
                 {location.pathname !== '/home/fullscreen' && token && <AsideBar />}
+                {token && <AudioModule />}
             </ThemeProvider>
         </div>
     )

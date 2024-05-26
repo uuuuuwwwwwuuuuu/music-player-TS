@@ -8,6 +8,7 @@ import artistsReducer from "./artists/reducerArtists";
 import notificationQueueReducer from "./notificationQueue/reducerNotification";
 import artistsTracksReducer from "./artistsTracks/reducerArtistsTracks";
 import likedArtistsReducer from "./likedArtists/reducerLikedArtists";
+import trackStateReducer from "./trackState/reducerTrackState";
 
 const store = configureStore({
     reducer: {
@@ -18,7 +19,8 @@ const store = configureStore({
         artists: artistsReducer,
         notification: notificationQueueReducer,
         artistsTracks: artistsTracksReducer,
-        likedArtists: likedArtistsReducer
+        likedArtists: likedArtistsReducer,
+        trackState: trackStateReducer
     },
     devTools: true,
 });

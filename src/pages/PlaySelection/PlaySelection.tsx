@@ -1,57 +1,36 @@
-import { FC, useState, useEffect, SyntheticEvent, useRef, ReactNode } from "react";
+import { FC, useState, useEffect, SyntheticEvent } from "react";
 
 import './PlaySelection.scss';
 
 import { useAppDispatch, useAppSelector } from "../../hook";
-import { selectCurrentTrack, selectShuffledPlayList, showCurrentPlayListAction } from "../../store/current/actionsCurrent";
+import { showCurrentPlayListAction } from "../../store/current/actionsCurrent";
 
 import { ITrack, toggleLike } from "../../store/likedPlayList/reducerLiked";
 
-import { AddToPlayList, CurrentPlayList, FullScreen, Like, PlayOrPause, Random, Repeat, Rewind } from "../../components/icons and tags/icons";
+import { CurrentPlayList, FullScreen, Like, PlayOrPause, Random, Repeat, Rewind } from "../../components/icons and tags/icons";
+import { rewindBack, rewindForward, setAudioData, setPause, setPlay, setRewindCurrentTime, switchTrackAction, toggleRandom, toggleRepeat } from "../../store/trackState/actionsTrackState";
+import { addNotification } from "../../store/notificationQueue/actionsNotification";
+
+import { v4 as randomId } from 'uuid';
 
 interface IKeyInfo {
     keyCode: string,
     shiftKey: boolean
 }
 
-const postAudition = async (trackId) => {
-    const postData = {
-        trackId
-    }
-
-    try {
-        fetch('http://127.0.0.1:8000/api/tracks/addaudition/', {
-            method: 'POST',
-            headers: {"Content-type": "application/json"},
-            body: JSON.stringify(postData)
-        });
-    } catch(error) {
-        if (error) {
-            if (error) {
-                const err = error as Error;
-                console.log(err.message);
-            }
-        }
-    }
-}
 
 const PlaySelection: FC = () => {
     const dispatch = useAppDispatch();
-    const {currentPlayList: playList, trackId, shuffledArr, showCurrentPlayList} = useAppSelector(state => state.current);
-    const {likedTrackList} = useAppSelector(state => state.liked)
+    const {currentPlayList, trackId, showCurrentPlayList} = useAppSelector(state => state.current);
+    const {likedTrackList} = useAppSelector(state => state.liked);
+    const {isRandom, isPlay, isRepeat, trackTimeData: {currentTime, duration}} = useAppSelector(state => state.trackState)
 
     const [currentWidth, setCurrentWidth] = useState(0);
     const [currentTrack, setCurrentTrack] = useState<ITrack | undefined>(undefined);
-    const [currentPlayList, setCurrentPlayList] = useState<ITrack[]>([]);
     const [key, setKey] = useState<IKeyInfo | null>(null);
     const [humanizedTime, setHumanizedTime] = useState<string>('00:00');
     
     const [isLiked, setIsLiked] = useState(false);
-    const [isPlay, setIsPlay] = useState(false);
-    const [isRepeat, setIsRepeat] = useState(false);
-    const [isRandom, setIsRandom] = useState(false);
-    const [audioData, setAudioData] = useState<string | null>(null);
-    const [audio, _] = useState(new Audio());
 
     useEffect(() => {
         const likedTrack = likedTrackList.find(track => track.id === trackId)
@@ -62,11 +41,12 @@ const PlaySelection: FC = () => {
         }
     }, [likedTrackList, trackId])
 
+
     useEffect(() => {
-        if (playList.length !== 0 && !trackId) {
-            dispatch(selectCurrentTrack(playList[0].id));
+        if (currentPlayList.length !== 0 && currentTrack?.id !== trackId) {
+            setCurrentTrack(currentPlayList.find(item => item.id === trackId));
         }
-    }, [playList, trackId, dispatch]);
+    }, [currentPlayList, currentTrack?.id, trackId]);
 
     useEffect(() => {
         const getTrackData = async () => {
@@ -74,7 +54,7 @@ const PlaySelection: FC = () => {
                 if (currentTrack) {
                     const response = await fetch(currentTrack.music);
                     const audioBlob = await response.blob();
-                    setAudioData(URL.createObjectURL(audioBlob));
+                    dispatch(setAudioData(URL.createObjectURL(audioBlob)));
                 }
             } catch (err) {
                 if (err) {
@@ -85,95 +65,40 @@ const PlaySelection: FC = () => {
         }
 
         getTrackData();
-
-        return () => {
-            if (audioData) {
-                URL.revokeObjectURL(audioData);
-            }
-        }
-    }, [currentTrack?.music]);
-
-    useEffect(() => {
-        if (audioData) {
-            audio.src = audioData;
-            audio.load();
-        }
-    }, [audioData, audio]);
-
-    useEffect(() => {
-        const handleCanPlay = () => {
-            audio.play();
-        }
-
-        audio.addEventListener('canplay', handleCanPlay);
-        audio.addEventListener('ended', onEnd);
-        audio.addEventListener('timeupdate', onUpdateCurrentTime);
-
-        return () => {
-            audio.removeEventListener('canplay', handleCanPlay);
-        }
-    });
-
-    useEffect(() => {
-        if (shuffledArr.length !== 0) {
-            setCurrentPlayList(shuffledArr);
-        } else {
-            setCurrentPlayList(playList);
-        }
-    }, [playList, shuffledArr]);
+    }, [currentTrack, currentTrack?.music, dispatch]);
 
     useEffect(() => {
         if (currentPlayList.length === 1) {
-            setIsRepeat(true);
+            dispatch(toggleRepeat(true));
         }
-    }, [currentPlayList]);
+    }, [currentPlayList, dispatch]);
 
+    
     useEffect(() => {
-        if (currentTrack) {
-            postAudition(currentTrack.id);
-        }
-    }, [currentTrack]);
-
-    useEffect(() => {
-        if (currentPlayList.length !== 0 && currentTrack?.id !== trackId) {
-            setCurrentTrack(currentPlayList.find(item => item.id === trackId));
-        }
-
-        if (currentTrack?.id !== trackId) {
-            setIsPlay(true);
-        }
-
-        audio.loop = isRepeat ? true : false
-    }, [trackId, currentTrack, currentPlayList, isRepeat]);
-
-    useEffect(() => {
-        if (currentTrack && audio.readyState >= 3) {
-            if (isPlay) {
-                audio.play();
-            } else {
-                audio.pause();
-            }
-        }
-    }, [isPlay, currentTrack, audio]);
-
-    useEffect(() => {
-        if (isRandom) {
-            dispatch(selectShuffledPlayList(shuffle(currentPlayList)))
-        } else {
-            dispatch(selectShuffledPlayList([]));
-        }
-    }, [isRandom])
+        setCurrentWidth(currentTime * 100 / duration);
+        setHumanizedTime(humanizingNumbers(currentTime));
+    }, [currentTime, duration]);
 
     //______________________________________________________
     const toggleIsLiked = () => {
-        if (trackId) {
+        if (trackId && currentTrack) {
             dispatch(toggleLike(trackId));
+            dispatch(addNotification({
+                notificationId: randomId(),
+                img: currentTrack.albumImg,
+                info: `${currentTrack.title} - ${currentTrack.artists}`,
+                additionalInfo: isLiked ? 'Трек удалён из <span>избранного</span>' : 'Трек добавлен в <span>избранное</span>'
+            }));
         }
     }
 
     const toggleIsPlay = () => {
         if (currentTrack) {
-            setIsPlay(!isPlay);
+            if (isPlay) {
+                dispatch(setPause());
+            } else {
+                dispatch(setPlay());
+            }
         }
     }
 
@@ -188,51 +113,29 @@ const PlaySelection: FC = () => {
     }
     
     const toggleIsRepeat = () => {
-        setIsRepeat(!isRepeat);
+        if (isRepeat) {
+            dispatch(toggleRepeat(false));
+        } else {
+            dispatch(toggleRepeat(true))
+        }
     }
 
     const toggleIsRandom = () => {
         if (currentTrack) {
-            setIsRandom(!isRandom);
+            if (isRandom) {
+                dispatch(toggleRandom(false));
+            } else {
+                dispatch(toggleRandom(true));
+            }
         }
     }
 
-    const shuffle = (array: ITrack[]): ITrack[] => {
-        const shuffledArray = [...array];
-
-        for (let i = shuffledArray.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
-        }
-    
-        return shuffledArray;
-    };
-
     const prevTrack = () => {
-        const currentIndex = currentPlayList.findIndex(item => item.id === currentTrack?.id);
-
-        if (currentPlayList) {
-            if (currentIndex === 0) {
-                dispatch(selectCurrentTrack(currentPlayList[currentPlayList.length - 1].id))
-            } else {
-                dispatch(selectCurrentTrack(currentPlayList[currentIndex - 1].id));
-            }
-        }
+        dispatch(switchTrackAction('back'));
     }
 
     const nextTrack = () => {
-        if (currentPlayList && currentTrack) {
-            const currentIndex = currentPlayList.findIndex(item => item.id === currentTrack?.id);
-            
-            if (currentPlayList) {
-                if (currentIndex >= currentPlayList.length - 1) {
-                    dispatch(selectCurrentTrack(currentPlayList[0].id))
-                } else {
-                    dispatch(selectCurrentTrack(currentPlayList[currentIndex + 1].id))
-                }
-            }
-        }
-        
+        dispatch(switchTrackAction('forward'));
     }
 
     const humanizingNumbers = (time: number): string => {
@@ -261,27 +164,13 @@ const PlaySelection: FC = () => {
         }
     }
 
-    const onUpdateCurrentTime = () => {
-        const {currentTime, duration} = audio
-
-        setCurrentWidth(currentTime * 100 / duration);
-        setHumanizedTime(humanizingNumbers(currentTime));
-    }
-
     const setCurrentTime = (e: SyntheticEvent<HTMLDivElement, MouseEvent>) => {
-        const song = audio;
         const offsetX = e.nativeEvent.offsetX;
         const clientWidth = document.querySelector('.music_progress')?.clientWidth;
-        if (song && clientWidth && song.readyState >= 4 && song.duration) {
+        if (clientWidth && duration) {
             const maxOffsetX = clientWidth - 1;
-            const newTime = ((offsetX > maxOffsetX ? maxOffsetX : offsetX) / clientWidth) * song.duration;
-            song.currentTime = newTime
-        }
-    }
-
-    const onEnd = () => {
-        if (!isRepeat) {
-            nextTrack();
+            const newTime = ((offsetX > maxOffsetX ? maxOffsetX : offsetX) / clientWidth) * duration;
+            dispatch(setRewindCurrentTime(newTime));
         }
     }
 
@@ -308,10 +197,10 @@ const PlaySelection: FC = () => {
                     toggleIsPlay();
                     break;
                 case 'ArrowRight':
-                    audio.currentTime += 5;
+                    dispatch(rewindForward());
                     break;
                 case 'ArrowLeft':
-                    audio.currentTime -= 5;
+                    dispatch(rewindBack());
                     break;
                 case 'KeyF':
                     toggleFullScreen();
@@ -392,7 +281,7 @@ const PlaySelection: FC = () => {
                                     <div className="target_circle"></div>
                                 </div>
                             </div>
-                            {currentTrack && <span className="time">{humanizingNumbers(audio.duration)}</span>}
+                            {currentTrack && <span className="time">{humanizingNumbers(duration)}</span>}
                         </div>
                     </div>
                 </div>
