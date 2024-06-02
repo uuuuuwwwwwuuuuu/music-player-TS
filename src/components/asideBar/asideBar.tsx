@@ -105,11 +105,11 @@ const AsideBar: FC = () => {
                     const artistsListCopy = [...likedArtists];
                     const sortedArr = artistsListCopy.sort((a, b) => b.likes - a.likes);
                     return sortedArr.map(item => {
-                        return <ArtistCard name={item.name} img={item.artistImg} type='small' />
+                        return <ArtistCard key={item.id} name={item.name} img={item.artistImg} type='small' />
                     })
                 } else {
                     return likedArtists.map(item => {
-                        return <ArtistCard name={item.name} img={item.artistImg} type='small' />
+                        return <ArtistCard key={item.id} name={item.name} img={item.artistImg} type='small' />
                     })
                 }
             }
@@ -124,7 +124,7 @@ const AsideBar: FC = () => {
         <AsideBarComponent $isHovered={isHovered} $isPlayList={showPlayList} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
             <FlexRow>
                 <span>Любимые треки</span>
-                <Button type="alternative" W={135} H={24} fontS={1.2} content='Посмотреть всё'/>
+                <Button onClick={() => navigate('/home/liked')} type="alternative" W={135} H={24} fontS={1.2} content='Посмотреть всё'/>
             </FlexRow>
             <div className="aside_liked_track_list">
                 {renderLikedTrackList()}

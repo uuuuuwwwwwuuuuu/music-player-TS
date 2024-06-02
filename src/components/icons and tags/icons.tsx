@@ -50,10 +50,6 @@ export const Like: FC<IProps> = ({scale = 20, type = 'idle', className, style}) 
             return <TiHeartFullOutline className={getClassList(type, className)  + ' like_icon'}
             style={{width: `${scale}px`, height: `${scale}px`, ...style}}/> 
     }
-
-    return <TiHeartFullOutline className={getClassList(type, className) + 
-                type === 'idle' || type === 'disable' ? ' like_icon' : ''}
-                style={{width: `${scale}px`, height: `${scale}px`, ...style}}/>
 }
 
 export const Random: FC<IProps> = ({scale = 20, type = 'idle', className, style}) => {
@@ -122,8 +118,8 @@ export const Follow: FC<IProps> =({scale = 20, type = 'idle', className, style})
 }
 
 export const Cross: FC<IProps> =({scale = 20, type = 'idle', className, style}) => {
-    return <RxCross2 className={getClassList(type, className) + ' add_playlist'}
-                style={{width: `${scale}px`, height: `${scale}px`, ...style}}/>
+    return <RxCross2 className={getClassList(type, className)}
+                style={{width: `${scale}px`, height: `${scale}px`, ...style}} strokeWidth={0.5}/>
 }
 
 export const UnFollow: FC<IProps> =({scale = 20, type = 'idle', className, style}) => {

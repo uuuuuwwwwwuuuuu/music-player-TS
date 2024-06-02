@@ -6,13 +6,7 @@
     position: relative;
     z-index: 2;
     display: flex;
-
-    img:first-child {
-        flex: 0 0 500px;
-        height: 500px;
-        border-radius: 20px;
-        margin-right: 20px;
-    }
+    align-items: end;
 }
 
 .fullscreen_bottom_elements {
@@ -32,6 +26,7 @@
     flex-direction: column;
     justify-content: space-between;
     width: calc(100svw - 660px);
+    height: 100%;
 }
 
 .fullscreen_track_info {
@@ -120,7 +115,7 @@
 .play_or_pause_icon {
     color: $text-color;
     position: relative;
-    left: 2px;
+    // left: 1px;
 
     &:hover {
         @extend .play_or_pause_icon;

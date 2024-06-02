@@ -78,15 +78,6 @@ const Headers: FC<IHeadersProp> = ({type, className, style}) => {
                         <HiHome />
                     </GoHomeBtn>
                 </nav>
-                <div className="header_search_panel">
-                    <button>
-                        <IoIosSearch />
-                    </button>
-                    <Input 
-                        H={40} W={400} fontS={1.5} fontW={400}
-                        type="text" placeholder="Поиск"
-                        style={{paddingLeft: 50}}/>
-                </div>
                 <div className="header_info">
                     <div className="header_account">
                         <div className="header_account_info">

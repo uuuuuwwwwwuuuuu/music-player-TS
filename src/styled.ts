@@ -12,6 +12,7 @@ interface ITheme {
     disabledBg: string,
     errorColor: string,
     successColor: string,
+    border: string,
 }
 
 export default ITheme

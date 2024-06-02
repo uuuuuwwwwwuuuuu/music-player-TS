@@ -1,12 +1,19 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, SyntheticEvent, useEffect, useRef, useState } from "react";
 
 import './fullScreen.scss';
-import styled, { keyframes } from "styled-components";
-import { useAppSelector } from "../../hook";
-import { ITrack } from "../../store/likedPlayList/reducerLiked";
+import styled from "styled-components";
+import { useAppDispatch, useAppSelector } from "../../hook";
+import { ITrack, toggleLike } from "../../store/likedPlayList/reducerLiked";
 import { HomeTrackCard } from "../../components/cards/homeTrackCards/homeTrackCards";
 import Button from "../../components/buttons/buttons";
 import { CurrentPlayList, Like, PlayOrPause, Random, Repeat, Rewind, FullScreen as FullScreenIcon } from "../../components/icons and tags/icons";
+import { rewindBack, rewindForward, setPause, setPlay, setRewindCurrentTime, switchTrackAction, toggleRandom, toggleRepeat } from "../../store/trackState/actionsTrackState";
+import { humanizingNumbers } from "../PlaySelection/PlaySelection";
+import { addNotification } from "../../store/notificationQueue/actionsNotification";
+import { v4 as randomId } from 'uuid'; 
+import { showCurrentPlayListAction } from "../../store/current/actionsCurrent";
+import { useLocation, useNavigate } from "react-router-dom";
+import { IKeyInfo } from "../PlaySelection/PlaySelection";
 
 const Background = styled.div<{$img: string}>`
     height: 100svh;
@@ -36,7 +43,7 @@ const Background = styled.div<{$img: string}>`
     }
 `;
 
-const CurrentPlayListSelection = styled.div<{$translateValue: number, $isCPLLong: boolean}>`
+const CurrentPlayListSelection = styled.div<{$translateValue: number, $isCPLLong: boolean, $showCPL: boolean}>`
     flex: 0 0 320px;
     width: 100%;
     background-color: ${({theme}) => theme.mainBgBlur};
@@ -47,11 +54,16 @@ const CurrentPlayListSelection = styled.div<{$translateValue: number, $isCPLLong
     padding: 0 10px;
     overflow: hidden;
     position: relative;
+    top: 0;
+    right: ${({$showCPL}) => $showCPL ? 0 : '-400px'};
+    opacity: ${({$showCPL}) => $showCPL ? 1 : 0};
+    pointer-events: ${({$showCPL}) => $showCPL ? '' : 'none'};
+    transition: 0.8s ease all;
     
     &::after {
         content: '';
         position: absolute;
-        right: 0;
+        right: -1px;
         top: 0;
         height: 100%;
         width: 70px;
@@ -105,6 +117,7 @@ const ProgressBar = styled.div<{$progress: number, $isHovered: boolean}>`
     background-color: ${({theme}) => theme.accent};
     border-radius: 100px;
     position: relative;
+    transition: 0.5s ease all;
 
     &::after {
         content: '';
@@ -120,21 +133,19 @@ const ProgressBar = styled.div<{$progress: number, $isHovered: boolean}>`
     }
 `
 
+const TrackImg = styled.img<{$isShow: boolean}>`
+    flex: 0 0 ${({$isShow}) => $isShow ? '500px' : '200px'};
+    height: ${({$isShow}) => $isShow ? '500px' : '200px'};
+    border-radius: 20px;
+    margin-right: 20px;
+    transition: 0.8s ease all;
+`
+
 const FullScreen: FC = () => {
-    //ТО, ЧТО НУЖНО БУДЕТ ВНЕДРИТЬ, ДЛЯ ТЕСТА БУДЕТ ИСПОЛЬЗОВАТЬСЯ КОД НИЖЕ
-    // const {trackId, currentPlayList} = useAppSelector(state => state.current);
-    // __________________________________________________________________________
-
-    const {likedTrackList: currentPlayList} = useAppSelector(state => state.liked);
-    const [trackId, setTrackId] = useState<string | null>(null);
-
-    useEffect(() => {
-        if (currentPlayList.length !== 0) {
-            setTrackId(currentPlayList[0].id);
-        }
-    }, [currentPlayList]);
-
-    // __________________________________________________________________________
+    const dispatch = useAppDispatch();
+    const {trackId, currentPlayList, showCurrentPlayList, shuffledArr} = useAppSelector(state => state.current);
+    const {isPlay, isRandom, isRepeat, trackTimeData: {currentTime, duration}} = useAppSelector(state => state.trackState);
+    const {likedTrackList} = useAppSelector(state => state.liked);
 
     const [currentTrack, setCurrentTrack] = useState<ITrack | undefined>(undefined);
     const [spanTranslateValue, setSpanTranslateValue] = useState(0);
@@ -142,26 +153,46 @@ const FullScreen: FC = () => {
     const [CPLTranslateValue, setCPLTranslateValue] = useState(0);
     const [isCPLLong, setIsCPLLong] = useState(false);
     const [isPBHovered, setIsPBHovered] = useState(false);
+    const [isLiked, setIsLiked] = useState(false);
+    const [currentWidth, setCurrentWidth] = useState(0);
 
     const infoDiv = useRef<HTMLDivElement | null>(null);
     const trackTitleSpan = useRef<HTMLSpanElement | null>(null);
     const CPLSelectionRef = useRef<HTMLDivElement | null>(null);
     const CPLLine = useRef<HTMLDivElement | null>(null);
 
-    // Логика по работе с рендером и адаптивом
+    const navigate = useNavigate();
+    const location = useLocation();
 
-    // Рендер
     const renderCurrentPlayList = () => {
-        return currentPlayList.map(item => {
-            if (item.id === trackId) {
-                return null;
-            } else {
-                return <HomeTrackCard key={item.id} playList={currentPlayList} track={item} />
-            }
-        })
+        if (shuffledArr.length !== 0) {
+            return shuffledArr.map(item => {
+                return <HomeTrackCard key={item.id} forFullScreen playList={currentPlayList} track={item} />
+            });
+        } else {
+            return currentPlayList.map(item => {
+                return <HomeTrackCard key={item.id} forFullScreen playList={currentPlayList} track={item} />
+            })
+        }
     }
 
-    // Адаптив
+    useEffect(() => {
+        if (location.pathname === '/home/fullscreen') {
+            if (!trackId) {
+                navigate('/home');
+            }
+        }
+    }, [trackId, location.pathname, navigate]);
+
+    useEffect(() => {
+        const likedTrack = likedTrackList.find(track => track.id === trackId)
+        if (likedTrack) {
+            setIsLiked(true);
+        } else {
+            setIsLiked(false)
+        }
+    }, [likedTrackList, trackId]);
+
     useEffect(() => {
         if (infoDiv.current && trackTitleSpan.current) {
             const wrapper = infoDiv.current;
@@ -189,32 +220,126 @@ const FullScreen: FC = () => {
     }, [CPLSelectionRef.current?.clientWidth, CPLLine.current?.clientWidth, CPLTranslateValue]);
 
 
-    // Логика по работе с звуком
     useEffect(() => {
         if (currentPlayList.length !== 0 && currentTrack?.id !== trackId) {
             setCurrentTrack(currentPlayList.find(item => item.id === trackId));
         }
     }, [currentPlayList, currentTrack?.id, trackId]);
 
+    useEffect(() => {
+        if (currentPlayList.length === 1) {
+            dispatch(toggleRepeat(true));
+        }
+    }, [currentPlayList, dispatch]);
+
+    useEffect(() => {
+        setCurrentWidth(currentTime * 100 / duration);
+    }, [currentTime, duration]);
+
     // Ивенты
+    useEffect(() => {
+        if (currentTrack) {
+            let trackIndex;
+            if (shuffledArr.length !== 0) {
+                trackIndex = shuffledArr.findIndex(item => item.id === currentTrack.id);
+            } else {
+                trackIndex = currentPlayList.findIndex(item => item.id === currentTrack.id);
+            }
+            if (trackIndex !== 0) {
+                setCPLTranslateValue(260 * (trackIndex - 1));
+            } else {
+                setCPLTranslateValue(260 * trackIndex);
+            }
+        }
+    }, [currentPlayList, currentTrack, shuffledArr]);
+
     const CPLTranslateToNext = () => {
         setCPLTranslateValue(prevState => {
             if (CPLSelectionRef.current) {
-                return prevState + CPLSelectionRef.current.clientWidth - 100;
+                return prevState + 260 * 2;
             } else {
                 return prevState
             }
         })
     }
-    
+
     const CPLTranslateToPrev = () => {
         setCPLTranslateValue(prevState => {
             if (CPLSelectionRef.current) {
-                return prevState - CPLSelectionRef.current.clientWidth + 100;
+                const newValue = prevState - 260 * 2;
+                if (newValue <= CPLSelectionRef.current.clientWidth + 20) {
+                    return 0;
+                }
+                return newValue;
             } else {
                 return prevState
             }
         })
+    }
+
+    const toggleIsLiked = () => {
+        if (trackId && currentTrack) {
+            dispatch(toggleLike(trackId));
+            dispatch(addNotification({
+                notificationId: randomId(),
+                img: currentTrack.albumImg,
+                info: `${currentTrack.title} - ${currentTrack.artists}`,
+                additionalInfo: isLiked ? 'Трек удалён из <span>избранного</span>' : 'Трек добавлен в <span>избранное</span>'
+            }));
+        }
+    }
+    
+    const toggleIsPlay = () => {
+        if (currentTrack) {
+            if (isPlay) {
+                dispatch(setPause());
+            } else {
+                dispatch(setPlay());
+            }
+        }
+    }
+
+    const toggleShowCurrentPlayList = () => {
+        if (currentPlayList) {
+            dispatch(showCurrentPlayListAction(!showCurrentPlayList));
+        }
+    }
+    
+
+    const toggleIsRepeat = () => {
+        if (isRepeat) {
+            dispatch(toggleRepeat(false));
+        } else {
+            dispatch(toggleRepeat(true))
+        }
+    }
+
+    const toggleIsRandom = () => {
+        if (currentTrack) {
+            if (isRandom) {
+                dispatch(toggleRandom(false));
+            } else {
+                dispatch(toggleRandom(true));
+            }
+        }
+    }
+
+    const prevTrack = () => {
+        dispatch(switchTrackAction('back'));
+    }
+
+    const nextTrack = () => {
+        dispatch(switchTrackAction('forward'));
+    }
+
+    const setCurrentTime = (e: SyntheticEvent<HTMLDivElement, MouseEvent>) => {
+        const offsetX = e.nativeEvent.offsetX;
+        const clientWidth = document.querySelector('.progress_bar_wrapper')?.clientWidth;
+        if (clientWidth && duration) {
+            const maxOffsetX = clientWidth - 1;
+            const newTime = ((offsetX > maxOffsetX ? maxOffsetX : offsetX) / clientWidth) * duration;
+            dispatch(setRewindCurrentTime(newTime));
+        }
     }
 
     return (
@@ -222,9 +347,9 @@ const FullScreen: FC = () => {
             {(currentTrack && currentPlayList) &&
                 <Background $img={currentTrack.albumImg}>
                     <div className="fullscreen_top_elements">
-                        <img src={currentTrack.albumImg} alt="фото альбома" />
+                        <TrackImg $isShow={showCurrentPlayList} src={currentTrack.albumImg} alt="фото альбома" />
                         <div className="fullscreen_info">
-                            <CurrentPlayListSelection $isCPLLong={isCPLLong} $translateValue={CPLTranslateValue} ref={CPLSelectionRef}>
+                            <CurrentPlayListSelection $showCPL={showCurrentPlayList} $isCPLLong={isCPLLong} $translateValue={CPLTranslateValue} ref={CPLSelectionRef}>
                                 {CPLTranslateValue 
                                     ? <Button 
                                     type="alternative" 
@@ -260,46 +385,49 @@ const FullScreen: FC = () => {
                     <div className="fullscreen_bottom_elements">
                         <div className="fullscreen_controls">
                             <div>
-                                <button>
-                                    <Like scale={40}/>
+                                <button onClick={toggleIsLiked} >
+                                    <Like type={isLiked ? 'active' : 'idle'} scale={40}/>
                                 </button>
                             </div>
                             <div style={{height: 70}}>
-                                <button>
-                                    <Random scale={30}/>
+                                <button onClick={toggleIsRandom}>
+                                    <Random type={isRandom ? 'active' : 'idle'} scale={30}/>
                                 </button>
-                                <button>
+                                <button onClick={prevTrack}>
                                     <Rewind scale={40}/>
                                 </button>
-                                <button style={{height: 70}} className="fullscreen_play_btn">
-                                    <PlayOrPause className="play_or_pause_icon" scale={30}/>
+                                <button style={{height: 70}} className="fullscreen_play_btn" onClick={toggleIsPlay}>
+                                    <PlayOrPause type={isPlay ? 'active' : 'idle'}
+                                    style={{left: isPlay ? 0 : 2}}
+                                    className="play_or_pause_icon" scale={30}/>
                                 </button>
-                                <button >
+                                <button onClick={nextTrack} >
                                     <Rewind style={{transform: 'rotate(180deg)'}} scale={40}/>
                                 </button>
-                                <button>
-                                    <Repeat scale={30}/>
+                                <button onClick={toggleIsRepeat}>
+                                    <Repeat type={isRepeat ? 'active' : 'idle'} scale={30}/>
                                 </button>
                             </div>
                             <div>
-                                <button>
-                                    <CurrentPlayList scale={35}/>
+                                <button onClick={toggleShowCurrentPlayList} >
+                                    <CurrentPlayList type={showCurrentPlayList ? 'active' : 'idle'} scale={35}/>
                                 </button>
-                                <button>
-                                    <FullScreenIcon scale={35}/>
+                                <button onClick={() => navigate(-1)}>
+                                    <FullScreenIcon type="active" scale={35}/>
                                 </button>
                             </div>
                         </div>
                         <div className="fullscreen_progress_controls">
                             <div className="time_wrapper">
-                                <span>0:00</span>
-                                <span>3:25</span>
+                                <span>{humanizingNumbers(currentTime)}</span>
+                                <span>{humanizingNumbers(duration)}</span>
                             </div>
                             <div 
                                 className="progress_bar_wrapper"
                                 onMouseEnter={() => setIsPBHovered(true)}
-                                onMouseLeave={() => setIsPBHovered(false)}>
-                                    <ProgressBar $isHovered={isPBHovered} $progress={54} />
+                                onMouseLeave={() => setIsPBHovered(false)}
+                                onClick={setCurrentTime}>
+                                    <ProgressBar $isHovered={isPBHovered} $progress={currentWidth} />
                             </div>
                         </div>
                     </div>

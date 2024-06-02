@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hook";
-import { resetSomeStateData, setPlay, setCurrentTime, setDuration, setPause } from "../../store/trackState/actionsTrackState";
+import { resetSomeStateData, setPlay, setCurrentTime, setDuration, setPause, setAudioData, switchTrackAction } from "../../store/trackState/actionsTrackState";
 import { ITrack } from "../../store/likedPlayList/reducerLiked";
 import { selectCurrentTrack, selectShuffledPlayList } from "../../store/current/actionsCurrent";
 
@@ -25,7 +25,7 @@ const AudioModule: FC = () => {
     
         audio.addEventListener('ended', () => {
             if (!isRepeat) {
-                nextTrack();
+                dispatch(switchTrackAction('forward'));
             }
         });
 
@@ -34,13 +34,31 @@ const AudioModule: FC = () => {
                 dispatch(setCurrentTime(audio.currentTime));
             }
         })
-    }, [])
 
+        return () => {
+            audio.removeEventListener('canplay', () => {
+                if (!isPlay) {
+                    dispatch(setPlay());
+                }
+            })
+        
+            audio.removeEventListener('ended', () => {
+                if (!isRepeat) {
+                    dispatch(switchTrackAction('forward'));
+                }
+            });
+    
+            audio.removeEventListener('timeupdate', () => {
+                if (audio.currentTime !== undefined) {
+                    dispatch(setCurrentTime(audio.currentTime));
+                }
+            })
+        }
+    }, [])
     // Ивенты
     function nextTrack () {
         if (playList && currentTrack) {
             const currentIndex = playList.findIndex(item => item.id === currentTrack?.id);
-            
             if (playList) {
                 if (currentIndex >= playList.length - 1) {
                     dispatch(selectCurrentTrack(playList[0].id))
@@ -97,6 +115,25 @@ const AudioModule: FC = () => {
     }
 
     // Эффекты
+    useEffect(() => {
+        const getTrackData = async () => {
+            try {
+                if (currentTrack) {
+                    const response = await fetch(currentTrack.music);
+                    const audioBlob = await response.blob();
+                    dispatch(setAudioData(URL.createObjectURL(audioBlob)));
+                }
+            } catch (err) {
+                if (err) {
+                    const error = err as Error;
+                    console.error(error)
+                }
+            }
+        }
+
+        getTrackData();
+    }, [currentTrack, currentTrack?.music, dispatch]);
+
     useEffect(() => {
         if (shuffledArr.length !== 0) {
             setPlayList(shuffledArr);

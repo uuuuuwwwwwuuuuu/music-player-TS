@@ -8,16 +8,42 @@ import { showCurrentPlayListAction } from "../../store/current/actionsCurrent";
 import { ITrack, toggleLike } from "../../store/likedPlayList/reducerLiked";
 
 import { CurrentPlayList, FullScreen, Like, PlayOrPause, Random, Repeat, Rewind } from "../../components/icons and tags/icons";
-import { rewindBack, rewindForward, setAudioData, setPause, setPlay, setRewindCurrentTime, switchTrackAction, toggleRandom, toggleRepeat } from "../../store/trackState/actionsTrackState";
+import { setPause, setPlay, setRewindCurrentTime, switchTrackAction, toggleRandom, toggleRepeat } from "../../store/trackState/actionsTrackState";
 import { addNotification } from "../../store/notificationQueue/actionsNotification";
 
 import { v4 as randomId } from 'uuid';
+import { useNavigate } from "react-router-dom";
 
-interface IKeyInfo {
+export interface IKeyInfo {
     keyCode: string,
     shiftKey: boolean
 }
 
+export const humanizingNumbers = (time: number): string => {
+    if (time) {
+        const roundedTime = Math.trunc(time);
+        const minutes = Math.floor(roundedTime / 60);
+        const seconds = roundedTime % 60;
+        
+        let minutesStr = '';
+        let secondsStr = '';
+
+        if (minutes < 10) {
+            minutesStr = `0${minutes}`;
+        } else {
+            minutesStr = `${minutes}`;
+        }
+
+        if (seconds < 10) {
+            secondsStr = `0${seconds}`;
+        } else {
+            secondsStr = `${seconds}`
+        }
+        return `${minutesStr}:${secondsStr}`;
+    } else {
+        return '00:00'
+    }
+}
 
 const PlaySelection: FC = () => {
     const dispatch = useAppDispatch();
@@ -27,10 +53,10 @@ const PlaySelection: FC = () => {
 
     const [currentWidth, setCurrentWidth] = useState(0);
     const [currentTrack, setCurrentTrack] = useState<ITrack | undefined>(undefined);
-    const [key, setKey] = useState<IKeyInfo | null>(null);
-    const [humanizedTime, setHumanizedTime] = useState<string>('00:00');
     
     const [isLiked, setIsLiked] = useState(false);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const likedTrack = likedTrackList.find(track => track.id === trackId)
@@ -39,8 +65,7 @@ const PlaySelection: FC = () => {
         } else {
             setIsLiked(false)
         }
-    }, [likedTrackList, trackId])
-
+    }, [likedTrackList, trackId]);
 
     useEffect(() => {
         if (currentPlayList.length !== 0 && currentTrack?.id !== trackId) {
@@ -48,24 +73,6 @@ const PlaySelection: FC = () => {
         }
     }, [currentPlayList, currentTrack?.id, trackId]);
 
-    useEffect(() => {
-        const getTrackData = async () => {
-            try {
-                if (currentTrack) {
-                    const response = await fetch(currentTrack.music);
-                    const audioBlob = await response.blob();
-                    dispatch(setAudioData(URL.createObjectURL(audioBlob)));
-                }
-            } catch (err) {
-                if (err) {
-                    const error = err as Error;
-                    console.error(error)
-                }
-            }
-        }
-
-        getTrackData();
-    }, [currentTrack, currentTrack?.music, dispatch]);
 
     useEffect(() => {
         if (currentPlayList.length === 1) {
@@ -76,7 +83,6 @@ const PlaySelection: FC = () => {
     
     useEffect(() => {
         setCurrentWidth(currentTime * 100 / duration);
-        setHumanizedTime(humanizingNumbers(currentTime));
     }, [currentTime, duration]);
 
     //______________________________________________________
@@ -107,10 +113,6 @@ const PlaySelection: FC = () => {
             dispatch(showCurrentPlayListAction(!showCurrentPlayList));
         }
     }
-
-    const toggleFullScreen = () => {
-
-    }
     
     const toggleIsRepeat = () => {
         if (isRepeat) {
@@ -138,32 +140,6 @@ const PlaySelection: FC = () => {
         dispatch(switchTrackAction('forward'));
     }
 
-    const humanizingNumbers = (time: number): string => {
-        if (time) {
-            const roundedTime = Math.trunc(time);
-            const minutes = Math.floor(roundedTime / 60);
-            const seconds = roundedTime % 60;
-            
-            let minutesStr = '';
-            let secondsStr = '';
-    
-            if (minutes < 10) {
-                minutesStr = `0${minutes}`;
-            } else {
-                minutesStr = `${minutes}`;
-            }
-    
-            if (seconds < 10) {
-                secondsStr = `0${seconds}`;
-            } else {
-                secondsStr = `${seconds}`
-            }
-            return `${minutesStr}:${secondsStr}`;
-        } else {
-            return '00:00'
-        }
-    }
-
     const setCurrentTime = (e: SyntheticEvent<HTMLDivElement, MouseEvent>) => {
         const offsetX = e.nativeEvent.offsetX;
         const clientWidth = document.querySelector('.music_progress')?.clientWidth;
@@ -173,61 +149,6 @@ const PlaySelection: FC = () => {
             dispatch(setRewindCurrentTime(newTime));
         }
     }
-
-    useEffect(() => {
-        if (key) {
-            if (key.shiftKey && key?.keyCode === 'ArrowRight') {
-                nextTrack();
-            }
-    
-            if (key.shiftKey && key?.keyCode === 'ArrowLeft') {
-                prevTrack();
-            }
-            switch (key.keyCode) {
-                case 'KeyR':
-                    toggleIsRepeat();
-                    break;
-                case 'KeyP':
-                    toggleShowCurrentPlayList();
-                    break;
-                case 'KeyN':
-                    toggleIsRandom();
-                    break;
-                case 'Space':
-                    toggleIsPlay();
-                    break;
-                case 'ArrowRight':
-                    dispatch(rewindForward());
-                    break;
-                case 'ArrowLeft':
-                    dispatch(rewindBack());
-                    break;
-                case 'KeyF':
-                    toggleFullScreen();
-                    break;
-            }
-            setKey(null);
-        }
-    }, [key])
-
-    useEffect(() => {
-        document.body.addEventListener('keydown', (e) => {
-            if (e.code === 'Space') {
-                e.preventDefault();
-            }
-            if (e.shiftKey) {
-                setKey({
-                    keyCode: e.code,
-                    shiftKey: true
-                });
-            } else {
-                setKey({
-                    keyCode: e.code,
-                    shiftKey: false
-                })
-            }
-        });
-    }, []);
 
     return (
         <>
@@ -269,13 +190,13 @@ const PlaySelection: FC = () => {
                                     <CurrentPlayList 
                                         type={currentTrack ? (showCurrentPlayList ? 'active' : 'idle') : 'disable'} />
                                 </button>
-                                <button onClick={toggleFullScreen} style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                <button onClick={() => navigate('/home/fullscreen')} style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                                     <FullScreen type={"idle"}/>
                                 </button>
                             </div>
                         </div>
                         <div className="additional_track_info">
-                            {currentTrack && <span className="time">{humanizedTime}</span>}
+                            {currentTrack && <span className="time">{humanizingNumbers(currentTime)}</span>}
                             <div className={"music_progress"} onClick={setCurrentTime}>
                                 <div className="progress_bar" style={{width: currentWidth + '%'}}>
                                     <div className="target_circle"></div>

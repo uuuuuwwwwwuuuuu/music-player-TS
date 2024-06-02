@@ -1,9 +1,9 @@
 import { FC, useEffect, useState } from "react";
 
 import './homeTrackCards.scss';
-import { AddToPlayList, Like, PlayOrPause, PlayingTrackTag } from "../../icons and tags/icons";
+import { AddToPlayList, Cross, Like, PlayOrPause, PlayingTrackTag } from "../../icons and tags/icons";
 import { useAppDispatch, useAppSelector } from "../../../hook";
-import { addToCurrentPlayList, selectCurrentTrack, selectPlayList } from "../../../store/current/actionsCurrent";
+import { addToCurrentPlayList, deleteCurrentTrack, selectCurrentTrack, selectPlayList } from "../../../store/current/actionsCurrent";
 import { ITrack, toggleLike } from "../../../store/likedPlayList/reducerLiked";
 import { addNotification } from "../../../store/notificationQueue/actionsNotification";
 import { v4 as randomId } from 'uuid'
@@ -12,16 +12,18 @@ import { MdErrorOutline } from "react-icons/md";
 interface IProp {
     track: ITrack,
     playList: ITrack[],
+    forFullScreen?: boolean
 }
 
-export const HomeTrackCard: FC<IProp> = ({track, playList}) => {
+export const HomeTrackCard: FC<IProp> = ({track, playList, forFullScreen}) => {
     const [isHovered, setIsHovered] = useState<boolean>(false);
     const dispatch = useAppDispatch();
     const currentTrackId = useAppSelector(state => state.current.trackId);
     const {likedTrackList} = useAppSelector(state => state.liked)
-    const {currentPlayList} = useAppSelector(state => state.current)
+    const {currentPlayList, trackId} = useAppSelector(state => state.current)
     const [isLiked, setIsLiked] = useState<boolean>(false);
     const {id, title, albumImg, artists} = track;
+    const {isPlay} = useAppSelector(state => state.trackState)
 
     useEffect(() => {
         const likedTrack = likedTrackList.find(track => track.id === id)
@@ -79,6 +81,10 @@ export const HomeTrackCard: FC<IProp> = ({track, playList}) => {
         }
     }
 
+    const deleteTrack = () => {
+        dispatch(deleteCurrentTrack(track.id));
+    }
+
     return (
         <div className="home_track_card">
             <div className="home_track_card_wrapper">
@@ -86,7 +92,9 @@ export const HomeTrackCard: FC<IProp> = ({track, playList}) => {
                 style={{opacity: currentTrackId === id ? 1 : (isHovered ? 1 : 0)}} onMouseEnter={() => setIsHovered(true)} className="home_track_card_play">
                     {
                         currentTrackId === id 
-                        ? <PlayingTrackTag />
+                        ? (isPlay 
+                            ? <PlayingTrackTag /> 
+                            : <PlayOrPause style={{position: 'relative', left: '0'}} scale={25} type='active'/>)
                         : <PlayOrPause scale={30} className="home_track_card_play_icon" type="idle"/>
                     }
                 </button>
@@ -98,7 +106,10 @@ export const HomeTrackCard: FC<IProp> = ({track, playList}) => {
                     <span>{cutLongString(artists)}</span>
                 </div>
                 <div className="home_track_card_buttons">
-                    <button onClick={addToPlayList}><AddToPlayList /></button>
+                    {forFullScreen 
+                        ? (track.id !== trackId && <button onClick={deleteTrack} ><Cross /></button>)
+                        : <button onClick={addToPlayList}><AddToPlayList /></button>
+                    }
                     <button onClick={toggleIsLiked}><Like type={isLiked ? 'active' : 'idle'}/></button>
                 </div>
             </div>

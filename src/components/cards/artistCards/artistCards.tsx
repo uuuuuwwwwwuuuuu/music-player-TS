@@ -37,7 +37,7 @@ const ArtistName = styled.span<{$type: 'small' | 'big'}>`
     transition: 0.5s ease all;
 `;
 
-const ArtistImg = styled.div<{$type: 'small' | 'big'}>`
+const ArtistImg = styled.div<{$type: 'small' | 'big', $img: string}>`
     width: ${({$type}) => $type === 'big' ? '100px' : '80px'};
     height: ${({$type}) => $type === 'big' ? '100px' : '80px'};
     border-radius: 100px;
@@ -45,11 +45,9 @@ const ArtistImg = styled.div<{$type: 'small' | 'big'}>`
     margin-bottom: ${({$type}) => $type === 'big' ? '15px' : '10px'};
     display: flex;
     justify-content: center;
-    img {
-        width: ${({$type}) => $type === 'big' ? '100px' : '80px'};
-        height: ${({$type}) => $type === 'big' ? '100px' : '80px'};
-        transition: 0.5s ease all;
-    }
+    background-image: url(${({$img}) => $img});
+    background-size: cover;
+    background-position: center;
 `;
 
 export const ArtistCard: FC<IProp> = ({img, name, type='big'}) => {
@@ -67,9 +65,7 @@ export const ArtistCard: FC<IProp> = ({img, name, type='big'}) => {
     }
     return (
         <ArtistHomeCard $type={type} className='artist_home_card' onClick={selectArtist}>
-            <ArtistImg $type={type}>
-                <img src={img} alt="Артист" />
-            </ArtistImg>
+            <ArtistImg $img={img} $type={type}></ArtistImg>
             <ArtistName $type={type}>{cutLongString(name)}</ArtistName>
         </ArtistHomeCard>
     )

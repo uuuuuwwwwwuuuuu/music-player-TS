@@ -23,6 +23,9 @@ const TrackItemWrapper = styled.div<{$isLiked: boolean}>`
     align-items: center;
     padding: 10px;
     cursor: pointer;
+    button {
+        cursor: pointer;
+    }
 `;
 
 const ImgWrapper = styled.div<{$img: string}>`
@@ -43,6 +46,8 @@ const TrackInfoWrapper = styled.div`
 const SmallTrackCard: FC<ISmallTrackListProps> = ({track, playList, isLiked=false}) => {
     const dispatch = useAppDispatch();
     const currentTrackId = useAppSelector(state => state.current.trackId);
+    const {likedTrackList} = useAppSelector(state => state.liked);
+    const [isLikedTrack, setIsLikedTrack] = useState(false);
 
     const deleteLike = () => {
         dispatch(toggleLike(track.id));
@@ -53,6 +58,16 @@ const SmallTrackCard: FC<ISmallTrackListProps> = ({track, playList, isLiked=fals
             notificationId: randomId()
         }));
     }
+
+    useEffect(() => {
+        const isLikedTrackItem = likedTrackList.find(item => item.id === track.id);
+        if (isLikedTrackItem) {
+            setIsLikedTrack(true);
+        } else {
+            setIsLikedTrack(false);
+        }
+
+    }, [likedTrackList, track.id])
 
     const deleteCurrent = () => {
         dispatch(deleteCurrentTrack(track.id));
@@ -72,14 +87,14 @@ const SmallTrackCard: FC<ISmallTrackListProps> = ({track, playList, isLiked=fals
                     <span>{track.artists}</span>
                 </div>
             </TrackInfoWrapper>
-            <button onClick={deleteLike}>
-                <Like type="active"/>
-            </button>
             {!isLiked && currentTrackId !== track.id &&
-                <button onClick={deleteCurrent}>
+                <button style={{marginRight: 5}} onClick={deleteCurrent}>
                     <Cross />
                 </button>
             }
+            <button onClick={deleteLike}>
+                <Like type={isLikedTrack ? 'active' : 'idle'}/>
+            </button>
         </TrackItemWrapper>
     )
 }

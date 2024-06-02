@@ -21,6 +21,8 @@ import AsideBar from "../../components/asideBar/asideBar";
 import { loadLikedArtists } from "../../store/likedArtists/reducerLikedArtists";
 import FullScreen from "../fullScreen/fullScreen";
 import AudioModule from "../audioModule/audioModule";
+import CPLSelection from "../../components/CPLSelection/CPLSelection";
+import LikedPage from "../likedPage/likedPage";
 
 const AppWrapper: FC = () => {
     const showUserData = useAppSelector(state => state.user);
@@ -62,15 +64,12 @@ const AppWrapper: FC = () => {
                     return <Route key={artist.id} path={'/artist/' + artist.name} element={<Artist artistName={artist.name}/>}/>
                 })}
                 <Route path="/home/fullscreen" element={<FullScreen />} />
+                <Route path='/home/liked' element={<LikedPage />} />
                 <Route path="*" element={<div>hyi</div>} />
             </Route>
         </Routes>
     );
 };
-
-interface IAppProp {
-    token: string | null
-}
 
 export const baseTheme: ITheme = {
     accent: '#5E37CC',
@@ -86,9 +85,10 @@ export const baseTheme: ITheme = {
     disabledBg: '#232224',
     errorColor: '#C84141',
     successColor: '#4EBA3C',
+    border: '#c5c4c652'
 }
 
-const App: FC<IAppProp> = ({token}) => {
+const App: FC<{token: string | null}> = ({token}) => {
     const location = useLocation();
     const {trackId} = useAppSelector(state => state.current)
     return (
@@ -103,6 +103,7 @@ const App: FC<IAppProp> = ({token}) => {
                 {token && <Notification />}
                 {location.pathname !== '/home/fullscreen' && token && <AsideBar />}
                 {token && <AudioModule />}
+                {token && location.pathname !== '/home/fullscreen' && <CPLSelection />}
             </ThemeProvider>
         </div>
     )
