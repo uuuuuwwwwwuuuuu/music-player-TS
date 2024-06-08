@@ -26,6 +26,7 @@ import LikedPage from "../likedPage/likedPage";
 import { toggleShowUserData } from "../../store/user/actionsUser";
 import { showCurrentPlayListAction } from "../../store/current/actionsCurrent";
 import AccountDataBar from "../../components/accountDataBar/accountDataBar";
+import NotFoundPage from "../notFoundPage/notFoundPage";
 
 const AppWrapper: FC = () => {
     const artists = useAppSelector(state => state.artists.artists);
@@ -63,7 +64,7 @@ const AppWrapper: FC = () => {
                 })}
                 <Route path="/home/fullscreen" element={<FullScreen />} />
                 <Route path='/home/liked' element={<LikedPage />} />
-                <Route path="*" element={<div>hyi</div>} />
+                <Route path="*" element={<NotFoundPage/>} />
             </Route>
         </Routes>
     );
