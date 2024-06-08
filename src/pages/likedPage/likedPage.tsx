@@ -85,15 +85,21 @@ const LikedPage: FC = () => {
     const [isPopular, setIsPopular] = useState(false);
 
     const renderLikedTrackList = () => {
-        if (searchStr) {
-            const subDataArr = dataArr.filter(item => item.title.toLowerCase().includes(searchStr.toLowerCase()));
-            return subDataArr.map(item => {
-                return <HomeTrackCard key={item.id} track={item} playList={dataArr}/>
-            });
+        if (likedTrackList.length !== 0) {
+            if (searchStr) {
+                const subDataArr = dataArr.filter(item => item.title.toLowerCase().includes(searchStr.toLowerCase()));
+                return subDataArr.map(item => {
+                    return <HomeTrackCard key={item.id} track={item} playList={dataArr}/>
+                });
+            } else {
+                return dataArr.map(item => {
+                    return <HomeTrackCard key={item.id} track={item} playList={dataArr}/>
+                });
+            }
         } else {
-            return dataArr.map(item => {
-                return <HomeTrackCard key={item.id} track={item} playList={dataArr}/>
-            });
+            return (
+                <NoDataDiv><span>Вы не добавили ни одного трека</span></NoDataDiv>
+            )
         }
     }
 

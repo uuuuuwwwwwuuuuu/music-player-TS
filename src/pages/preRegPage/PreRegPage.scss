@@ -1,9 +1,10 @@
 @import '../../constants';
 
 .pre_reg_main {
-    height: 100svh;
+    height: calc(100svh - 100px);
     width: 100%;
     background-color: $second-bg-color;
+    animation: fade-in 0.5s ease;
     main {
         display: flex;
         justify-content: center;
@@ -49,8 +50,5 @@
 .action_links {
     display: flex;
     justify-content: center;
-
-    a {
-        margin-right: 20px;
-    }
+    padding-top: 20px;
 }

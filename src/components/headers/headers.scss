@@ -1,5 +1,9 @@
 @import '../../constants';
 
+header {
+    animation: header-fade-in 1s ease;
+}
+
 .main_header {
     height: 80px;
     width: calc(100% - 80px);
@@ -12,6 +16,8 @@
     backdrop-filter: blur(40px);
     padding: 0 40px;
     z-index: 200;
+
+
 
     nav {
         display: flex;
@@ -43,9 +49,11 @@
     
     .header_account {
         display: flex;
-        width: 200px;
+        min-width: 200px;
         height: 50px;
         justify-content: flex-end;
+        transition: 0.5s ease all;
+        cursor: pointer;
     
         &_info {
             display: flex;
@@ -67,12 +75,6 @@
                 }
             }
         }
-    
-    }
-    
-    .header_info {
-        display: flex;
-        align-items: center;
     }
     
     .account_photo {
@@ -101,5 +103,15 @@
         font-weight: 700;
         font-family: 'Inria Sans';
         letter-spacing: 5px;
+    }
+}
+
+@keyframes header-fade-in {
+    from {
+        top: -100px;
+        opacity: 0;
+    } to {
+        top: 0;
+        opacity: 1;
     }
 }

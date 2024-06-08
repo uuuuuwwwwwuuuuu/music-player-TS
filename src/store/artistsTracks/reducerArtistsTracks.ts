@@ -11,11 +11,13 @@ const initialState: {
    tracks: [] 
 }
 
+const serverUrl = 'http://127.0.0.1:8000';
+
 export const loadArtistTracks = createAsyncThunk<ITrack[], string[], {rejectValue: string}>(
     '@@artistTracks/LOAD_ARTIST_TRACKS',
     async (arrOfId, {rejectWithValue}) => {
         try {
-            const response = await fetch('http://127.0.0.1:8000/api/tracks/getartisttracks/', {
+            const response = await fetch(serverUrl + '/api/tracks/getartisttracks/', {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json'
@@ -24,8 +26,8 @@ export const loadArtistTracks = createAsyncThunk<ITrack[], string[], {rejectValu
             });
             const data = await response.json();
             const newData = data.data.map((item: ITrack) => {
-                item.albumImg = 'http://127.0.0.1:8000' + item.albumImg;
-                item.music = 'http://127.0.0.1:8000/' + item.music;
+                item.albumImg = serverUrl + item.albumImg;
+                item.music = serverUrl + item.music;
                 return item;
             });
             return newData

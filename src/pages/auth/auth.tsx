@@ -321,10 +321,9 @@ const Auth: FC = () => {
                                 placeholder='Пароль'
                                 required />
                             {passwordInvalid && <div className='validation_error'>{passwordInvalid}</div>}
-                            {auth === 'auth' && <div className='forgot_pass'><button type='button'>Забыли пароль? нужно дописать</button></div>}
                         </div>
                         {auth === 'reg' 
-                            ? <div className='input_field'>
+                            && <div className='input_field'>
                                 <div className='label_icon_wrapper'>
                                     <label htmlFor="email">Адрес электронной почты</label>
                                     <LuInfo className='auth_error_icon' style={{opacity: emailInvalid ? 1 : 0}}/>
@@ -338,15 +337,6 @@ const Auth: FC = () => {
                                     placeholder='Электронная почта'
                                     required/>
                                 {emailInvalid && <div className='validation_error'>{emailInvalid}</div>}
-                            </div>
-                            : <div style={{display: 'flex', justifyContent: 'center'}}>
-                                <Button style={{marginTop: '20px'}}
-                                W={250} H={50} isLink path='/'
-                                content={<div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px'}}>
-                                    <FaTelegramPlane style={{width: '30px', height: '30px', marginRight: 10}}/>
-                                    <span>Войти через Telegram</span>
-                                </div>}
-                                type='alternative' fontS={1.5} fontW={600}/>
                             </div>}
                     </div>
                     <Button W={auth === 'reg' ? 250 : 180} H={50} 
@@ -368,7 +358,7 @@ const Auth: FC = () => {
     return (
         <div className='auth'>
             <div className="auth_header">
-                <span className='auth_title'>BROOKLING</span>
+                <span className='auth_title'>BROOKLYN</span>
                 <div>
                     <Button 
                         H={42} W={200}

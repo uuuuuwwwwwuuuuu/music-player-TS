@@ -5,7 +5,6 @@ import { useAppSelector } from "../../hook";
 import Button from "../buttons/buttons";
 import SmallTrackCard from "../cards/smallTrackCard/smallTrackCard";
 import { ArtistCard } from "../cards/artistCards/artistCards";
-import { IArtist } from "../../store/artists/reducerArtists";
 import { useNavigate } from "react-router-dom";
 
 const AsideBarComponent = styled.aside<{$isPlayList: boolean, $isHovered: boolean}>`
@@ -19,7 +18,7 @@ const AsideBarComponent = styled.aside<{$isPlayList: boolean, $isHovered: boolea
     border-radius: 15px;
     transition: 500ms ease all;
     z-index: 100;
-    border: 1px solid #c5c4c652;
+    border: 1px solid ${({theme}) => theme.border};
     opacity: ${({$isHovered}) => $isHovered ? 1 : 0};
     box-sizing: border-box;
     padding: 20px;
@@ -56,8 +55,9 @@ const NoDataSpan = styled.span`
     text-align: center;
 `;
 
-const ArtistsGridWrapper = styled.div`
-    display: grid;
+const ArtistsGridWrapper = styled.div<{$isNoArtists: boolean}>`
+    display: ${({$isNoArtists}) => $isNoArtists ? 'flex' : "grid"};
+    justify-content: center;
     grid-template-columns: repeat(auto-fill, minmax(100px, 100px));
     gap: 20px;
     width: 100%;
@@ -137,7 +137,7 @@ const AsideBar: FC = () => {
                     style={{borderRadius: 100}}/>
             </FlexRow>
             <div className="aside_artist_list">
-                <ArtistsGridWrapper>
+                <ArtistsGridWrapper $isNoArtists={likedArtists.length === 0}>
                     {renderLikedArtists()}
                 </ArtistsGridWrapper>
             </div>

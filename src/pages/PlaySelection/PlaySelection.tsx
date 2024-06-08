@@ -190,7 +190,8 @@ const PlaySelection: FC = () => {
                                     <CurrentPlayList 
                                         type={currentTrack ? (showCurrentPlayList ? 'active' : 'idle') : 'disable'} />
                                 </button>
-                                <button onClick={() => navigate('/home/fullscreen')} style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                <button onClick={() => navigate('/home/fullscreen')} 
+                                    style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                                     <FullScreen type={"idle"}/>
                                 </button>
                             </div>

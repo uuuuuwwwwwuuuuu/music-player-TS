@@ -1,30 +1,40 @@
 import { createReducer, createAsyncThunk } from "@reduxjs/toolkit";
+import { logoutUser, setUserPhoto, toggleShowUserData } from "./actionsUser";
 
 interface IUser {
     username: string,
     email: string,
+    reg_date: string,
+    user_img: string | null
 }
 
 interface IUserState {
-    data: IUser | null,
+    data: IUser,
     error: string | undefined,
-    loading: true | false
+    loading: boolean,
+    showUserData: boolean
 }
 
 const initialState: IUserState = {
-    data: null,
+    data: {username: '', email: '', reg_date: '', user_img: null},
     error: undefined,
-    loading: false
+    loading: false,
+    showUserData: false
 }
+
+const serverUrl = 'http://127.0.0.1:8000';
 
 export const loadUserData = createAsyncThunk<IUser, undefined, {rejectValue: string}>(
     '@@user/LOAD_USER',
     async (_, {rejectWithValue}) => {
-        try {
-            const res = await fetch(`http://127.0.0.1:8000/api/users/getdata/${localStorage.getItem('Token')}/`);
-            return await res.json();
-        } catch {
-            return rejectWithValue('Произошла ошибка при получении данных')
+        if (localStorage.getItem('Token')) {
+            try {
+                    const res = await fetch(serverUrl + `/api/users/getdata/${localStorage.getItem('Token')}/`);
+                    const data = await res.json();
+                    return data
+                } catch {
+                    return rejectWithValue('Произошла ошибка при получении данных');
+                }
         }
     }
 );
@@ -43,6 +53,15 @@ const userReducer = createReducer(initialState, (builder) => {
             state.data = payload;
             state.error = undefined;
             state.loading = false;
+        })
+        .addCase(toggleShowUserData, (state, {payload}) => {
+            state.showUserData = payload
+        })
+        .addCase(logoutUser, (state) => {
+            state = initialState
+        })
+        .addCase(setUserPhoto, (state, {payload}) => {
+            state.data.user_img = payload
         })
 })
 

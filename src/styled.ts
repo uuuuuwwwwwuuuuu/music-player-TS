@@ -13,6 +13,7 @@ interface ITheme {
     errorColor: string,
     successColor: string,
     border: string,
+    errorHover: string
 }
 
 export default ITheme

@@ -13,11 +13,13 @@ const initialState: ITrackList = {
     error: undefined
 }
 
+const serverUrl = 'http://127.0.0.1:8000'
+
 export const loadTrackList = createAsyncThunk<ITrack[], undefined, {rejectValue: string}> (
     '@@trackList/LOAD_TRACK_LIST',
     async (_, {rejectWithValue}) => {
         try {
-            const response = await fetch('http://127.0.0.1:8000/api/tracks/');
+            const response = await fetch(serverUrl + '/api/tracks/');
             return await response.json()
         } catch (err) {
             if (err) {

@@ -4,6 +4,17 @@ import { resetSomeStateData, setPlay, setCurrentTime, setDuration, setPause, set
 import { ITrack } from "../../store/likedPlayList/reducerLiked";
 import { selectCurrentTrack, selectShuffledPlayList } from "../../store/current/actionsCurrent";
 
+export const shuffle = (array: ITrack[]): ITrack[] => {
+    const shuffledArray = [...array];
+
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+    }
+
+    return shuffledArray;
+};
+
 const AudioModule: FC = () => {
     const dispatch = useAppDispatch();
 
@@ -81,16 +92,7 @@ const AudioModule: FC = () => {
         }
     }
 
-    const shuffle = (array: ITrack[]): ITrack[] => {
-        const shuffledArray = [...array];
-
-        for (let i = shuffledArray.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
-        }
     
-        return shuffledArray;
-    };
 
 
     const postAudition = async (trackId) => {
@@ -115,6 +117,7 @@ const AudioModule: FC = () => {
     }
 
     // Эффекты
+
     useEffect(() => {
         const getTrackData = async () => {
             try {

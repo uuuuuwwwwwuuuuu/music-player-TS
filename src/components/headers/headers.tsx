@@ -7,6 +7,9 @@ import { Input } from "../inputFields/inputFields";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { HiHome } from "react-icons/hi2";
+import { useAppDispatch, useAppSelector } from "../../hook";
+import { toggleShowUserData } from "../../store/user/actionsUser";
+import { UserIcon } from "../icons and tags/icons";
 
 interface IHeadersProp {
     type: 'simple' | 'main',
@@ -35,11 +38,15 @@ const GoHomeBtn = styled.button`
             transform: scale(1.02);
         }
     }
-`
+`;
 
 const Headers: FC<IHeadersProp> = ({type, className, style}) => {
     const navigate = useNavigate();
     const location = useLocation()
+    const dispatch = useAppDispatch();
+    
+    const {username, email, user_img} = useAppSelector(state => state.user.data);
+    const {showUserData} = useAppSelector(state => state.user);
 
     const goBack = () => {
         navigate(-1);
@@ -54,6 +61,10 @@ const Headers: FC<IHeadersProp> = ({type, className, style}) => {
 
     const goHome = () => {
         navigate('/home');
+    }
+
+    const toggleSUD = () => {
+        dispatch(toggleShowUserData(true));
     }
 
     if (type === 'main') {
@@ -78,15 +89,13 @@ const Headers: FC<IHeadersProp> = ({type, className, style}) => {
                         <HiHome />
                     </GoHomeBtn>
                 </nav>
-                <div className="header_info">
-                    <div className="header_account">
-                        <div className="header_account_info">
-                            <span>Devor</span>
-                            <span>Пользователь</span>
-                        </div>
-                        <div className="account_photo">
-                            <img src="/img/my_photo.jpeg" alt="моё фото" />
-                        </div>
+                <div style={{opacity: showUserData ? 0 : 1}} className="header_account" onClick={toggleSUD}>
+                    <div className="header_account_info">
+                        <span>{username}</span>
+                        <span>{email}</span>
+                    </div>
+                    <div className="account_photo">
+                        {user_img ? <img src={user_img} alt="моё фото" /> : <UserIcon />}
                     </div>
                 </div>
             </header>

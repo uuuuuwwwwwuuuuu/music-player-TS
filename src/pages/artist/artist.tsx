@@ -59,14 +59,20 @@ const ArtistBG = styled.div<{$big_img: string}>`
 
 const MoreTracksWrapper = styled.div`
     width: 100%;
-    display: flex;
-    gap: 30px;
-    flex-wrap: wrap;
-    margin: 20px 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
 `;
 
 const ErrorBlock = styled.div`
+    display: flex;
+    justify-content: center;
 
+    span {
+        font-size: 2rem;
+        font-weight: 700;
+    }
 `;
 
 interface IProp {
@@ -195,7 +201,7 @@ const Artist: FC<IProp> = ({artistName}) => {
             <main className="artist">
                 <Headers type="main" />
                 <ErrorBlock>
-
+                    <span>Артист не найден</span>
                 </ErrorBlock>
             </main>
         )

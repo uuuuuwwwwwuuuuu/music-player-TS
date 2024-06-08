@@ -12,7 +12,7 @@ interface IProp {
     W?: number,
     H?: number,
     onClick?: any
-    style?: React.CSSProperties
+    style?: React.CSSProperties,
 }
 
 export const HomeCard: FC<IProp> = ({W, H=200, style, img, category, content, onClick, additionalContent}) => {
@@ -95,7 +95,7 @@ export const HomeCard: FC<IProp> = ({W, H=200, style, img, category, content, on
                     <span className='home_card_additional'>{additionalContent}</span>
                 </div>
                 <Button W={isHovered ? 70 : 50} H={isHovered ? 70 : 50} 
-                type='alternative' 
+                type='alternative' onClick={onClick}
                 content={<PlayOrPause 
                             style={{transition: '0.5s all ease'}} 
                             scale={isHovered ? 30 : 20} type='disable'/>}/>

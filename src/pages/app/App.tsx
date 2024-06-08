@@ -23,11 +23,12 @@ import FullScreen from "../fullScreen/fullScreen";
 import AudioModule from "../audioModule/audioModule";
 import CPLSelection from "../../components/CPLSelection/CPLSelection";
 import LikedPage from "../likedPage/likedPage";
+import { toggleShowUserData } from "../../store/user/actionsUser";
+import { showCurrentPlayListAction } from "../../store/current/actionsCurrent";
+import AccountDataBar from "../../components/accountDataBar/accountDataBar";
 
 const AppWrapper: FC = () => {
-    const showUserData = useAppSelector(state => state.user);
     const artists = useAppSelector(state => state.artists.artists);
-    const {trackList} = useAppSelector(state => state.trackList);
 
     const dispatch = useAppDispatch();
     const location = useLocation();
@@ -36,16 +37,13 @@ const AppWrapper: FC = () => {
     const token: string | null = localStorage.getItem('Token');
 
     useEffect(() => {
-        if (!showUserData.data && !showUserData.error && token) {
+        if (token) {
             dispatch(loadUserData());
+            dispatch(loadArtists());
+            dispatch(loadTrackList());
+            dispatch(loadLikedTrackList());
+            dispatch(loadLikedArtists());
         }
-    }, [dispatch, showUserData.data, showUserData.error, token]);
-
-    useEffect(() => {
-        dispatch(loadArtists());
-        dispatch(loadTrackList());
-        dispatch(loadLikedTrackList());
-        dispatch(loadLikedArtists());
     }, [dispatch, token]);
 
     useEffect(() => {
@@ -84,13 +82,28 @@ export const baseTheme: ITheme = {
     inputsBg: '#2B2A2D',
     disabledBg: '#232224',
     errorColor: '#C84141',
+    errorHover: '#ab3939',
     successColor: '#4EBA3C',
     border: '#c5c4c652'
 }
 
 const App: FC<{token: string | null}> = ({token}) => {
     const location = useLocation();
-    const {trackId} = useAppSelector(state => state.current)
+    const {trackId} = useAppSelector(state => state.current);
+    const dispatch = useAppDispatch();
+    const {showUserData} = useAppSelector(state => state.user);
+    const {showCurrentPlayList} = useAppSelector(state => state.current)
+
+    useEffect(() => {
+        if (location.pathname === '/home/fullscreen') {
+            dispatch(toggleShowUserData(false));
+        }
+
+        if (showUserData && showCurrentPlayList) {
+            dispatch(showCurrentPlayListAction(false));
+        }
+    }, [dispatch, location.pathname, showCurrentPlayList, showUserData]);
+
     return (
         <div className="App">
             <ThemeProvider theme={baseTheme} >
@@ -104,6 +117,7 @@ const App: FC<{token: string | null}> = ({token}) => {
                 {location.pathname !== '/home/fullscreen' && token && <AsideBar />}
                 {token && <AudioModule />}
                 {token && location.pathname !== '/home/fullscreen' && <CPLSelection />}
+                {token && location.pathname !== '/home/fullscreen' && <AccountDataBar />}
             </ThemeProvider>
         </div>
     )

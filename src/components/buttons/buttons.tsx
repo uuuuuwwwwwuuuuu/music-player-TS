@@ -18,10 +18,12 @@ interface IProp {
     propClassList?: string,
     onClick?: any,
     style?: React.CSSProperties,
-    rounded?: boolean
+    rounded?: boolean,
+    onMouseDown?: any,
+    onMouseUp?: any
 }
 
-const Button: FC<IProp> = ({type, W, H, content, fontS, fontW, actionType, propClassList = '', onClick = () => {}, style, isLink, path, rounded = false}) => {
+const Button: FC<IProp> = ({type, W, H, content, fontS, fontW, actionType, propClassList = '', onClick = () => {}, style, isLink, path, onMouseDown = () => {}, onMouseUp = () => {}}) => {
 
     if (!isLink) {
         let genericClassName: typeof type = 'accent' 
@@ -41,7 +43,7 @@ const Button: FC<IProp> = ({type, W, H, content, fontS, fontW, actionType, propC
                 type={actionType ? actionType : 'button'}
                 className={genericClassName + ` general_btn ${propClassList}`}
                 style={{width: `${W}px`, height: `${H}px`, fontSize: `${fontS}rem`, fontWeight: fontW, ...style}}
-                onClick={onClick}>
+                onClick={onClick} onMouseDown={onMouseDown} onMouseUp={onMouseUp}>
                     {content}
             </button>
         )
