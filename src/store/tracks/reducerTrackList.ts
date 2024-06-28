@@ -13,7 +13,7 @@ const initialState: ITrackList = {
     error: undefined
 }
 
-const serverUrl = 'http://127.0.0.1:8000'
+const serverUrl = 'https://music-server-production-d261.up.railway.app'
 
 export const loadTrackList = createAsyncThunk<ITrack[], undefined, {rejectValue: string}> (
     '@@trackList/LOAD_TRACK_LIST',

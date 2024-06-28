@@ -21,7 +21,7 @@ const initialState: IArtistsState = {
     error: undefined,
 }
 
-const serverUrl = 'http://127.0.0.1:8000';
+const serverUrl = 'https://music-server-production-d261.up.railway.app';
 
 export const loadArtists = createAsyncThunk<IArtist[], undefined, {rejectValue: string}>(
     '@@artists/LOAD_ARTISTS',

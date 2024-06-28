@@ -1,5 +1,5 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { resetSomeStateData, rewindBack, rewindForward, setAudioData, setPause, setPlay, setCurrentTime, switchTrackAction, toggleRandom, toggleRepeat, setDuration, setRewindCurrentTime } from "./actionsTrackState";
+import { resetSomeStateData, rewindBack, rewindForward, setAudioData, setPause, setPlay, setCurrentTime, switchTrackAction, toggleRandom, toggleRepeat, setDuration, setRewindCurrentTime, setPending } from "./actionsTrackState";
 
 interface ITrackState {
     isRandom: boolean,
@@ -13,6 +13,7 @@ interface ITrackState {
         duration: number
     },
     switchTrack: 'back' | 'idle' | 'forward',
+    pending: boolean
 }
 
 const initialState: ITrackState = {
@@ -26,7 +27,8 @@ const initialState: ITrackState = {
         duration: 0
     },
     switchTrack: 'idle',
-    rewindCurrentTime: -1
+    rewindCurrentTime: -1,
+    pending: false
 }
 
 const trackStateReducer = createReducer(initialState, (builder) => {
@@ -68,6 +70,9 @@ const trackStateReducer = createReducer(initialState, (builder) => {
         })
         .addCase(setRewindCurrentTime, (state, {payload}) => {
             state.rewindCurrentTime = payload;
+        })
+        .addCase(setPending, (state, {payload}) => {
+            state.pending = payload;
         })
 })
 

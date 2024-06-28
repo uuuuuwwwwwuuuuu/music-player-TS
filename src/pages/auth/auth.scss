@@ -64,6 +64,7 @@
     justify-content: space-between;
     align-items: center;
     border-radius: 14px;
+    position: relative;
 }
 
 .auth_reg_title {
@@ -119,7 +120,7 @@
 
 .response_message {
     position: absolute;
-    bottom: 70px;
+    bottom: 30px;
     background-color: $main-bg-color-for-blur;
     backdrop-filter: blur(4px);
     padding: 10px 20px;

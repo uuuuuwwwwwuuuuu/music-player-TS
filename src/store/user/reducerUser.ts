@@ -22,7 +22,7 @@ const initialState: IUserState = {
     showUserData: false
 }
 
-const serverUrl = 'http://127.0.0.1:8000';
+const serverUrl = 'https://music-server-production-d261.up.railway.app';
 
 export const loadUserData = createAsyncThunk<IUser, undefined, {rejectValue: string}>(
     '@@user/LOAD_USER',

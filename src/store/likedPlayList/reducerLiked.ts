@@ -23,13 +23,13 @@ const initialState: ILikedState = {
     errorMessage: undefined
 };
 
-const serverUrl = 'http://127.0.0.1:8000';
+const serverUrl = 'https://music-server-production-d261.up.railway.app';
 
 export const loadLikedTrackList = createAsyncThunk<ITrack[], undefined, {rejectValue: string}>(
     '@@liked/LOAD_LIKED_TRACK_LIST', 
     async (_, {rejectWithValue}) => {
         try {
-            const res = await fetch('http://127.0.0.1:8000/api/tracks/getliked/', {
+            const res = await fetch(serverUrl + '/api/tracks/getliked/', {
                 method: 'GET',
                 headers: {
                     'Token': localStorage.getItem('Token')!
@@ -51,7 +51,7 @@ export const toggleLike = createAsyncThunk<ITrack[], string, {rejectValue: strin
     '@@liked/TOGGLE_LIKE',
     async (trackId, {rejectWithValue}) => {
         try {
-            const response = await fetch('http://127.0.0.1:8000/api/users/toggleliked/', {
+            const response = await fetch(serverUrl + '/api/users/toggleliked/', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

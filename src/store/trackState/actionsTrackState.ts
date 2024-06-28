@@ -35,3 +35,7 @@ export const switchTrackAction = createAction('@@trackState/SWITCH_TRACK', (swit
 export const setRewindCurrentTime = createAction('@@trackState/SET_REWIND_CURRENT_TIME', (currentTime) => ({
     payload: currentTime
 }))
+
+export const setPending = createAction('@@trackState/SET_PENDING', (isPending: boolean) => ({
+    payload: isPending
+}));

@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hook";
-import { resetSomeStateData, setPlay, setCurrentTime, setDuration, setPause, setAudioData, switchTrackAction } from "../../store/trackState/actionsTrackState";
+import { resetSomeStateData, setPlay, setCurrentTime, setDuration, setPause, setAudioData, switchTrackAction, setPending } from "../../store/trackState/actionsTrackState";
 import { ITrack } from "../../store/likedPlayList/reducerLiked";
 import { selectCurrentTrack, selectShuffledPlayList } from "../../store/current/actionsCurrent";
 
@@ -101,7 +101,7 @@ const AudioModule: FC = () => {
         }
 
         try {
-            fetch('http://127.0.0.1:8000/api/tracks/addaudition/', {
+            fetch('https://music-server-production-d261.up.railway.app/api/tracks/addaudition/', {
                 method: 'POST',
                 headers: {"Content-type": "application/json"},
                 body: JSON.stringify(postData)
@@ -121,15 +121,20 @@ const AudioModule: FC = () => {
     useEffect(() => {
         const getTrackData = async () => {
             try {
+                dispatch(setPause());
+                dispatch(setCurrentTime(0));
+                dispatch(setPending(true));
                 if (currentTrack) {
                     const response = await fetch(currentTrack.music);
                     const audioBlob = await response.blob();
                     dispatch(setAudioData(URL.createObjectURL(audioBlob)));
+                    dispatch(setPending(false));
                 }
             } catch (err) {
                 if (err) {
                     const error = err as Error;
-                    console.error(error)
+                    console.error(error);
+                    dispatch(setPending(false));
                 }
             }
         }

@@ -7,20 +7,19 @@ import { ITrack, toggleLike } from "../../store/likedPlayList/reducerLiked";
 import { HomeTrackCard } from "../../components/cards/homeTrackCards/homeTrackCards";
 import Button from "../../components/buttons/buttons";
 import { CurrentPlayList, Like, PlayOrPause, Random, Repeat, Rewind, FullScreen as FullScreenIcon } from "../../components/icons and tags/icons";
-import { rewindBack, rewindForward, setPause, setPlay, setRewindCurrentTime, switchTrackAction, toggleRandom, toggleRepeat } from "../../store/trackState/actionsTrackState";
+import { setPause, setPlay, setRewindCurrentTime, switchTrackAction, toggleRandom, toggleRepeat } from "../../store/trackState/actionsTrackState";
 import { humanizingNumbers } from "../PlaySelection/PlaySelection";
 import { addNotification } from "../../store/notificationQueue/actionsNotification";
 import { v4 as randomId } from 'uuid'; 
 import { showCurrentPlayListAction } from "../../store/current/actionsCurrent";
 import { useLocation, useNavigate } from "react-router-dom";
-import { IKeyInfo } from "../PlaySelection/PlaySelection";
 
 const Background = styled.div<{$img: string}>`
-    height: 100svh;
+    height: calc(100svh - 70px);
     width: 100%;
     position: relative;
     box-sizing: border-box;
-    padding: 70px;
+    padding: 70px 70px 0px 70px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -144,7 +143,7 @@ const TrackImg = styled.img<{$isShow: boolean}>`
 const FullScreen: FC = () => {
     const dispatch = useAppDispatch();
     const {trackId, currentPlayList, showCurrentPlayList, shuffledArr} = useAppSelector(state => state.current);
-    const {isPlay, isRandom, isRepeat, trackTimeData: {currentTime, duration}} = useAppSelector(state => state.trackState);
+    const {isPlay, isRandom, isRepeat, pending, trackTimeData: {currentTime, duration}} = useAppSelector(state => state.trackState);
     const {likedTrackList} = useAppSelector(state => state.liked);
 
     const [currentTrack, setCurrentTrack] = useState<ITrack | undefined>(undefined);
@@ -396,11 +395,13 @@ const FullScreen: FC = () => {
                                 <button onClick={prevTrack}>
                                     <Rewind scale={40}/>
                                 </button>
-                                <button style={{height: 70}} className="fullscreen_play_btn" onClick={toggleIsPlay}>
-                                    <PlayOrPause type={isPlay ? 'active' : 'idle'}
-                                    style={{left: isPlay ? 0 : 2}}
-                                    className="play_or_pause_icon" scale={30}/>
-                                </button>
+                                {pending 
+                                    ? <div style={{marginRight: 40, width: 50, height: 50}} className="loader"></div>
+                                    : <button style={{height: 70}} className="fullscreen_play_btn" onClick={toggleIsPlay}>
+                                        <PlayOrPause type={isPlay ? 'active' : 'idle'}
+                                        style={{left: isPlay ? 0 : 2}}
+                                        className="play_or_pause_icon" scale={30}/>
+                                    </button>}
                                 <button onClick={nextTrack} >
                                     <Rewind style={{transform: 'rotate(180deg)'}} scale={40}/>
                                 </button>

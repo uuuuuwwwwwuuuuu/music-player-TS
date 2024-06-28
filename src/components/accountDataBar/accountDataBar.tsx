@@ -249,7 +249,7 @@ const AccountDataBar: FC = () => {
     const regDate = new Date(reg_date);
     const navigate = useNavigate();
 
-    const serverUrl = 'http://127.0.0.1:8000';
+    const serverUrl = 'https://music-server-production-d261.up.railway.app';
 
     const [isPressed, setIsPressed] = useState(false);
     const [startDate, setStartDate] = useState<null | number>(null);
@@ -265,9 +265,13 @@ const AccountDataBar: FC = () => {
         const dateOnUp = new Date().getTime();
         if (startDate) {
             if (dateOnUp - startDate >= 1000) {
-                logout();
-                dispatch(logoutUser());
-                navigate('/auth');
+                // eslint-disable-next-line no-restricted-globals
+                const answer = confirm('Вы точно хотите выйти из аккаунта?');
+                if (answer) {
+                    logout();
+                    dispatch(logoutUser());
+                    navigate('/auth');
+                }
             }
         }
     }

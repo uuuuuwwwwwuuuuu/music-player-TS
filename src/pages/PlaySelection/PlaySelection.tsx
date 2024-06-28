@@ -49,7 +49,7 @@ const PlaySelection: FC = () => {
     const dispatch = useAppDispatch();
     const {currentPlayList, trackId, showCurrentPlayList} = useAppSelector(state => state.current);
     const {likedTrackList} = useAppSelector(state => state.liked);
-    const {isRandom, isPlay, isRepeat, trackTimeData: {currentTime, duration}} = useAppSelector(state => state.trackState)
+    const {isRandom, isPlay, isRepeat, pending, trackTimeData: {currentTime, duration}} = useAppSelector(state => state.trackState)
 
     const [currentWidth, setCurrentWidth] = useState(0);
     const [currentTrack, setCurrentTrack] = useState<ITrack | undefined>(undefined);
@@ -155,7 +155,12 @@ const PlaySelection: FC = () => {
             {currentTrack &&
                 <div className="play_selection" >
                     <div className="left_elements">
-                        <img className="album_img" src={currentTrack.albumImg} alt="album" />
+                        <div className="album_img_wrapper">
+                            {pending
+                                ? <div className="loader"></div>
+                                : <img className="album_img" src={currentTrack.albumImg} alt="album" />}
+                            
+                        </div>
                         <div className="track_info">
                             <span>{currentTrack.title}</span>
                             <span className="artists">{currentTrack.artists}</span>

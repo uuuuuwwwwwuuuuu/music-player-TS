@@ -22,7 +22,7 @@ const store = configureStore({
         likedArtists: likedArtistsReducer,
         trackState: trackStateReducer
     },
-    devTools: true,
+    devTools: false,
 });
 
 export default store;
