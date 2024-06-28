@@ -77,7 +77,7 @@ const NoDataDiv = styled.div`
 `
 
 const LikedPage: FC = () => {
-    const {likedTrackList, loading} = useAppSelector(state => state.liked);
+    const {likedTrackList} = useAppSelector(state => state.liked);
     const trackId = useAppSelector(state => state.current.trackId);
     const [dataArr, setDataArr] = useState<ITrack[]>([]);
     const [searchStr, setSearchStr] = useState('');

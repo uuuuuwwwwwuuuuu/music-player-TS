@@ -20,7 +20,14 @@ export const loadTrackList = createAsyncThunk<ITrack[], undefined, {rejectValue:
     async (_, {rejectWithValue}) => {
         try {
             const response = await fetch(serverUrl + '/api/tracks/');
-            return await response.json()
+            const data = await response.json();
+            const newData = data.map((item: ITrack) => {
+                item.albumImg = item.albumImg.replace(/http/g, 'https');
+                item.music = item.music.replace(/http/g, 'https');
+                return item
+            })
+            console.log(newData);
+            return newData
         } catch (err) {
             if (err) {
                 const error = err as Error;

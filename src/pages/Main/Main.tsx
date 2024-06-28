@@ -116,24 +116,24 @@ const Main: FC = () => {
                                 onClick={setArtistOfMonthPlayList}
                                 W={800} category="Артист месяца" content="Тринадцать карат" 
                                 additionalContent="242412 прослушиваний"
-                                img="/img/homecard1.jpg" />
+                                img={process.env.PUBLIC_URL + "/img/homecard1.jpg"}/>
                             <HomeCard 
                                 onClick={setBestInBrooklyn}
                                 W={530} category="Лучшее" content="в BROOKLYN" 
                                 additionalContent="Моргенштерн, Тринадцать карат ..."
-                                img="/img/homecard2.jpeg" />
+                                img={process.env.PUBLIC_URL + "/img/homecard2.jpeg"} />
                         </div>
                         <div className="cards">
                             <HomeCard 
                                 onClick={setBestInCountry}
                                 W={530} category="ТОП" content="в Стране" 
                                 additionalContent="Тима белорусских, Макс Корж ..."
-                                img="/img/homecard3.jpeg" />
+                                img={process.env.PUBLIC_URL + "/img/homecard3.jpeg"} />
                             <HomeCard 
                                 onClick={bestForYou}
                                 W={800} category="Подборка" content="Для вас" 
                                 additionalContent="Nikitata, Тринадцать карат, Три дня до..."
-                                img="/img/homecard4.jpeg" />
+                                img={process.env.PUBLIC_URL + "/img/homecard4.jpeg"}/>
                         </div>
                         <div className="home_artists_line">
                             <span>Артисты</span>
