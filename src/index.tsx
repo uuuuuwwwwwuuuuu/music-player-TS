@@ -11,7 +11,7 @@ const root = ReactDOM.createRoot(
 );
 
 root.render(
-    <BrowserRouter >
+    <BrowserRouter basename='music-player-TS/' >
         <Provider store={store}>
             <AppWrapper />
         </Provider>
