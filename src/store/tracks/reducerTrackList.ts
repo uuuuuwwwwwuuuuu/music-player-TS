@@ -26,7 +26,6 @@ export const loadTrackList = createAsyncThunk<ITrack[], undefined, {rejectValue:
                 item.music = item.music.replace(/http/g, 'https');
                 return item
             })
-            console.log(newData);
             return newData
         } catch (err) {
             if (err) {

@@ -28,7 +28,13 @@ export const loadArtists = createAsyncThunk<IArtist[], undefined, {rejectValue: 
     async (_, {rejectWithValue}) => {
         try {
             const response = await fetch(serverUrl + '/api/artists/');
-            return await response.json()
+            const data = await response.json();
+            const newData = data.map((item: IArtist) => {
+                item.artistImg = item.artistImg.replace(/http/g, 'https');
+                item.big_img = item.big_img.replace(/http/g, 'https');
+                return item;
+            });
+            return newData;
         } catch (err) {
             if (err) {
                 const error = err as Error;
