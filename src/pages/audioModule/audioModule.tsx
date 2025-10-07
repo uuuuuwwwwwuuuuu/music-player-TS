@@ -101,7 +101,7 @@ const AudioModule: FC = () => {
         }
 
         try {
-            fetch('https://music-server-production-d261.up.railway.app/api/tracks/addaudition/', {
+            fetch('https://music-server-production-5ca2.up.railway.app/api/tracks/addaudition/', {
                 method: 'POST',
                 headers: {"Content-type": "application/json"},
                 body: JSON.stringify(postData)

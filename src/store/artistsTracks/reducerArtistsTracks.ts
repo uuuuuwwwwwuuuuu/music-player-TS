@@ -11,7 +11,7 @@ const initialState: {
    tracks: [] 
 }
 
-const serverUrl = 'https://music-server-production-d261.up.railway.app';
+const serverUrl = 'https://music-server-production-5ca2.up.railway.app';
 
 export const loadArtistTracks = createAsyncThunk<ITrack[], string[], {rejectValue: string}>(
     '@@artistTracks/LOAD_ARTIST_TRACKS',

@@ -154,7 +154,7 @@ const PlaySelection: FC = () => {
         <>
             {currentTrack &&
                 <div className="play_selection" >
-                    <div className="left_elements">
+                    <div className="left_elements" >
                         <div className="album_img_wrapper">
                             {pending
                                 ? <div className="loader"></div>

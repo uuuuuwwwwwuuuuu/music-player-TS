@@ -146,8 +146,8 @@ const FullScreen: FC = () => {
     const {isPlay, isRandom, isRepeat, pending, trackTimeData: {currentTime, duration}} = useAppSelector(state => state.trackState);
     const {likedTrackList} = useAppSelector(state => state.liked);
 
-    const [currentTrack, setCurrentTrack] = useState<ITrack | undefined>(undefined);
-    const [spanTranslateValue, setSpanTranslateValue] = useState(0);
+    const [currentTrack, setCurrentTrack] = useState<ITrack | undefined>(undefined);  // Трек
+    const [spanTranslateValue, setSpanTranslateValue] = useState(0);  //
     const [isSpanHovered, setIsSpanHovered] = useState(false);
     const [CPLTranslateValue, setCPLTranslateValue] = useState(0);
     const [isCPLLong, setIsCPLLong] = useState(false);
@@ -155,10 +155,10 @@ const FullScreen: FC = () => {
     const [isLiked, setIsLiked] = useState(false);
     const [currentWidth, setCurrentWidth] = useState(0);
 
-    const infoDiv = useRef<HTMLDivElement | null>(null);
+    const infoDiv = useRef<HTMLDivElement | null>(null);  
     const trackTitleSpan = useRef<HTMLSpanElement | null>(null);
     const CPLSelectionRef = useRef<HTMLDivElement | null>(null);
-    const CPLLine = useRef<HTMLDivElement | null>(null);
+    const CPLLineRef = useRef<HTMLDivElement | null>(null);
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -206,9 +206,9 @@ const FullScreen: FC = () => {
     }, [isSpanHovered]);
 
     useEffect(() => {
-        if (CPLSelectionRef.current && CPLLine.current) {
+        if (CPLSelectionRef.current && CPLLineRef.current) {
             const selection = CPLSelectionRef.current;
-            const line = CPLLine.current;
+            const line = CPLLineRef.current;
             if (selection.clientWidth < line.clientWidth - CPLTranslateValue) {
                 setIsCPLLong(true);
             } else {
@@ -216,7 +216,7 @@ const FullScreen: FC = () => {
             }
 
         }
-    }, [CPLSelectionRef.current?.clientWidth, CPLLine.current?.clientWidth, CPLTranslateValue]);
+    }, [CPLSelectionRef.current?.clientWidth, CPLLineRef.current?.clientWidth, CPLTranslateValue]);
 
 
     useEffect(() => {
@@ -255,7 +255,15 @@ const FullScreen: FC = () => {
     const CPLTranslateToNext = () => {
         setCPLTranslateValue(prevState => {
             if (CPLSelectionRef.current) {
-                return prevState + 260 * 2;
+                const newValue = prevState + 260 * 2;
+                if (CPLLineRef.current) {
+                    console.log(CPLLineRef.current.clientWidth);
+                    console.log(newValue);
+                    if (newValue >= CPLLineRef.current.clientWidth - CPLSelectionRef.current.clientWidth) {
+                        return CPLLineRef.current.clientWidth - CPLSelectionRef.current.clientWidth + 10;
+                    }
+                }
+                return newValue;
             } else {
                 return prevState
             }
@@ -266,12 +274,12 @@ const FullScreen: FC = () => {
         setCPLTranslateValue(prevState => {
             if (CPLSelectionRef.current) {
                 const newValue = prevState - 260 * 2;
-                if (newValue <= CPLSelectionRef.current.clientWidth + 20) {
+                if (newValue <= 0) {
                     return 0;
                 }
                 return newValue;
             } else {
-                return prevState
+                return prevState;
             }
         })
     }
@@ -358,7 +366,7 @@ const FullScreen: FC = () => {
                                     onClick={CPLTranslateToPrev} />
                                     : null}
 
-                                <CurrentPlayListLine $translateValue={CPLTranslateValue} ref={CPLLine}>
+                                <CurrentPlayListLine $translateValue={CPLTranslateValue} ref={CPLLineRef}>
                                     {renderCurrentPlayList()}
                                 </CurrentPlayListLine>
 

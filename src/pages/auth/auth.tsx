@@ -43,7 +43,7 @@ const Auth: FC = () => {
     const regUser = async (data) => {
         try {
             
-            const res = await fetch('https://music-server-production-d261.up.railway.app/api/users/register/', {
+            const res = await fetch('https://music-server-production-5ca2.up.railway.app/api/users/register/', {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json'
@@ -64,7 +64,7 @@ const Auth: FC = () => {
     
     const authUser = async (data) => {
         try {
-            const res = await fetch('https://music-server-production-d261.up.railway.app/api/users/auth/', {
+            const res = await fetch('https://music-server-production-5ca2.up.railway.app/api/users/auth/', {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json'

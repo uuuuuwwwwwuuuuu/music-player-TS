@@ -49,7 +49,9 @@ const AppWrapper: FC = () => {
 
     window.addEventListener('load', () => {
         navigate('/');
-    })
+    });
+
+
 
     useEffect(() => {
         if (location.pathname === '/' && token) {

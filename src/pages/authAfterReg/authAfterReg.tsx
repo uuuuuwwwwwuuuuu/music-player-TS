@@ -31,7 +31,7 @@ const ButtonsWrapper = styled.div`
     }
 `;
 export const logout = () => {
-    const serverUrl = 'https://music-server-production-d261.up.railway.app'
+    const serverUrl = 'https://music-server-production-5ca2.up.railway.app'
 
     try {
         fetch(serverUrl + '/api/users/logout/', {

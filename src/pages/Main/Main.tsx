@@ -21,6 +21,10 @@ const Main: FC = () => {
     const [translateValue, setTranslateValue] = useState<number>(0);
 
     const artistLine = useRef<HTMLDivElement>(null);
+    
+    useEffect(() => {
+
+    }, )
 
     useEffect(() => {
         const artistLineWidth = artistLine.current?.clientWidth;

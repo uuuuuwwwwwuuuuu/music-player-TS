@@ -13,7 +13,7 @@ const initialState: IArtistsState = {
     error: undefined,
 }
 
-const serverUrl = 'https://music-server-production-d261.up.railway.app';
+const serverUrl = 'https://music-server-production-5ca2.up.railway.app';
 
 export const loadLikedArtists = createAsyncThunk<IArtist[], undefined, {rejectValue: string}>(
     '@@artists/LOAD_LIKED_ARTISTS',

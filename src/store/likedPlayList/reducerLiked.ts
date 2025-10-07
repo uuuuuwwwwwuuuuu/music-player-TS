@@ -23,7 +23,7 @@ const initialState: ILikedState = {
     errorMessage: undefined
 };
 
-const serverUrl = 'https://music-server-production-d261.up.railway.app';
+const serverUrl = 'https://music-server-production-5ca2.up.railway.app';
 
 export const loadLikedTrackList = createAsyncThunk<ITrack[], undefined, {rejectValue: string}>(
     '@@liked/LOAD_LIKED_TRACK_LIST', 

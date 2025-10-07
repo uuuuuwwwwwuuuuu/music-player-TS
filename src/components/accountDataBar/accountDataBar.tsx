@@ -249,7 +249,7 @@ const AccountDataBar: FC = () => {
     const regDate = new Date(reg_date);
     const navigate = useNavigate();
 
-    const serverUrl = 'https://music-server-production-d261.up.railway.app';
+    const serverUrl = 'https://music-server-production-5ca2.up.railway.app';
 
     const [isPressed, setIsPressed] = useState(false);
     const [startDate, setStartDate] = useState<null | number>(null);
