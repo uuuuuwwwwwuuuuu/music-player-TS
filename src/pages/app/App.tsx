@@ -28,6 +28,7 @@ import { showCurrentPlayListAction } from "../../store/current/actionsCurrent";
 import AccountDataBar from "../../components/accountDataBar/accountDataBar";
 import NotFoundPage from "../notFoundPage/notFoundPage";
 
+
 const AppWrapper: FC = () => {
     const artists = useAppSelector(state => state.artists.artists);
 
@@ -35,8 +36,10 @@ const AppWrapper: FC = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const token: string | null = localStorage.getItem('Token');
+    
 
+    const token: string | null = localStorage.getItem('Token');
+    
     useEffect(() => {
         if (token) {
             dispatch(loadUserData());

@@ -19,34 +19,55 @@ const Main: FC = () => {
 
     const [isButtonShow, setIsButtonShow] = useState<boolean>(false);
     const [translateValue, setTranslateValue] = useState<number>(0);
+    const [rightShadowOpasity, setRightShadowOpacity] = useState<number>(0);
 
+    const artistLineWrapper = useRef<HTMLDivElement>(null);
     const artistLine = useRef<HTMLDivElement>(null);
+
     
     useEffect(() => {
 
     }, )
 
     useEffect(() => {
-        const artistLineWidth = artistLine.current?.clientWidth;
+        const artistLineWidth = artistLineWrapper.current?.clientWidth;
         const artistsCardsWidth = 130 * artists.length;
 
         if (artistLineWidth) {
-            setIsButtonShow(artistLineWidth >= artistsCardsWidth - translateValue ? false : true)
+            setIsButtonShow(artistLineWidth >= artistsCardsWidth - translateValue ? false : true);
+            setRightShadowOpacity(1);
+        } else {
+            setRightShadowOpacity(0);
         }
     }, [artists.length, translateValue]);
 
     const slideToNextArtistPage = (e: MouseEventHandler<HTMLButtonElement>) => {
-        if (artistLine.current) {
-            const newTranslateValue = translateValue + artistLine.current.clientWidth - 150
-            setTranslateValue(newTranslateValue);
-        }
+        setTranslateValue(prevState => {
+            if (artistLineWrapper.current && artistLine.current) {
+                const newValue = prevState + 300;
+                if (newValue >= artistLine.current.clientWidth - artistLineWrapper.current.clientWidth) {
+                    return artistLine.current.clientWidth - artistLineWrapper.current.clientWidth;
+                }
+                return newValue;
+            } else {
+                return prevState;
+            }
+        })
     }
 
     const slideToPrevArtistPage = () => {
-        if (artistLine.current) {
-            const newTranslateValue = translateValue - artistLine.current.clientWidth + 150
-            setTranslateValue(newTranslateValue);
-        }
+        // if (artistLineWrapper.current) {
+        //     const newTranslateValue = translateValue - artistLineWrapper.current.clientWidth + 150
+        //     setTranslateValue(newTranslateValue);
+        // }
+
+        setTranslateValue(prevState => {
+            const newValue = prevState - 300;
+            if (newValue <= 0) {
+                return 0;
+            }
+            return newValue;
+        })
     }
 
     const renderArtists = () => {
@@ -142,7 +163,7 @@ const Main: FC = () => {
                         <div className="home_artists_line">
                             <span>Артисты</span>
                             {translateValue ? <div className="shade"></div> : null}
-                            <div ref={artistLine} className="artists_line">
+                            <div ref={artistLineWrapper} className="artists_line">
                                 {translateValue 
                                     ? <Button onClick={slideToPrevArtistPage} 
                                     type="alternative" W={50} H={50} fontS={3.2} content='<'/> 
@@ -150,7 +171,7 @@ const Main: FC = () => {
 
                                 <div style={{transform: `translate(${-translateValue}px)`, 
                                             justifyContent: artistLoading ? 'center' : 'flex-start'}} 
-                                className="artists_line_wrapper">
+                                            className="artists_line_wrapper" ref={artistLine}>
                                     {artistLoading ? <div className="loader"></div> : renderArtists()}
                                 </div>
                                 

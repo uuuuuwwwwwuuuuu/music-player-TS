@@ -13,6 +13,7 @@ import { addNotification } from "../../store/notificationQueue/actionsNotificati
 
 import { v4 as randomId } from 'uuid';
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "styled-components";
 
 export interface IKeyInfo {
     keyCode: string,
@@ -154,7 +155,7 @@ const PlaySelection: FC = () => {
         <>
             {currentTrack &&
                 <div className="play_selection" >
-                    <div className="left_elements" >
+                    <div className="left_elements" onClick={() => navigate('/home/fullscreen')}>
                         <div className="album_img_wrapper">
                             {pending
                                 ? <div className="loader"></div>

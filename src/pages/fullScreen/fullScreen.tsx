@@ -272,15 +272,11 @@ const FullScreen: FC = () => {
 
     const CPLTranslateToPrev = () => {
         setCPLTranslateValue(prevState => {
-            if (CPLSelectionRef.current) {
-                const newValue = prevState - 260 * 2;
-                if (newValue <= 0) {
-                    return 0;
-                }
-                return newValue;
-            } else {
-                return prevState;
+            const newValue = prevState - 260 * 2;
+            if (newValue <= 0) {
+                return 0;
             }
+            return newValue;
         })
     }
 
