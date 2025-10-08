@@ -2,7 +2,7 @@ import ReactDOM from 'react-dom/client';
 import './index.scss';
 import AppWrapper from './pages/app/App';
 import { Provider } from 'react-redux';
-import {BrowserRouter, HashRouter} from 'react-router-dom'
+import {HashRouter} from 'react-router-dom'
 
 import store from './store/store';
 
