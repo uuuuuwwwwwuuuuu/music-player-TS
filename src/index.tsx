@@ -13,7 +13,7 @@ const root = ReactDOM.createRoot(
 root.render(
     <HashRouter >
         <Provider store={store}>
-            <AppWrapper />
+            <AppWrapper/>
         </Provider>
     </HashRouter>
 );
